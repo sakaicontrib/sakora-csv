@@ -25,9 +25,9 @@
         <version>2.6-SNAPSHOT</version> 
         <relativePath>../master/pom.xml</relativePath>
     </parent>
-    <name>Sakai-Oracle SIS Integration</name>
+    <name>Simple Sakai SIS Integration Services (Sakora CSV)</name>
     <groupId>net.unicon</groupId>
-    <artifactId>sakai-sakora-base</artifactId>
+    <artifactId>sakai-sakora-csv-base</artifactId>
     <organization>
         <name>Unicon, Inc</name>
         <url>http://www.unicon.net/</url>
@@ -36,90 +36,23 @@
     <version>1.3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>
-      The Sakai-Oracle SIS Integration module implements (eventually) bi-directional messaging
-      between Sakai and Oracle/Peoplesoft SIS hosts. Course data inbound to Sakai is synchronized
-      with entities managed by the Sakai CourseManagement APIs. Grades are delivered to Oracle/Peoplesoft
-      on an on-demand basis. Messaging is implemented by a flavor of the IMS v2 protocol, trasported by
-      SOAP over HTTP. The Sakai-side implemented includes an embedded JMS provider: ActiveMQ at this
-      writing.
     </description>
 
     <modules>
-      <module>sakora-api/api</module>
-      <module>sakora-impl/impl</module>
-      <module>sakora-impl/pack</module>
-      <module>sakora-impl/shared-deployer</module>
-      <module>sakora-tool/tool</module>
+      <module>sakora-csv-api/api</module>
+      <module>sakora-csv-impl/impl</module>
+      <module>sakora-csv-impl/pack</module>
+      <module>sakora-csv-tool/tool</module>
     </modules>
 
     <scm>
-      <connection>scm:svn:https://source.sakaiproject.org/contrib/unicon/sakora/trunk</connection>
-      <developerConnection>scm:svn:https://source.sakaiproject.org/contrib/unicon/sakora/trunk</developerConnection>
-      <url>https://source.sakaiproject.org/contrib/unicon/sakora/trunk</url>
+      <connection>scm:svn:https://source.sakaiproject.org/contrib/unicon/sakora-csv/trunk</connection>
+      <developerConnection>scm:svn:https://source.sakaiproject.org/contrib/unicon/sakora-csv/trunk</developerConnection>
+      <url>https://source.sakaiproject.org/contrib/unicon/sakora-csv/trunk</url>
     </scm>
-
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.springframework.ws</groupId>
-                <artifactId>spring-ws-core</artifactId>
-                <version>1.0.1</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.ws</groupId>
-                <artifactId>spring-ws-core-tiger</artifactId>
-                <version>1.0.1</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.ws</groupId>
-                <artifactId>spring-oxm</artifactId>
-                <version>1.0.1</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.ws</groupId>
-                <artifactId>spring-oxm-tiger</artifactId>
-                <version>1.0.1</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.ws</groupId>
-                <artifactId>spring-xml</artifactId>
-                <version>1.0.1</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>javax.xml.soap</groupId>
-                <artifactId>saaj-api</artifactId>
-                <version>1.3</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.xml.messaging.saaj</groupId>
-                <artifactId>saaj-impl</artifactId>
-                <version>1.3</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>javax.xml.bind</groupId>
-                <artifactId>jaxb-api</artifactId>
-                <version>2.1</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-impl</artifactId>
-                <version>2.1.3</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>xpp3</groupId>
-                <artifactId>xpp3</artifactId>
-                <version>1.1.4c</version>
-            </dependency> 
         </dependencies>
     </dependencyManagement>
 
@@ -144,18 +77,6 @@
       </repository>
     </repositories>
 
-    <!-- No build for a base project -->
     <build />
-    <profiles>
-        <profile>
-            <id>ci</id>
-            <distributionManagement>
-                <site>
-                    <id>website</id>
-                    <url>file://${ci.site.url}/project</url>
-                </site>
-            </distributionManagement>
-        </profile>
-    </profiles>
 </project>
 

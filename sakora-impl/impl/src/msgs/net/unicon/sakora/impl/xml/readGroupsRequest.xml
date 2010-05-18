@@ -1,5 +1,0 @@
-<gsm:readGroupsRequest.V1 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:gsm="http://xmlns.oracle.com/Enterprise/HCM/services/GROUPMANAGEMENTSERVICE">
-	<gsm:sourcedId/>
-</gsm:readGroupsRequest.V1>
