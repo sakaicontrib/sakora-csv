@@ -1,0 +1,26 @@
+<?xml version="1.0"?> 
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" version="IMS CMS 2.0" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:cms="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> 
+  <xs:simpleType name="GUID.Type"> 
+    <xs:restriction base="xs:string"/> 
+  </xs:simpleType> 
+  <xs:complexType name="GUIDSet.Type"> 
+    <xs:annotation> 
+      <xs:documentation>
+The GUIDSet data-type is the container for ...
+    </xs:documentation> 
+    </xs:annotation> 
+    <xs:sequence> 
+      <xs:element maxOccurs="unbounded" minOccurs="0" ref="cms:sourcedId"/> 
+    </xs:sequence> 
+  </xs:complexType> 
+  <xs:element name="readSectionAssociationsRequest"> 
+    <xs:complexType> 
+      <xs:sequence> 
+        <xs:element ref="cms:sourcedIdSet"/> 
+      </xs:sequence> 
+    </xs:complexType> 
+  </xs:element> 
+  <xs:element name="sourcedId" type="cms:GUID.Type"/> 
+  <xs:element name="sourcedIdSet" type="cms:GUIDSet.Type"/> 
+</xs:schema>
+

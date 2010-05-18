@@ -1,0 +1,64 @@
+<?xml version="1.0"?><createPersonRequest xmlns="http://www.imsglobal.org/services/es/pms2p0/xsd/imspms_v2p0">
+   <sourcedId>CC0002</sourcedId>
+   <person>
+      <sourcedId>CC0002</sourcedId>
+      <formname>
+         <formattedName>
+            <language>en-US</language>
+            <text>Ted Hanks</text>
+         </formattedName>
+      </formname>
+      <name>
+         <partname>
+            <firstname>Tom</firstname>
+            <nickname/>
+            <familyname>Hanks</familyname>
+            <givenname>Tom</givenname>
+            <prefix>Mr</prefix>
+            <suffix/>
+            <initials/>
+            <last>Hanks</last>
+            <maternal/>
+            <middle/>
+            <particle/>
+            <paternal/>
+            <surname>Hanks</surname>
+         </partname>
+      </name>
+      <address>
+         <addresspart>
+            <nonfieldedstreetaddress1>6900 Sunset Boulevard</nonfieldedstreetaddress1>
+            <nonfieldedstreetaddress2/>
+            <nonfieldedstreetaddress3/>
+            <nonfieldedstreetaddress4/>
+            <locality>Los Angeles</locality>
+            <city>Los Angeles</city>
+            <statepr>CA</statepr>
+            <region>CA</region>
+            <country>USA</country>
+            <postcode>92405</postcode>
+         </addresspart>
+      </address>
+      <contactinfo>
+         <telephone/>
+         <email/>
+         <webaddress/>
+      </contactinfo>
+      <demographics>
+         <gender>male</gender>
+         <placeofbirth>
+            <language>en-US</language>
+            <text/>
+         </placeofbirth>
+      </demographics>
+      <birthday>1960-04-10</birthday>
+      <dataSource>CS</dataSource>
+      <extension>
+         <extensionField>
+            <fieldName>Mode</fieldName>
+            <fieldType>String</fieldType>
+            <fieldValue>A</fieldValue>
+         </extensionField>
+      </extension>
+   </person>
+</createPersonRequest>

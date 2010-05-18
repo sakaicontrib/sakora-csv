@@ -1,0 +1,31 @@
+<?xml version="1.0"?><createCourseTemplateRequest xmlns="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0">
+   <sourcedId>007251-1</sourcedId>
+   <courseTemplate>
+      <sourcedId>007251-1</sourcedId>
+      <label>
+         <language>en-US</language>
+         <text>007251-1</text>
+      </label>
+      <title>
+         <language>en-US</language>
+         <text>Analytical Psychology</text>
+      </title>
+      <catalogDescription>
+         <shortDescription>Analytical Psychology</shortDescription>
+         <longDescription>Analytical Psychology</longDescription>
+      </catalogDescription>
+      <courseNumber>
+         <language>en-US</language>
+         <text>PSYCH  118</text>
+      </courseNumber>
+      <status>Active</status>
+      <dataSource>CS</dataSource>
+      <extension>
+         <extensionField>
+            <fieldName>Mode</fieldName>
+            <fieldType>String</fieldType>
+            <fieldValue>A</fieldValue>
+         </extensionField>
+      </extension>
+   </courseTemplate>
+</createCourseTemplateRequest>

@@ -1,0 +1,4 @@
+Eid, Session Eid, Title, Description, Status, Start Date, End Date, Canonical Course Eid, Course Set Eid (optional)
+TEST101_Summer_1_2009_Ryan, Summer_1_2009, Hello World, Basic test course, open, 2009-6-5, 2009-7-21, TEST101
+TEST101_Summer_2_2009_Ryan, Summer_2_2009, Hello World, Basic test course, open, 2009-7-25, 2009-8-15, TEST101, CS
+Math_101_Summer_2_2009, Summer_2_2009, Addition, Basic Addition, open, 2009-7-25, 2009-8-15, Math_101, Math

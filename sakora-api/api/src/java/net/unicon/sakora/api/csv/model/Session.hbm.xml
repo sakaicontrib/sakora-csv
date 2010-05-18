@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+   <class name="net.unicon.sakora.api.csv.model.Session" table="SAKORA_SESSION">
+      <id name="eid" type="string" length="255" column="EID" />
+      <property name="inputTime" type="timestamp" column="INPUT_TIME" />
+   </class>
+   
+   <database-object>
+       <create>create index SAKORA_SESSION_SEARCH_IDX on SAKORA_SESSION (INPUT_TIME)</create>
+       <drop></drop>
+       <dialect-scope name="org.hibernate.dialect.MySQLDialect"/> 
+   </database-object>
+</hibernate-mapping>

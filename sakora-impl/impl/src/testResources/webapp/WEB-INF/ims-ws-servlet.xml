@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Sakai Foundation under one or more contributor
+  license agreements. See the NOTICE file distributed with this
+  work for additional information regarding copyright ownership.
+  The Sakai Foundation licenses this file to you under the Apache
+  License, Version 2.0 (the "License"); you may not use this file
+  except in compliance with the License. You may obtain a copy of
+  the License at:
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on
+  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied. See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<!--  exposing the static wsdl document -->
+	<bean id="courseMgmtServices" class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
+	    <constructor-arg value="/wsdl/CourseManagementService.wsdl"/>
+	</bean>
+	
+	<bean id="personServices" class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
+	    <constructor-arg value="/wsdl/PersonManagementService.wsdl"/>
+	</bean>
+	
+	<bean id="groupServices" class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
+	    <constructor-arg value="/wsdl/GroupManagementService.wsdl"/>
+	</bean>
+	
+	<bean id="membershipServices" class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
+	    <constructor-arg value="/wsdl/MembershipManagementService.wsdl"/>
+	</bean>
+	
+ 	<bean id="pmsMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+		<property name="contextPath" 
+			value="com.oracle.xmlns.enterprise.hcm.services.pms"/>
+	</bean>
+	
+	<!--  enable payload annotation endpoint mapping -->
+	<bean class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping"
+		lazy-init="false">
+		<property name="order" value="1"/>
+	</bean>
+
+	<!--  registering endpoint beans -->
+	<bean id="abstractServicesEndpoint" class="net.unicon.sakora.impl.ws.service.ResponseBuilderEndpoint"
+		abstract="true">
+		<property name="responseBuilder">
+			<bean id="responseBuilder" class="net.unicon.sakora.impl.ws.service.ResponseBuilder">
+				<property name="urlPrefix" value="http://localhost:8888/data/" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="personServicesEndpoint" 
+		class="net.unicon.sakora.impl.ws.service.PersonServicesEndpoint"
+		parent="abstractServicesEndpoint">
+		<!--   property name="marshaller" ref="pmsMarshaller"/ -->
+	</bean>
+		
+	<bean id="courseManagementServicesEndpoint" 
+		class="net.unicon.sakora.impl.ws.service.CourseManagementServicesEndpoint"
+		parent="abstractServicesEndpoint"/>
+		
+	<bean id="groupServicesEndpoint" 
+		class="net.unicon.sakora.impl.ws.service.GroupServicesEndpoint"
+		parent="abstractServicesEndpoint"/>
+		
+	<bean id="memberServicesEndpoint" 
+		class="net.unicon.sakora.impl.ws.service.MemberServicesEndpoint"
+		parent="abstractServicesEndpoint"/>
+
+	<!--  and the dispatch to regular controller for the Spring MVC -->
+	<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
+
+</beans>

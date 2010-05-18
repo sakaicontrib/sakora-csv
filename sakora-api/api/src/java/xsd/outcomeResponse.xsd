@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:nxsd="http://xmlns.oracle.com/pcbpel/nxsd"
+            targetNamespace="http://TargetNamespace.com/OutcomeFileReader"
+            xmlns:tns="http://TargetNamespace.com/OutcomeFileReader"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified" nxsd:encoding="ASCII" nxsd:hasHeader="true" nxsd:headerLines="1" nxsd:headerLinesTerminatedBy="${eol}" nxsd:stream="chars" nxsd:version="NXSD">
+  <xsd:element name="outcomes">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="result" minOccurs="1" maxOccurs="unbounded">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="SourcedID" type="xsd:string" nxsd:style="terminated" nxsd:terminatedBy="," nxsd:quotedBy="&quot;">
+              </xsd:element>
+              <xsd:element name="Status" type="xsd:string" nxsd:style="terminated" nxsd:terminatedBy="," nxsd:quotedBy="&quot;">
+              </xsd:element>
+              <xsd:element name="PersonSourcedId" type="xsd:string" nxsd:style="terminated" nxsd:terminatedBy="," nxsd:quotedBy="&quot;">
+              </xsd:element>
+              <xsd:element name="Date" type="xsd:string" nxsd:style="terminated" nxsd:terminatedBy="," nxsd:quotedBy="&quot;">
+              </xsd:element>
+              <xsd:element name="RecordInfo" type="xsd:string" nxsd:style="terminated" nxsd:terminatedBy="," nxsd:quotedBy="&quot;">
+              </xsd:element>
+              <xsd:element name="ResultValueSourcedId" type="xsd:string" nxsd:style="terminated" nxsd:terminatedBy="," nxsd:quotedBy="&quot;">
+              </xsd:element>
+              <xsd:element name="Mode" type="xsd:string" nxsd:style="terminated" nxsd:terminatedBy="," nxsd:quotedBy="&quot;">
+              </xsd:element>
+              <xsd:element name="Result" type="xsd:string" nxsd:style="terminated" nxsd:terminatedBy="${eol}" nxsd:quotedBy="&quot;">
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="enterprise">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="outcomes">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="result" minOccurs="1" maxOccurs="unbounded">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="SourcedID" type="xsd:string" nxsd:style="terminated" nxsd:terminatedBy="," nxsd:quotedBy="&quot;">
+              </xsd:element>
+              <xsd:element name="Status" type="xsd:string" nxsd:style="terminated" nxsd:terminatedBy="," nxsd:quotedBy="&quot;">
+              </xsd:element>
+              <xsd:element name="PersonSourcedId" type="xsd:string" nxsd:style="terminated" nxsd:terminatedBy="," nxsd:quotedBy="&quot;">
+              </xsd:element>
+              <xsd:element name="Date" type="xsd:string" nxsd:style="terminated" nxsd:terminatedBy="," nxsd:quotedBy="&quot;">
+              </xsd:element>
+              <xsd:element name="RecordInfo" type="xsd:string" nxsd:style="terminated" nxsd:terminatedBy="," nxsd:quotedBy="&quot;">
+              </xsd:element>
+              <xsd:element name="ResultValueSourcedId" type="xsd:string" nxsd:style="terminated" nxsd:terminatedBy="," nxsd:quotedBy="&quot;">
+              </xsd:element>
+              <xsd:element name="Mode" type="xsd:string" nxsd:style="terminated" nxsd:terminatedBy="," nxsd:quotedBy="&quot;">
+              </xsd:element>
+              <xsd:element name="Result" type="xsd:string" nxsd:style="terminated" nxsd:terminatedBy="${eol}" nxsd:quotedBy="&quot;">
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

@@ -1,0 +1,39 @@
+<createCourseSectionRequest xmlns="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0">
+   <sourcedId>003280-1-0590-1-10-3349</sourcedId>
+   <courseSection>
+      <sourcedId>003280-1-0590-1-10-3349</sourcedId>
+      <label>
+         <language>en-US</language>
+         <text>Anglo-Saxon English Literature</text>
+      </label>
+      <parentOfferingId>003280-1-0590-1-10</parentOfferingId>
+      <catalogDescription>
+         <shortDescription>Anglo-Saxon Lit</shortDescription>
+         <longDescription>Anglo-Saxon Lit</longDescription>
+      </catalogDescription>
+      <category>
+         <language>en-US</language>
+         <text>LEC</text>
+      </category>
+      <maxNumberofStudents>35</maxNumberofStudents>
+      <org>
+         <orgName>ENGLISH</orgName>
+      </org>
+      <timeFrame>
+         <begin>
+            <date>2007-08-30</date>
+         </begin>
+         <end>
+            <date>2007-12-12</date>
+         </end>
+      </timeFrame>
+      <dataSource>CS</dataSource>
+      <extension>
+         <extensionField>
+            <fieldName>Mode</fieldName>
+            <fieldType>String</fieldType>
+            <fieldValue>A</fieldValue>
+         </extensionField>
+      </extension>
+   </courseSection>
+</createCourseSectionRequest>

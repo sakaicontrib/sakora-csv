@@ -1,0 +1,1615 @@
+<?xml version="1.0"?>
+<wsdl:definitions name="CourseManagementService" targetNamespace="http://xmlns.oracle.com/Enterprise/HCM/services/CourseManagementService" xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:readCourseOfferingsFSPRequest="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" xmlns:readCourseOfferingsFSPResponse="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" xmlns:readCourseOfferingsRequest="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" xmlns:readCourseOfferingsResponse="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" xmlns:readCourseSectionsFSPRequest="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" xmlns:readCourseSectionsFSPResponse="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" xmlns:readCourseSectionsRequest="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" xmlns:readCourseSectionsResponse="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" xmlns:readCourseTemplatesFSPRequest="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" xmlns:readCourseTemplatesFSPResponse="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" xmlns:readCourseTemplatesRequest="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" xmlns:readCourseTemplatesResponse="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" xmlns:readSectionAssocFSPRequest="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" xmlns:readSectionAssocFSPResponse="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" xmlns:readSectionAssocResponse="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" xmlns:readSectionAssociationsRequest="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://xmlns.oracle.com/Enterprise/HCM/services/CourseManagementService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2002/12/policy">
+  <wsp:UsagePolicy wsdl:Required="true"/>
+  <plnk:partnerLinkType name="COURSEMANAGEMENTSERVICE_PartnerLinkType">
+    <plnk:role name="COURSEMANAGEMENTSERVICE_Provider">
+      <plnk:portType name="tns:COURSEMANAGEMENTSERVICE_PortType"/>
+    </plnk:role>
+  </plnk:partnerLinkType>
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:import namespace="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" schemaLocation="readCourseOfferingsRequest.xsd"/>
+      <xsd:import namespace="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" schemaLocation="readCourseOfferingsResponse.xsd"/>
+      <xsd:import namespace="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" schemaLocation="readCourseOfferingsFSPRequest.xsd"/>
+      <xsd:import namespace="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" schemaLocation="readCourseOfferingsFSPResponse.xsd"/>
+      <xsd:import namespace="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" schemaLocation="readCourseSectionsRequest.xsd"/>
+      <xsd:import namespace="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" schemaLocation="readCourseSectionsResponse.xsd"/>
+      <xsd:import namespace="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" schemaLocation="readCourseSectionsFSPRequest.xsd"/>
+      <xsd:import namespace="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" schemaLocation="readCourseSectionsFSPResponse.xsd"/>
+      <xsd:import namespace="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" schemaLocation="readCourseTemplatesRequest.xsd"/>
+      <xsd:import namespace="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" schemaLocation="readCourseTemplatesResponse.xsd"/>
+      <xsd:import namespace="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" schemaLocation="readCourseTemplatesFSPRequest.xsd"/>
+      <xsd:import namespace="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" schemaLocation="readCourseTemplatesFSPResponse.xsd"/>
+      <xsd:import namespace="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" schemaLocation="readSectionAssociationsRequest.xsd"/>
+      <xsd:import namespace="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" schemaLocation="readSectionAssocResponse.xsd"/>
+      <xsd:import namespace="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" schemaLocation="readSectionAssocFSPRequest.xsd"/>
+      <xsd:import namespace="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0" schemaLocation="readSectionAssocFSPResponse.xsd"/>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="request"/>
+  <wsdl:message name="response"/>
+  <wsdl:message name="readCourseOfferingsRequest">
+    <wsdl:documentation>Course offerings snapshot</wsdl:documentation>
+    <wsdl:part element="readCourseOfferingsRequest:readCourseOfferingsRequest" name="parameter"/>
+  </wsdl:message>
+  <wsdl:message name="readCourseOfferingsResponse">
+    <wsdl:documentation>Course offerings Response</wsdl:documentation>
+    <wsdl:part element="readCourseOfferingsResponse:readCourseOfferingsResponse" name="parameter"/>
+  </wsdl:message>
+  <wsdl:message name="readCourseOfferingsFSPRequest">
+    <wsdl:documentation>Course offerings Incremental</wsdl:documentation>
+    <wsdl:part element="readCourseOfferingsFSPRequest:readCourseOfferingsFromSavePointRequest" name="parameter"/>
+  </wsdl:message>
+  <wsdl:message name="readCourseOfferingsFSPResponse">
+    <wsdl:documentation>Course offerings Incremental</wsdl:documentation>
+    <wsdl:part element="readCourseOfferingsFSPResponse:readCourseOfferingsFromSavePointResponse" name="parameter"/>
+  </wsdl:message>
+  <wsdl:message name="readCourseSectionsRequest">
+    <wsdl:part element="readCourseSectionsRequest:readCourseSectionsRequest" name="parameter"/>
+  </wsdl:message>
+  <wsdl:message name="readCourseSectionsResponse">
+    <wsdl:part element="readCourseSectionsResponse:readCourseSectionsResponse" name="parameter"/>
+  </wsdl:message>
+  <wsdl:message name="readCourseSectionsFSPRequest">
+    <wsdl:part element="readCourseSectionsFSPRequest:readCourseSectionsFromSavePointRequest" name="parameter"/>
+  </wsdl:message>
+  <wsdl:message name="readCourseSectionsFSPResponse">
+    <wsdl:part element="readCourseSectionsFSPResponse:readCourseSectionsFromSavePointResponse" name="parameter"/>
+  </wsdl:message>
+  <wsdl:message name="readCourseTemplatesRequest">
+    <wsdl:documentation>Course Templates Snapshot</wsdl:documentation>
+    <wsdl:part element="readCourseTemplatesRequest:readCourseTemplatesRequest" name="parameter"/>
+  </wsdl:message>
+  <wsdl:message name="readCourseTemplatesResponse">
+    <wsdl:documentation>Course Templates Snapshot</wsdl:documentation>
+    <wsdl:part element="readCourseTemplatesResponse:readCourseTemplatesResponse" name="parameter"/>
+  </wsdl:message>
+  <wsdl:message name="readCourseTemplatesFSPRequest">
+    <wsdl:documentation>Course Templates Incremental</wsdl:documentation>
+    <wsdl:part element="readCourseTemplatesFSPRequest:readCourseTemplatesFromSavePointRequest" name="parameter"/>
+  </wsdl:message>
+  <wsdl:message name="readCourseTemplatesFSPResponse">
+    <wsdl:documentation>Course Templates Incremental</wsdl:documentation>
+    <wsdl:part element="readCourseTemplatesFSPResponse:readCourseTemplatesFromSavePointResponse" name="parameter"/>
+  </wsdl:message>
+  <wsdl:message name="readSectionAssociationsRequest">
+    <wsdl:documentation>Section Association Snapshot</wsdl:documentation>
+    <wsdl:part element="readSectionAssociationsRequest:readSectionAssociationsRequest" name="parameter"/>
+  </wsdl:message>
+  <wsdl:message name="readSectionAssocResponse">
+    <wsdl:documentation>Section Association Snapshot</wsdl:documentation>
+    <wsdl:part element="readSectionAssocResponse:readSectionAssociationsResponse" name="parameter"/>
+  </wsdl:message>
+  <wsdl:message name="readSectionAssocFSPRequest">
+    <wsdl:documentation>Section Association increment</wsdl:documentation>
+    <wsdl:part element="readSectionAssocFSPRequest:readSectionAssocationsFromSavePointRequest" name="parameter"/>
+  </wsdl:message>
+  <wsdl:message name="readSectionAssocFSPResponse">
+    <wsdl:documentation>Section Association Increment</wsdl:documentation>
+    <wsdl:part element="readSectionAssocFSPResponse:readSectionAssociationsFromSavePointResponse" name="parameter"/>
+  </wsdl:message>
+  <wsdl:portType name="COURSEMANAGEMENTSERVICE_PortType">
+    <wsdl:operation name="addCourseSectionId">
+      <wsdl:documentation>Add CourseSections</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="changeCourseSectionIdentifier">
+      <wsdl:documentation>changeCourseSectionIdentifier</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="changeCourseOfferingIdentifier">
+      <wsdl:documentation>Change CourseOffering</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="changeCourseTemplateIdentifier">
+      <wsdl:documentation>Change CourseTemplate ID</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="changeSectionAssociationIdentifier">
+      <wsdl:documentation>Change SectionAssociation Id</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="createByProxyCourseSection">
+      <wsdl:documentation>createByProxyCourseSection</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="createByProxyCourseOffering">
+      <wsdl:documentation>CourseOffering By Proxy</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="createByProxyCourseTemplate">
+      <wsdl:documentation>Course Template By Proxy</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="createByProxySectionAssociation">
+      <wsdl:documentation>Section Association By Proxy</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="createCourseOffering">
+      <wsdl:documentation>Create CourseOffering</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="createCourseSectionFromCourseSection">
+      <wsdl:documentation>createCourseSecFromCourseSec</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="createCourseSection">
+      <wsdl:documentation>createCourseSection</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="createCourseTemplate">
+      <wsdl:documentation>Create CourseTemplate</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="createCourseOfferingFromCourseOffering">
+      <wsdl:documentation>Create Offering from Offering</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="createSectionAssociation">
+      <wsdl:documentation>Create SectionAssociation</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="deleteCourseOffering">
+      <wsdl:documentation>Delete CourseOffering</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="deleteCourseSection">
+      <wsdl:documentation>deleteCourseSection</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="deleteCourseTemplate">
+      <wsdl:documentation>Delete CourseTemplate</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="deleteSectionAssociation">
+      <wsdl:documentation>Delete Section Association</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="discoverCourseOfferingIds">
+      <wsdl:documentation>Discover CourseOfferings</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="discoverCourseSectionIds">
+      <wsdl:documentation>discoverCourseSectionIds</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="discoverCourseTemplateIds">
+      <wsdl:documentation>Discover CourseTemplate IDS</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="discoverSectionAssociationIds">
+      <wsdl:documentation>Discover SectionAssociations</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="readAllActiveCourseOfferingIdsForAcademicSession">
+      <wsdl:documentation>All Active Offerings</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="readAllCourseOfferingIds">
+      <wsdl:documentation>Read All CourseOfferings</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="readAllCourseSectionIds">
+      <wsdl:documentation>readAllCourseSectionIds</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="readAllCourseTemplateIds">
+      <wsdl:documentation>Read All CourseTemplateIds</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="readAllSectionAssociationIds">
+      <wsdl:documentation>Read All Section Associations</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseOfferingIdsFromSavePoint">
+      <wsdl:documentation>Read CourseOffering Save Point</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseOfferings">
+      <wsdl:documentation>Service Operation for IMS V2</wsdl:documentation>
+      <wsdl:input message="tns:readCourseOfferingsRequest" name="readCourseOfferingsRequest"/>
+      <wsdl:output message="tns:readCourseOfferingsResponse" name="readCourseOfferingsResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseOfferingsFromSavePoint">
+      <wsdl:documentation>CourseOfferings Save Point</wsdl:documentation>
+      <wsdl:input message="tns:readCourseOfferingsFSPRequest" name="readCourseOfferingsFSPRequest"/>
+      <wsdl:output message="tns:readCourseOfferingsFSPResponse" name="readCourseOfferingsFSPResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseOffering">
+      <wsdl:documentation>Read CourseOffering</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseSections">
+      <wsdl:documentation>Read All the Coursesection</wsdl:documentation>
+      <wsdl:input message="tns:readCourseSectionsRequest" name="readCourseSectionsRequest"/>
+      <wsdl:output message="tns:readCourseSectionsResponse" name="readCourseSectionsResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseSectionsFromSavePoint">
+      <wsdl:documentation>Coursesection Incremental</wsdl:documentation>
+      <wsdl:input message="tns:readCourseSectionsFSPRequest" name="readCourseSectionsFSPRequest"/>
+      <wsdl:output message="tns:readCourseSectionsFSPResponse" name="readCourseSectionsFSPResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseSection">
+      <wsdl:documentation>readCourseSection</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseTemplateIdsFromSavePoint">
+      <wsdl:documentation>CourseTemplate Ids FSP</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseTemplates">
+      <wsdl:documentation>ServiceOperation for IMS V2</wsdl:documentation>
+      <wsdl:input message="tns:readCourseTemplatesRequest" name="readCourseTemplatesRequest"/>
+      <wsdl:output message="tns:readCourseTemplatesResponse" name="readCourseTemplatesResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseTemplatesFromSavePoint">
+      <wsdl:documentation>CourseTemplates Save point</wsdl:documentation>
+      <wsdl:input message="tns:readCourseTemplatesFSPRequest" name="readCourseTemplatesFSPRequest"/>
+      <wsdl:output message="tns:readCourseTemplatesFSPResponse" name="readCourseTemplatesFSPResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseTemplate">
+      <wsdl:documentation>Read CourseTemplate</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseOfferingIdsForCourseTemplate">
+      <wsdl:documentation>Offerings for Templates</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseSectionIdsForCourseOffering">
+      <wsdl:documentation>Read Sections for Offering</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="readSectionAssociations">
+      <wsdl:documentation>Section Association Snapshot</wsdl:documentation>
+      <wsdl:input message="tns:readSectionAssociationsRequest" name="readSectionAssociationsRequest"/>
+      <wsdl:output message="tns:readSectionAssocResponse" name="readSectionAssocResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="readSectionAssociationsFromSavePoint">
+      <wsdl:documentation>SectionAssociations Save Point</wsdl:documentation>
+      <wsdl:input message="tns:readSectionAssocFSPRequest" name="readSectionAssocFSPRequest"/>
+      <wsdl:output message="tns:readSectionAssocFSPResponse" name="readSectionAssocFSPResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="readSectionAssociation">
+      <wsdl:documentation>Read Section Assocation</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="readSectionAssociationIdsFromSavePoint">
+      <wsdl:documentation>Read SectionAssociations</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="removeCourseSectionId">
+      <wsdl:documentation>Remove CourseSection ID</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="replaceCourseOffering">
+      <wsdl:documentation>Replace Course Offering</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="replaceCourseSection">
+      <wsdl:documentation>replaceCourseSection</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="replaceCourseTemplate">
+      <wsdl:documentation>Replace CourseTemplate</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="replaceSectionAssociation">
+      <wsdl:documentation>Replace SectionAssociation</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="updateCourseOffering">
+      <wsdl:documentation>Update Course Offering</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="updateCourseSectionStatus">
+      <wsdl:documentation>updateCourseSectionStatus</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="updateCourseSection">
+      <wsdl:documentation>updateCourseSection</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="updateCourseTemplate">
+      <wsdl:documentation>Update CourseTemplate</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:request" name="request"/>
+    </wsdl:operation>
+    <wsdl:operation name="updateCourseOfferingStatus">
+      <wsdl:documentation>Update CourseOffering Status</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="updateSectionAssociation">
+      <wsdl:documentation>Update SectionAssociation</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="COURSEMANAGEMENTSERVICE_Binding" type="tns:COURSEMANAGEMENTSERVICE_PortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="addCourseSectionId">
+      <soap:operation soapAction="addCourseSectionId" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="changeCourseSectionIdentifier">
+      <soap:operation soapAction="changeCourseSectionIdentifier" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="changeCourseOfferingIdentifier">
+      <soap:operation soapAction="changeCourseOfferingIdentifier" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="changeCourseTemplateIdentifier">
+      <soap:operation soapAction="changeCourseTemplateIdentifier" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="changeSectionAssociationIdentifier">
+      <soap:operation soapAction="changeSectionAssociationIdentifier" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createByProxyCourseSection">
+      <soap:operation soapAction="createByProxyCourseSection" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createByProxyCourseOffering">
+      <soap:operation soapAction="createByProxyCourseOffering" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createByProxyCourseTemplate">
+      <soap:operation soapAction="createByProxyCourseTemplate" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createByProxySectionAssociation">
+      <soap:operation soapAction="createByProxySectionAssociation" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createCourseOffering">
+      <soap:operation soapAction="createCourseOffering" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createCourseSectionFromCourseSection">
+      <soap:operation soapAction="createCourseSectionFromCourseSection" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createCourseSection">
+      <soap:operation soapAction="createCourseSection" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createCourseTemplate">
+      <soap:operation soapAction="createCourseTemplate" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createCourseOfferingFromCourseOffering">
+      <soap:operation soapAction="createCourseOfferingFromCourseOffering" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createSectionAssociation">
+      <soap:operation soapAction="createSectionAssociation" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteCourseOffering">
+      <soap:operation soapAction="deleteCourseOffering" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteCourseSection">
+      <soap:operation soapAction="deleteCourseSection" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteCourseTemplate">
+      <soap:operation soapAction="deleteCourseTemplate" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteSectionAssociation">
+      <soap:operation soapAction="deleteSectionAssociation" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="discoverCourseOfferingIds">
+      <soap:operation soapAction="discoverCourseOfferingIds" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="discoverCourseSectionIds">
+      <soap:operation soapAction="discoverCourseSectionIds" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="discoverCourseTemplateIds">
+      <soap:operation soapAction="discoverCourseTemplateIds" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="discoverSectionAssociationIds">
+      <soap:operation soapAction="discoverSectionAssociationIds" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readAllActiveCourseOfferingIdsForAcademicSession">
+      <soap:operation soapAction="readAllActiveCourseOfferingIdsForAcademicSession" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readAllCourseOfferingIds">
+      <soap:operation soapAction="readAllCourseOfferingIds" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readAllCourseSectionIds">
+      <soap:operation soapAction="readAllCourseSectionIds" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readAllCourseTemplateIds">
+      <soap:operation soapAction="readAllCourseTemplateIds" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readAllSectionAssociationIds">
+      <soap:operation soapAction="readAllSectionAssociationIds" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseOfferingIdsFromSavePoint">
+      <soap:operation soapAction="readCourseOfferingIdsFromSavePoint" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseOfferings">
+      <soap:operation soapAction="readCourseOfferings" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="readCourseOfferingsRequest">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="readCourseOfferingsResponse">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseOfferingsFromSavePoint">
+      <soap:operation soapAction="readCourseOfferingsFromSavePoint" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="readCourseOfferingsFSPRequest">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="readCourseOfferingsFSPResponse">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseOffering">
+      <soap:operation soapAction="readCourseOffering" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseSections">
+      <soap:operation soapAction="readCourseSections" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="readCourseSectionsRequest">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="readCourseSectionsResponse">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseSectionsFromSavePoint">
+      <soap:operation soapAction="readCourseSectionsFromSavePoint" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="readCourseSectionsFSPRequest">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="readCourseSectionsFSPResponse">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseSection">
+      <soap:operation soapAction="readCourseSection" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseTemplateIdsFromSavePoint">
+      <soap:operation soapAction="readCourseTemplateIdsFromSavePoint" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseTemplates">
+      <soap:operation soapAction="readCourseTemplates" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="readCourseTemplatesRequest">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="readCourseTemplatesResponse">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseTemplatesFromSavePoint">
+      <soap:operation soapAction="readCourseTemplatesFromSavePoint" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="readCourseTemplatesFSPRequest">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="readCourseTemplatesFSPResponse">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseTemplate">
+      <soap:operation soapAction="readCourseTemplate" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseOfferingIdsForCourseTemplate">
+      <soap:operation soapAction="readCourseOfferingIdsForCourseTemplate" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readCourseSectionIdsForCourseOffering">
+      <soap:operation soapAction="readCourseSectionIdsForCourseOffering" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readSectionAssociations">
+      <soap:operation soapAction="readSectionAssociations" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="readSectionAssociationsRequest">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="readSectionAssocResponse">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readSectionAssociationsFromSavePoint">
+      <soap:operation soapAction="readSectionAssociationsFromSavePoint" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="readSectionAssocFSPRequest">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="readSectionAssocFSPResponse">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readSectionAssociation">
+      <soap:operation soapAction="readSectionAssociation" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readSectionAssociationIdsFromSavePoint">
+      <soap:operation soapAction="readSectionAssociationIdsFromSavePoint" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="removeCourseSectionId">
+      <soap:operation soapAction="removeCourseSectionId" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="replaceCourseOffering">
+      <soap:operation soapAction="replaceCourseOffering" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="replaceCourseSection">
+      <soap:operation soapAction="replaceCourseSection" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="replaceCourseTemplate">
+      <soap:operation soapAction="replaceCourseTemplate" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="replaceSectionAssociation">
+      <soap:operation soapAction="replaceSectionAssociation" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateCourseOffering">
+      <soap:operation soapAction="updateCourseOffering" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateCourseSectionStatus">
+      <soap:operation soapAction="updateCourseSectionStatus" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateCourseSection">
+      <soap:operation soapAction="updateCourseSection" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateCourseTemplate">
+      <soap:operation soapAction="updateCourseTemplate" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateCourseOfferingStatus">
+      <soap:operation soapAction="updateCourseOfferingStatus" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateSectionAssociation">
+      <soap:operation soapAction="updateSectionAssociation" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CourseManagementService">
+    <wsdl:documentation>Service for CourseManagement</wsdl:documentation>
+    <wsdl:port binding="tns:COURSEMANAGEMENTSERVICE_Binding" name="COURSEMANAGEMENTSERVICE_Port">
+      <soap:address location="http://ORACLE_ENDPOINT"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
+

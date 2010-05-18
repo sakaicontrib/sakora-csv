@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+   <class name="net.unicon.sakora.api.csv.model.SakoraLog" table="SAKORA_LOG">
+      <id name="id" column="ID" type="long">
+         <generator class="native"/>
+      </id>
+      <property name="source" type="string" length="255" column="SOURCE"/>
+      <property name="message" type="text" column="MESSAGE"/>      
+      <property name="time" type="timestamp" column="TIME" />
+   </class>
+</hibernate-mapping>
+

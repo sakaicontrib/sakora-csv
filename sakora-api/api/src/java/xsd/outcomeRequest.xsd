@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://www.oracle.com"
+            targetNamespace="http://www.oracle.com"
+            elementFormDefault="qualified">
+	<xsd:element name="readOutcomes">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="institution" type="xsd:string"/>
+				<xsd:element name="term" type="xsd:string"/>
+				<xsd:element name="classNumber" type="xsd:string"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

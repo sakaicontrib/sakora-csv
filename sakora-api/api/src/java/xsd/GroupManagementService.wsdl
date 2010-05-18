@@ -1,0 +1,448 @@
+<?xml version="1.0"?>
+<wsdl:definitions name="GroupManagementService" targetNamespace="http://xmlns.oracle.com/Enterprise/HCM/services/GROUPMANAGEMENTSERVICE" xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:readGroupsFSPRequest="http://www.imsglobal.org/services/es/gms2p0/xsd/imsgms_v2p0" xmlns:readGroupsFSPResponse="http://www.imsglobal.org/services/es/gms2p0/xsd/imsgms_v2p0" xmlns:readGroupsRequest="http://www.imsglobal.org/services/es/gms2p0/xsd/imsgms_v2p0" xmlns:readGroupsResponse="http://www.imsglobal.org/services/es/gms2p0/xsd/imsgms_v2p0" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://xmlns.oracle.com/Enterprise/HCM/services/GROUPMANAGEMENTSERVICE" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2002/12/policy">
+  <wsp:UsagePolicy wsdl:Required="true"/>
+  <plnk:partnerLinkType name="GROUPMANAGEMENTSERVICE_PartnerLinkType">
+    <plnk:role name="GROUPMANAGEMENTSERVICE_Provider">
+      <plnk:portType name="tns:GROUPMANAGEMENTSERVICE_PortType"/>
+    </plnk:role>
+  </plnk:partnerLinkType>
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:import namespace="http://www.imsglobal.org/services/es/gms2p0/xsd/imsgms_v2p0" schemaLocation="readGroupsFSPRequest.xsd"/>
+      <xsd:import namespace="http://www.imsglobal.org/services/es/gms2p0/xsd/imsgms_v2p0" schemaLocation="readGroupsFSPResponse.xsd"/>
+      <xsd:import namespace="http://www.imsglobal.org/services/es/gms2p0/xsd/imsgms_v2p0" schemaLocation="readGroupsRequest.xsd"/>
+      <xsd:import namespace="http://www.imsglobal.org/services/es/gms2p0/xsd/imsgms_v2p0" schemaLocation="readGroupsResponse.xsd"/>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="request"/>
+  <wsdl:message name="response"/>
+  <wsdl:message name="readGroupsFSPRequest">
+    <wsdl:part element="readGroupsFSPRequest:readGroupsFromSavePointRequest" name="parameter"/>
+  </wsdl:message>
+  <wsdl:message name="readGroupsFSPResponse">
+    <wsdl:part element="readGroupsFSPResponse:readGroupsFromSavePointResponse" name="parameter"/>
+  </wsdl:message>
+  <wsdl:message name="readGroupsRequest">
+    <wsdl:part element="readGroupsRequest:readGroupsRequest" name="parameter"/>
+  </wsdl:message>
+  <wsdl:message name="readGroupsResponse">
+    <wsdl:part element="readGroupsResponse:readGroupsResponse" name="parameter"/>
+  </wsdl:message>
+  <wsdl:portType name="GROUPMANAGEMENTSERVICE_PortType">
+    <wsdl:operation name="addGroupRelationship">
+      <wsdl:documentation>addGroupRelationship</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="changeGroupIdentifier">
+      <wsdl:documentation>changeGroupIdentifier</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="createByProxyGroup">
+      <wsdl:documentation>createByProxyGroup</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="createGroup">
+      <wsdl:documentation>createGroup</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="deleteGroup">
+      <wsdl:documentation>deleteGroup</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="discoverGroupIds">
+      <wsdl:documentation>discoverGroupIds</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="readAllGroupIds">
+      <wsdl:documentation>readAllGroupIds</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="readGroupIdsForPerson">
+      <wsdl:documentation>readGroupIdsForPerson</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="readGroupIdsFromSavePoint">
+      <wsdl:documentation>readGroupIdsFromSavePoint</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="readGroupsFromSavePoint">
+      <wsdl:documentation>READGROUPSFROMSAVEPOINT</wsdl:documentation>
+      <wsdl:input message="tns:readGroupsFSPRequest" name="readGroupsFSPRequest"/>
+      <wsdl:output message="tns:readGroupsFSPResponse" name="readGroupsFSPResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="readGroups">
+      <wsdl:documentation>Group Snapshot SrvOperation</wsdl:documentation>
+      <wsdl:input message="tns:readGroupsRequest" name="readGroupsRequest"/>
+      <wsdl:output message="tns:readGroupsResponse" name="readGroupsResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="readGroup">
+      <wsdl:documentation>readGroup</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="removeGroupRelationship">
+      <wsdl:documentation>removeGroupRelationship</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="replaceGroup">
+      <wsdl:documentation>replaceGroup</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+    <wsdl:operation name="updateGroup">
+      <wsdl:documentation>updateGroup</wsdl:documentation>
+      <wsdl:input message="tns:request" name="request"/>
+      <wsdl:output message="tns:response" name="response"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="GROUPMANAGEMENTSERVICE_Binding" type="tns:GROUPMANAGEMENTSERVICE_PortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="addGroupRelationship">
+      <soap:operation soapAction="addGroupRelationship" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="changeGroupIdentifier">
+      <soap:operation soapAction="changeGroupIdentifier" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createByProxyGroup">
+      <soap:operation soapAction="createByProxyGroup" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createGroup">
+      <soap:operation soapAction="createGroup" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteGroup">
+      <soap:operation soapAction="deleteGroup" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="discoverGroupIds">
+      <soap:operation soapAction="discoverGroupIds" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readAllGroupIds">
+      <soap:operation soapAction="readAllGroupIds" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readGroupIdsForPerson">
+      <soap:operation soapAction="readGroupIdsForPerson" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readGroupIdsFromSavePoint">
+      <soap:operation soapAction="readGroupIdsFromSavePoint" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readGroupsFromSavePoint">
+      <soap:operation soapAction="readGroupsFromSavePoint" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="readGroupsFSPRequest">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="readGroupsFSPResponse">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readGroups">
+      <soap:operation soapAction="readGroups" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="readGroupsRequest">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="readGroupsResponse">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="readGroup">
+      <soap:operation soapAction="readGroup" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="removeGroupRelationship">
+      <soap:operation soapAction="removeGroupRelationship" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="replaceGroup">
+      <soap:operation soapAction="replaceGroup" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateGroup">
+      <soap:operation soapAction="updateGroup" style="document"/>
+      <wsp:Policy wsu:Id="UsernameTokenSecurityPolicyPasswordOptional" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsp:ExactlyOne>
+          <wsp:All>
+            <wsse:SecurityToken wsp:Usage="wsp:Required" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+              <wsse:TokenType>wsse:UserNameToken</wsse:TokenType>
+              <Claims>
+                <SubjectName MatchType="wsse:Exact"/>
+                <UsePassword wsp:Usage="wsp:Optional"/>
+              </Claims>
+            </wsse:SecurityToken>
+          </wsp:All>
+        </wsp:ExactlyOne>
+      </wsp:Policy>
+      <wsdl:input name="request">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="response">
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="GROUPMANAGEMENTSERVICE">
+    <wsdl:documentation>Group Snapshot Service</wsdl:documentation>
+    <wsdl:port binding="tns:GROUPMANAGEMENTSERVICE_Binding" name="GROUPMANAGEMENTSERVICE_Port">
+      <soap:address location="http://ORACLE_ENDPOINT"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
+

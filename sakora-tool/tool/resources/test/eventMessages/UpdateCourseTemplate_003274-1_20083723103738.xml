@@ -1,0 +1,31 @@
+<?xml version="1.0"?><updateCourseTemplateRequest xmlns="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0">
+   <sourcedId>003274-1</sourcedId>
+   <courseTemplate>
+      <sourcedId>003274-1</sourcedId>
+      <label>
+         <language>en-US</language>
+         <text>003274-1</text>
+      </label>
+      <title>
+         <language>en-US</language>
+         <text>Survey of British Literature</text>
+      </title>
+      <catalogDescription>
+         <shortDescription>Surv Brit Lit - 01012008</shortDescription>
+         <longDescription>Surv Brit Lit - 01012008</longDescription>
+      </catalogDescription>
+      <courseNumber>
+         <language>en-US</language>
+         <text>ENGLLIT  100</text>
+      </courseNumber>
+      <status>Active</status>
+      <dataSource>CS</dataSource>
+      <extension>
+         <extensionField>
+            <fieldName>Mode</fieldName>
+            <fieldType>String</fieldType>
+            <fieldValue>C</fieldValue>
+         </extensionField>
+      </extension>
+   </courseTemplate>
+</updateCourseTemplateRequest>

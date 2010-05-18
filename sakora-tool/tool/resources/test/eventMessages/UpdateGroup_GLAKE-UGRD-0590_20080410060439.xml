@@ -1,0 +1,43 @@
+<?xml version="1.0"?><updateGroupRequest xmlns="http://www.imsglobal.org/services/es/gms2p0/xsd/imsgms_v2p0">
+   <sourcedId>GLAKE-UGRD-0590</sourcedId>
+   <group>
+      <sourcedId>GLAKE-UGRD-0590</sourcedId>
+      <groupType>
+         <scheme>
+            <language>en-US</language>
+            <text>SAIP</text>
+         </scheme>
+         <typevalue>
+            <type>
+               <language>en-US</language>
+               <text>TERM</text>
+            </type>
+            <level>
+               <language>en-US</language>
+               <text>3</text>
+            </level>
+         </typevalue>
+      </groupType>
+      <timeframe>
+         <begin>
+            <date>2007-08-30</date>
+         </begin>
+         <end>
+            <date>2008-05-10</date>
+         </end>
+      </timeframe>
+      <description>
+         <shortDescription>2007 Fall</shortDescription>
+         <longDescription>2007 Fall</longDescription>
+      </description>
+      <dataSource>CS</dataSource>
+      <dataSource>CS</dataSource>
+      <extension>
+         <extensionField>
+            <fieldName>Mode</fieldName>
+            <fieldType>String</fieldType>
+            <fieldValue>C</fieldValue>
+         </extensionField>
+      </extension>
+   </group>
+</updateGroupRequest>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+   <class name="net.unicon.sakora.api.csv.model.Membership" table="SAKORA_MEMBERSHIP">
+      <id name="id" column="ID" type="long">
+         <generator class="native"/>
+      </id>
+      <property name="userEid" type="string" length="255" column="USER_EID"/>
+      <property name="containerEid" type="string" length="255" column="COURSE_EID" />
+      <property name="role" type="string" length="255" column="ROLE" />
+      <property name="mode" type="string" length="8" column="MODE" />      
+      <property name="inputTime" type="timestamp" column="INPUT_TIME" />
+   </class>
+   
+   <!-- database-object>
+       <create>create index IDX_SAKORA_MEMBERSHIP_INPUT_TIME_MODE on SAKORA_MEMBERSHIP (INPUT_TIME,MODE)</create>
+       <drop></drop>
+   </database-object -->
+   
+   <database-object>
+       <create>create index SAKORA_MEMBERSHIP_SEARCH_IDX on SAKORA_MEMBERSHIP (INPUT_TIME, MODE, USER_EID, COURSE_EID)</create>
+       <drop></drop>
+       <dialect-scope name="org.hibernate.dialect.MySQLDialect"/> 
+   </database-object>
+</hibernate-mapping>
+

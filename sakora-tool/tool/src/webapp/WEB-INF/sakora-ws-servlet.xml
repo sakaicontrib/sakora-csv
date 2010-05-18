@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Sakai Foundation under one or more contributor
+  license agreements. See the NOTICE file distributed with this
+  work for additional information regarding copyright ownership.
+  The Sakai Foundation licenses this file to you under the Apache
+  License, Version 2.0 (the "License"); you may not use this file
+  except in compliance with the License. You may obtain a copy of
+  the License at:
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on
+  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied. See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<!--  exposing the static wsdl document -->
+	<bean id="courseMgmtServices" class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
+	    <constructor-arg value="/WEB-INF/wsdl/CourseManagementService.wsdl"/>
+	</bean>
+
+	<bean id="groupMgmtServices" class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
+	    <constructor-arg value="/WEB-INF/wsdl/GroupManagementService.wsdl"/>
+	</bean>
+
+	<bean id="membershipMgmtServices" class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
+	    <constructor-arg value="/WEB-INF/wsdl/MembershipManagementService.wsdl"/>
+	</bean>
+
+	<bean id="personMgmtServices" class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
+	    <constructor-arg value="/WEB-INF/wsdl/PersonManagementService.wsdl"/>
+	</bean>
+
+	<!--  enable payload annotation endpoint mapping -->
+
+	<bean class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping"
+		lazy-init="false">
+		<property name="order" value="1"/>
+	</bean>
+
+
+	<!-- marshaller bean definitions for the xml files -->
+	<bean id="cmsMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+		<property name="contextPath" 
+			value="com.oracle.xmlns.enterprise.hcm.services.cms"/>
+	</bean>
+
+	<bean id="gmsMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+		<property name="contextPath" 
+			value="com.oracle.xmlns.enterprise.hcm.services.gms"/>
+	</bean>
+
+	<bean id="pmsMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+		<property name="contextPath" 
+			value="com.oracle.xmlns.enterprise.hcm.services.pms"/>
+	</bean>
+	
+	<bean id="mmsMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+		<property name="contextPath" 
+			value="com.oracle.xmlns.enterprise.hcm.services.mms"/>
+	</bean>
+	
+	
+	<bean id="imsEventServiceEndpoint" 
+		class="net.unicon.sakora.tool.ws.server.ImsEventServiceEndpoint" 
+		abstract="true"
+		init-method="init">
+	</bean>
+ 	
+	<bean id="courseManagementEventServiceEndpoint" 
+		class="net.unicon.sakora.tool.ws.server.CourseManagementEventServiceEndpoint"
+		parent="imsEventServiceEndpoint">
+		<property name="courseManagementHandler">
+			<bean class="net.unicon.sakora.tool.ws.handler.JMSCourseManagementHandler">
+				<property name="marshaller" ref="cmsMarshaller"/>
+				<property name="messageProducer" ref="net.unicon.sakora.api.queue.MessageProducer"/>
+			</bean>
+		</property>
+	</bean>
+ 	
+	<bean id="groupManagementEventServiceEndpoint" 
+		class="net.unicon.sakora.tool.ws.server.GroupManagementEventServiceEndpoint"
+		parent="imsEventServiceEndpoint">
+		<property name="groupManagementHandler">
+			<bean class="net.unicon.sakora.tool.ws.handler.JMSGroupManagementHandler">
+				<property name="marshaller" ref="gmsMarshaller"/>
+				<property name="messageProducer" ref="net.unicon.sakora.api.queue.MessageProducer"/>
+			</bean>
+		</property>
+	</bean>
+ 	
+	<bean id="personManagementEventServiceEndpoint" 
+		class="net.unicon.sakora.tool.ws.server.PersonManagementEventServiceEndpoint"
+		parent="imsEventServiceEndpoint">
+		<property name="personManagementHandler">
+			<bean class="net.unicon.sakora.tool.ws.handler.JMSPersonManagementHandler">
+				<property name="marshaller" ref="pmsMarshaller"/>
+				<property name="messageProducer" ref="net.unicon.sakora.api.queue.MessageProducer"/>
+			</bean>
+		</property>
+	</bean>
+ 	
+	<bean id="memberManagementEventServiceEndpoint" 
+		class="net.unicon.sakora.tool.ws.server.MembershipManagementEventServiceEndpoint"
+		parent="imsEventServiceEndpoint">
+		<property name="membershipManagementHandler">
+			<bean class="net.unicon.sakora.tool.ws.handler.JMSMembershipManagementHandler">
+				<property name="marshaller" ref="mmsMarshaller"/>
+				<property name="messageProducer" ref="net.unicon.sakora.api.queue.MessageProducer"/>
+			</bean>
+		</property>
+	</bean>
+ 	
+	<!--  and the dispatch to regular controller for the Spring MVC -->
+	<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
+
+</beans>

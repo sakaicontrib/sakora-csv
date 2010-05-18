@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Sakai Foundation under one or more contributor
+  license agreements. See the NOTICE file distributed with this
+  work for additional information regarding copyright ownership.
+  The Sakai Foundation licenses this file to you under the Apache
+  License, Version 2.0 (the "License"); you may not use this file
+  except in compliance with the License. You may obtain a copy of
+  the License at:
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on
+  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied. See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="propertyConfigurer" 
+ 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    		<property name="locations">
+    			<list>
+    				<value>local.properties</value>
+    				<value>sakai.properties</value>
+    			</list>
+    		</property>
+	</bean>
+	
+    <bean id="net.unicon.sakora.api.SakoraService" 
+		class="net.unicon.sakora.impl.SakoraServiceImpl"
+		lazy-init="false" />
+
+    <bean id="URLHandlingTemplateImpl" class="net.unicon.sakora.impl.handler.url.URLHandlingTemplateImpl">
+    </bean>
+
+    <bean id="FtpHandlingTemplateImpl" class="net.unicon.sakora.impl.handler.url.FtpHandlingTemplateImpl">
+    	<property name="userId" value="test"/>
+    	<property name="password" value="test"/>
+    </bean>
+
+    <bean id="XMLStreamHandlingCallbackTarget" class="net.unicon.sakora.impl.handler.xml.XMLStreamHandlingCallbackImpl">
+        <property name="messageProducer" ref="net.unicon.sakora.api.queue.MessageProducer"/>
+        <property name="childDepth" value="2"/>
+        <property name="inputEncoding" value="UTF-8"/>
+    </bean>
+   
+<!--
+	<bean id="jmsTransactionManager" class="org.springframework.jms.connection.JmsTransactionManager">
+		<property name="connectionFactory" ref="net.unicon.sakora.api.queue.JmsConnectionFactory"/>
+	</bean>
+-->
+
+	<bean id="XMLStreamHandlingCallback" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<list><value>net.unicon.sakora.api.handler.xml.XMLStreamHandlingCallback</value></list>
+		</property>
+		<property name="target"><ref local="XMLStreamHandlingCallbackTarget"/></property>
+		<!-- 
+		<property name="transactionManager"><ref local="testTransactionManager"/></property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="handleStream*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+		-->
+	</bean>
+   
+    <bean id="net.unicon.sakora.api.queue.MessageProducer" class="net.unicon.sakora.impl.msg.SystenOutMessageProducerImpl">
+    </bean>
+
+    <bean id="net.unicon.sakora.impl.queue.MessageListenerImpl"
+		class="net.unicon.sakora.impl.queue.MessageListenerImpl">
+		<property name="imsContentDelegator" ref="net.unicon.sakora.api.ims.ImsContentDelegator"/>
+	</bean>
+    
+    <bean id="net.unicon.sakora.api.ims.ImsContentDelegator" class="net.unicon.sakora.impl.ims.ImsContentDelegatorImpl">
+    	<property name="elementToCreatorMap">
+    		<map>
+				<entry key="group"><ref	bean="net.unicon.sakora.impl.ims.ImsCreateGroup" /></entry>
+				<entry key="coursetemplate"><ref bean="net.unicon.sakora.impl.ims.ImsCreateCourseTemplate" /></entry>
+				<entry key="courseoffering"><ref bean="net.unicon.sakora.impl.ims.ImsCreateCourseOffering" /></entry>
+				<entry key="coursesection"><ref bean="net.unicon.sakora.impl.ims.ImsCreateCourseSection" /></entry>
+				<entry key="sectionassociation"><ref bean="net.unicon.sakora.impl.ims.ImsCreateSectionAssociation" /></entry>
+				<entry key="person"> <ref bean="net.unicon.sakora.impl.ims.ImsCreatePerson" /></entry>
+				<entry key="membership"><ref bean="net.unicon.sakora.impl.ims.ImsCreateMembership" /></entry>
+    		</map>
+    	</property>
+    </bean>
+
+<!-- 
+	<bean id="net.unicon.sakora.api.ims.ImsContentValidator"
+		class="net.unicon.sakora.impl.validator.XMLFileValidator">
+		<property name="xsdMap">
+			<map>
+				<entry key="group"><ref bean="GroupManagementService.xsd.bean" /></entry>
+				<entry key="coursetemplate"><ref bean="CourseManagementService.xsd.bean"/></entry>
+				<entry key="courseoffering"><ref bean="CourseManagementService.xsd.bean"/></entry>
+				<entry key="coursesection"><ref bean="CourseManagementService.xsd.bean"/></entry>
+				<entry key="sectionassociation"><ref bean="CourseManagementService.xsd.bean" /></entry>
+				<entry key="person"><ref bean="PersonManagementService.xsd.bean" /></entry>
+				<entry key="membership"><ref bean="MembershipManagementService.xsd.bean" /></entry>
+			</map>
+		</property>
+	</bean>
+ -->
+ 
+   <bean id="GroupManagementService.xsd.bean" class="java.lang.String">
+   	  <constructor-arg value="xsd/GroupManagementService.xsd" type="java.lang.String" />
+   </bean>	    
+   <bean id="CourseManagementService.xsd.bean" class="java.lang.String">
+   	  <constructor-arg value="xsd/CourseManagementService.xsd" type="java.lang.String" />
+   </bean>	    
+   <bean id="PersonManagementService.xsd.bean" class="java.lang.String">
+   	  <constructor-arg value="xsd/PersonManagementService.xsd" type="java.lang.String" />
+   </bean>	    
+   <bean id="MembershipManagementService.xsd.bean" class="java.lang.String">
+   	  <constructor-arg value="xsd/MembershipManagementService.xsd" type="java.lang.String" />
+   </bean>	    
+
+  <bean id="net.unicon.sakora.file.ImsEsSyncService" 
+      class="net.unicon.sakora.impl.ImsEsSyncServiceFileImpl"
+      lazy-init="false" >
+      <property name="urlHandlingTemplate">
+         <ref bean="URLHandlingTemplateImpl"/>
+      </property>
+      <property name="xmlStreamHandlingCallback">
+         <ref bean="XMLStreamHandlingCallback"/>
+      </property>
+      <property name="dataFolder">
+      	<bean id="location" class="java.io.File">
+      		<constructor-arg value="${sakora.datafolder}" type="java.lang.String" />
+      	</bean>
+      </property>
+  </bean>
+  
+  <bean id="net.unicon.sakora.api.ws.ImsEsSyncService" 
+      class="net.unicon.sakora.impl.ws.client.ImsEsSyncServiceWsClientImpl"
+      lazy-init="false" >
+		<property name="webServiceTemplate">
+			<bean class="org.springframework.ws.client.core.WebServiceTemplate">
+				<property name="messageFactory">
+					<bean class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>	
+<!-- 					<bean class="org.springframework.ws.soap.axiom.AxiomSoapMessageFactory"/>   -->
+				</property>
+			</bean>
+		</property>
+      <property name="urlHandlingTemplate">
+         <ref bean="URLHandlingTemplateImpl"/>
+      </property>
+      <property name="xmlStreamHandlingCallback">
+         <ref bean="XMLStreamHandlingCallback"/>
+      </property>
+      <property name="saipEndpoint">
+         <value>${sakora.saipEndpoint}</value>
+      </property>
+      <property name="requestDocumentMap">
+         <map>
+            <entry key="readCourseTemplates" value="net/unicon/sakora/impl/xml/readCourseTemplatesRequest.xml"/>
+            <entry key="readCourseTemplatesFromSavePoint" value="net/unicon/sakora/impl/xml/readCourseTemplatesFromSavePointRequest.xml"/>
+            <entry key="readCourseOfferings" value="net/unicon/sakora/impl/xml/readCourseOfferingsRequest.xml"/>
+            <entry key="readCourseOfferingsFromSavePoint" value="net/unicon/sakora/impl/xml/readCourseOfferingsFromSavePointRequest.xml"/>
+            <entry key="readCourseSections" value="net/unicon/sakora/impl/xml/readCourseSectionsRequest.xml"/>
+            <entry key="readCourseSectionsFromSavePoint" value="net/unicon/sakora/impl/xml/readCourseSectionsFromSavePointRequest.xml"/>
+            <entry key="readSectionAssociations" value="net/unicon/sakora/impl/xml/readSectionAssociationsRequest.xml"/>
+            <entry key="readSectionAssociationsFromSavePoint" value="net/unicon/sakora/impl/xml/readSectionAssociationsFromSavePointRequest.xml"/>
+            <entry key="readPersons" value="net/unicon/sakora/impl/xml/readPersonsRequest.xml"/>
+            <entry key="readPersonsFromSavePoint" value="net/unicon/sakora/impl/xml/readPersonsFromSavePointRequest.xml"/>
+            <entry key="readGroups" value="net/unicon/sakora/impl/xml/readGroupsRequest.xml"/>
+            <entry key="readGroupsFromSavePoint" value="net/unicon/sakora/impl/xml/readGroupsFromSavePointRequest.xml"/>
+            <entry key="readMemberships" value="net/unicon/sakora/impl/xml/readMembershipsRequest.xml"/>
+            <entry key="readMembershipsFromSavePoint" value="net/unicon/sakora/impl/xml/readMembershipsFromSavePointRequest.xml"/>
+         </map>
+      </property>   
+      <property name="documentInfoMap">
+         <map>
+            <entry key="dataFile_xpath" value="//dataFile"/>
+            <entry key="savepoint_xpath" value="//savePoint"/>
+            <entry key="from_savepoint" value="//fromSavePoint"/>
+            <entry key="namespace" value=""/>
+            <entry key="prefix" value=""/>
+         </map>
+      </property>
+      <property name="soapActionMap">
+          <map>
+            <entry key="readCourseTemplates" value="readCourseTemplates"/>
+            <entry key="readCourseTemplatesFromSavePoint" value="readCourseTemplatesFromSavePoint"/>
+            <entry key="readCourseOfferings" value="readCourseOfferings"/>
+            <entry key="readCourseOfferingsFromSavePoint" value="readCourseOfferingsFromSavePoint"/>
+            <entry key="readCourseSections" value="readCourseSections"/>
+            <entry key="readCourseSectionsFromSavePoint" value="readCourseSectionsFromSavePoint"/>
+            <entry key="readSectionAssociations" value="readSectionAssociations"/>
+            <entry key="readSectionAssociationsFromSavePoint" value="readSectionAssociationsFromSavePoint"/>
+            <entry key="readPersons" value="readPersons"/>
+            <entry key="readPersonsFromSavePoint" value="readPersonsFromSavePoint"/>
+            <entry key="readGroups" value="readGroups"/>
+            <entry key="readGroupsFromSavePoint" value="readGroupsFromSavePoint"/>
+            <entry key="readMemberships" value="readMemberships"/>
+            <entry key="readMembershipsFromSavePoint" value="readMembershipsFromSavePoint"/>
+          </map>
+      </property>
+  </bean>
+      
+   <!-- IMS to Course Management handlers -->
+   <bean id="net.unicon.sakora.impl.ims.ImsEntityCreatorFactory"
+   		class="net.unicon.sakora.impl.ims.ImsEntityCreatorFactory"
+        lazy-init="false">
+   		<property name="imsCreatorBeans">
+   			<map>
+				<entry key="Group"><ref bean="net.unicon.sakora.impl.ims.ImsCreateGroup" /></entry>
+				<entry key="CourseTemplate"><ref bean="net.unicon.sakora.impl.ims.ImsCreateCourseTemplate" /></entry>
+				<entry key="CourseOffering"><ref bean="net.unicon.sakora.impl.ims.ImsCreateCourseOffering" /></entry>
+				<entry key="CourseSection"><ref bean="net.unicon.sakora.impl.ims.ImsCreateCourseSection" /></entry>
+				<entry key="SectionAssociation"><ref bean="net.unicon.sakora.impl.ims.ImsCreateSectionAssociation" /></entry>
+				<entry key="Person"><ref bean="net.unicon.sakora.impl.ims.ImsCreatePerson" /></entry>
+				<entry key="Membership"><ref bean="net.unicon.sakora.impl.ims.ImsCreateMembership" /></entry> 				
+   			</map>
+   		</property>
+   </bean>
+   <bean id="net.unicon.sakora.impl.ims.ImsCreateBase" abstract="true"
+   		class="net.unicon.sakora.impl.ims.ImsCreateBase">
+   	</bean>
+	<bean id="net.unicon.sakora.impl.ims.ImsCreateGroup"
+		class="net.unicon.sakora.impl.ims.ImsCreateGroup"
+		parent="net.unicon.sakora.impl.ims.ImsCreateBase"
+		init-method="init">
+	</bean> 
+	<bean id="net.unicon.sakora.impl.ims.ImsCreateCourseTemplate"
+		class="net.unicon.sakora.impl.ims.ImsCreateCourseTemplate"
+		parent="net.unicon.sakora.impl.ims.ImsCreateBase"
+		init-method="init">
+	</bean> 
+	<bean id="net.unicon.sakora.impl.ims.ImsCreateCourseOffering"
+		class="net.unicon.sakora.impl.ims.ImsCreateCourseOffering"
+		parent="net.unicon.sakora.impl.ims.ImsCreateBase"
+		init-method="init">
+	</bean> 
+	<bean id="net.unicon.sakora.impl.ims.ImsCreateCourseSection"
+		class="net.unicon.sakora.impl.ims.ImsCreateCourseSection"
+		parent="net.unicon.sakora.impl.ims.ImsCreateBase"
+		init-method="init">
+	</bean> 
+	<bean id="net.unicon.sakora.impl.ims.ImsCreateSectionAssociation"
+		class="net.unicon.sakora.impl.ims.ImsCreateSectionAssociation"
+		parent="net.unicon.sakora.impl.ims.ImsCreateBase"
+		init-method="init">
+	</bean> 
+	<bean id="net.unicon.sakora.impl.ims.ImsCreatePerson"
+		class="net.unicon.sakora.impl.ims.ImsCreatePerson"
+		parent="net.unicon.sakora.impl.ims.ImsCreateBase"
+		init-method="init">
+	</bean> 
+	<bean id="net.unicon.sakora.impl.ims.ImsCreateMembership"
+		class="net.unicon.sakora.impl.ims.ImsCreateMembership"
+		parent="net.unicon.sakora.impl.ims.ImsCreateBase"
+		init-method="init">
+	</bean> 
+ 
+   	<!-- Oracle data loader job bean using the web service implementation -->
+	<bean id="dataLoaderJobBean"
+		class="net.unicon.sakora.impl.jobs.DataLoaderJobBean"
+		init-method="init" destroy-method="destroy">
+		<!-- scope="singleton"> -->
+		<property name="sakoraService">
+			<ref bean="net.unicon.sakora.api.SakoraService" />
+		</property>
+		<property name="imsEsSyncService">
+			<ref bean="net.unicon.sakora.api.ws.ImsEsSyncService" />
+		</property>
+		<!-- this list just sets the processing order -->
+		<property name="taskList">
+			<list>
+				<value>Group</value>
+				<value>CourseTemplate</value>
+				<value>CourseOffering</value>
+				<value>CourseSection</value>
+				<value>SectionAssociation</value>
+				<value>Person</value>
+				<value>Membership</value>
+				<value>FailTest</value>
+			</list>
+		</property>
+	</bean>
+      
+</beans>

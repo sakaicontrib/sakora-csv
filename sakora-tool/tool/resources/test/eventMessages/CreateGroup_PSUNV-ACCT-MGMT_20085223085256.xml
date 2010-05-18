@@ -1,0 +1,44 @@
+<?xml version="1.0"?><createGroupRequest xmlns="http://www.imsglobal.org/services/es/gms2p0/xsd/imsgms_v2p0">
+   <sourcedId>PSUNV-ACCT-MGMT</sourcedId>
+   <group>
+      <sourcedId>PSUNV-ACCT-MGMT</sourcedId>
+      <groupType>
+         <scheme>
+            <language>en-US</language>
+            <text>SAIP</text>
+         </scheme>
+         <typevalue>
+            <type>
+               <language>en-US</language>
+               <text>DEPARTMENT</text>
+            </type>
+            <level>
+               <language>en-US</language>
+               <text>2</text>
+            </level>
+         </typevalue>
+      </groupType>
+      <org>
+         <orgName>
+            <language>en-US</language>
+            <text>Accounting - MGMT School</text>
+         </orgName>
+         <id>
+            <language>en-US</language>
+            <text>ACCT-MGMT</text>
+         </id>
+      </org>
+      <description>
+         <shortDescription>Acct-MGMT</shortDescription>
+         <longDescription>Accounting - MGMT School</longDescription>
+      </description>
+      <dataSource>CS</dataSource>
+      <extension>
+         <extensionField>
+            <fieldName>Mode</fieldName>
+            <fieldType>String</fieldType>
+            <fieldValue>A</fieldValue>
+         </extensionField>
+      </extension>
+   </group>
+</createGroupRequest>

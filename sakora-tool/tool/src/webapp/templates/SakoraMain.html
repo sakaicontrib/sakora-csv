@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+  Licensed to the Sakai Foundation under one or more contributor
+  license agreements. See the NOTICE file distributed with this
+  work for additional information regarding copyright ownership.
+  The Sakai Foundation licenses this file to you under the Apache
+  License, Version 2.0 (the "License"); you may not use this file
+  except in compliance with the License. You may obtain a copy of
+  the License at:
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on
+  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied. See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:rsf="http://ponder.org.uk/rsf">
+<head>
+<script type="text/javascript" rsf:id="scr=portal-matter" language="JavaScript" src="/library/js/headscripts.js"></script>
+<link href="/library/skin/tool_base.css" rsf:id="scr=portal-matter" type="text/css" rel="stylesheet" media="all" />
+<link href="/library/skin/default/tool.css" rsf:id="scr=portal-matter" type="text/css" rel="stylesheet" media="all" />
+<link rel="stylesheet" href="../css/Sample.css" type="text/css"/>
+<title>Sakora Web Services Test Page</title>
+</head>
+<body>
+<div class="portletBody">
+
+<h3>Configuration of the Sakora Integration Services</h3>
+<table border="0" cellpadding="0" cellspacing="0">
+  <tr><td>Web service sync class implementation:</td><td rsf:id="wsSyncClass">WS Sync Class</td></tr>
+  <tr><td>Web service endpoint:</td><td rsf:id="saipEndpoint">saipEndpoint</td></tr>
+  <tr><td><a rsf:id="testWebService" href="dosomething">Test Web Service</a></td></tr>
+  <tr><td>&nbsp;</td></tr>
+  <tr>
+    <td>Log file: <span rsf:id="fileName">FileName </span> (<span rsf:id="fileSize">11111</span> bytes) 
+    &nbsp;&nbsp;<a rsf:id="viewLogFile" href="viewFileContent" target="logFile">View File</a> 
+    </td>
+  </tr>
+</table>
+
+
+<div rsf:id="resultMessage"><b>Exception during execution</b></div>
+<span rsf:id="exceptionMessage">Exception Message</span>
+<table border="0" cellpadding="0" cellspacing="0">
+  <tr rsf:id="exceptionRow:">
+     <td rsf:id="stackElement">stackElement</td>
+  </tr>
+</table>
+</div>
+</body>
+</html>

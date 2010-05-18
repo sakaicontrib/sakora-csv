@@ -1,0 +1,822 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<xs:schema xmlns="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://www.imsglobal.org/services/es/gms2p0/xsd/imsgms_v2p0"
+    xmlns:gms="http://www.imsglobal.org/services/es/gms2p0/xsd/imsgms_v2p0"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    version="IMS GMS 2.0"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+    <xs:annotation>
+        <xs:documentation>
+            XSD Data File Information
+            -------------------------
+            Author:         Colin Smythe
+            Date:           31st October, 2007
+            Version:        Draft 1.0
+            Status:         CM/DN Release
+            Description:    The service realisation of the Group Management Service.  The core data model consists 
+                            of: Group, GroupType andRelaltionship.
+
+            History:        Version 1.0: The first formal release of this PSM binding.
+
+            Copyright:      2005-2007 (c) IMS Global Learning Consortium Inc.  All Rights Reserved.
+                            IMS Global Learning Consortium, Inc. (IMS/GLC) is publishing the information
+                            contained in this binding ("Specification") for purposes of scientific
+                            experimental and scholarly collaboration only.  IMS/GLC makes no warranty or 
+                            representation regarding the accuracy or completeness of the Specification.
+                            This material is provided on an "As Is" and "As Available basis".
+                            The Specification is at all times subject to change and revision without
+                            notice. It is your sole responsibility to evaluate the usefulness, accuracy
+                            and completeness of the Specification as it relates to you.  IMS/GLC would
+                            appreciate receiving your comments and suggestions.  Please contact IMS/GLC
+                            through our website at: http://www.imsglobal.org.
+
+            UML Source File Information
+            ---------------------------
+            Choreography:     Sync
+
+            Source XSLT File Information
+            ----------------------------
+            XSL Generator:    UMLtoWSDLTransformv0p8.xsl
+            XSLT Processor:   Xalan
+            Release:          1.0 Beta 2
+            Date:             31st March, 2007
+
+            Auto-generation Tool
+            --------------------
+            This WSDL/XSD was auto-generated using the IMS WSDL/XSD auto-generation tool.  While every attempt
+            has been made to ensure that this tool auto-generates the XSDs correctly, users should be aware
+            that this is an experimental tool.  Permission is given to make use of this tool.  IMS makes no
+            claim on the materials created by third party users of this tool.  Details on how to use this tool
+            are contained in the IMS document: "IMS/GLC General Web Services: WSDL/XSD Binding Auto-generation"
+            available at the IMS web-site.
+            Tool Copyright:  2005-2007 (c) IMS Global Learning Consortium Inc.  All Rights Reserved.
+        </xs:documentation>
+    </xs:annotation>
+
+    <!-- Generate Global Attributes ***********************************************************************  -->
+
+    <!-- ==================================================================================================  -->
+
+    <!-- Generate Namespaced extension Group  *************************************************************  -->
+
+    <!-- ==================================================================================================  -->
+
+    <!-- Generate Special DataTypes  **********************************************************************  -->
+
+    <!-- ==================================================================================================  -->
+
+    <!-- Generate the enumerated simpleType declarations **************************************************  -->
+
+    <xs:simpleType name="Relation.Type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Parent"/>
+            <xs:enumeration value="Child"/>
+            <xs:enumeration value="Sibling"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="imsx_CodeMajor.Type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="success"/>
+            <xs:enumeration value="processing"/>
+            <xs:enumeration value="failure"/>
+            <xs:enumeration value="unsupported"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="imsx_Severity.Type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="status"/>
+            <xs:enumeration value="warning"/>
+            <xs:enumeration value="error"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="imsx_CodeMinorValue.Type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="fullsuccess"/>
+            <xs:enumeration value="idalloc"/>
+            <xs:enumeration value="overflowfail"/>
+            <xs:enumeration value="idallocinusefail"/>
+            <xs:enumeration value="invaliddata"/>
+            <xs:enumeration value="incompletedata"/>
+            <xs:enumeration value="partialdatastorage"/>
+            <xs:enumeration value="unknownobject"/>
+            <xs:enumeration value="deletefailure"/>
+            <xs:enumeration value="targetreadfailure"/>
+            <xs:enumeration value="savepointerror"/>
+            <xs:enumeration value="unknownquery"/>
+            <xs:enumeration value="unknownvocab"/>
+            <xs:enumeration value="targetisbusy"/>
+            <xs:enumeration value="unknownextension"/>
+            <xs:enumeration value="unauthorizedrequest"/>
+            <xs:enumeration value="linkfailure"/>
+            <xs:enumeration value="unsupported"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="MediaMode.Type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="uri"/>
+            <xs:enumeration value="entityref"/>
+            <xs:enumeration value="base64"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="ContentRefType.Type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="text"/>
+            <xs:enumeration value="image"/>
+            <xs:enumeration value="audio"/>
+            <xs:enumeration value="video"/>
+            <xs:enumeration value="application"/>
+            <xs:enumeration value="applet"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="LanguageSet.Type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="en"/>
+            <xs:enumeration value="fr"/>
+            <xs:enumeration value="en-US"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="FieldType.Type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Boolean"/>
+            <xs:enumeration value="Integer"/>
+            <xs:enumeration value="String"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="relation" type="gms:Relation.Type"/>
+
+    <xs:element name="imsx_codeMajor" type="gms:imsx_CodeMajor.Type"/>
+
+    <xs:element name="imsx_severity" type="gms:imsx_Severity.Type"/>
+
+    <xs:element name="imsx_codeMinorFieldValue" type="gms:imsx_CodeMinorValue.Type"/>
+
+    <xs:element name="mediamode" type="gms:MediaMode.Type"/>
+
+    <xs:element name="contentRefType" type="gms:ContentRefType.Type"/>
+
+    <xs:element name="language" type="gms:LanguageSet.Type"/>
+
+    <xs:element name="fieldType" type="gms:FieldType.Type"/>
+
+    <!-- ==================================================================================================  -->
+
+    <!-- Generate the simpleType elements based IMS data-types  *******************************************  -->
+
+    <xs:simpleType name="URL.Type">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value = "4096"/>
+            <xs:minLength value = "1"/>
+            <xs:whiteSpace value = "preserve"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Email.Type">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value = "4096"/>
+            <xs:minLength value = "1"/>
+            <xs:whiteSpace value = "preserve"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="email" type="gms:Email.Type"/>
+
+    <xs:element name="url" type="gms:URL.Type"/>
+
+    <xs:element name="imsx_messageRefIdentifier" type="xs:string" />
+
+    <xs:element name="imsx_operationRefIdentifier" type="xs:string" />
+
+    <xs:element name="imsx_description" type="xs:string" />
+
+    <xs:element name="imsx_codeMinorFieldName" type="xs:string" default="TargetEndSystem" />
+
+    <xs:element name="imsx_version" type="xs:string" />
+
+    <xs:element name="imsx_messageIdentifier" type="xs:string" />
+
+    <xs:element name="shortDescription" type="xs:string" />
+
+    <xs:element name="longDescription" type="xs:string" />
+
+    <xs:element name="mimeType" type="xs:string" />
+
+    <xs:element name="content" type="xs:string" />
+
+    <xs:element name="adminPeriod" type="xs:string" />
+
+    <xs:element name="enrollAccept" type="xs:boolean" />
+
+    <xs:element name="enrollAllowed" type="xs:boolean" />
+
+    <xs:element name="date" type="xs:date" />
+
+    <xs:element name="restrict" type="xs:boolean" />
+
+    <xs:element name="text" type="xs:string" />
+
+    <xs:element name="fieldName" type="xs:string" />
+
+    <xs:element name="fieldValue" type="xs:string" />
+
+    <!-- ==================================================================================================  -->
+
+    <!-- Generate the derived data-type elements based upon simpleType ************************************  -->
+
+    <xs:simpleType name="GUID.Type">
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+
+    <xs:simpleType name="SequenceIdentifier.Type">
+        <xs:restriction base="xs:dateTime"/>
+    </xs:simpleType>
+
+    <xs:simpleType name="QueryObject.Type">
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+
+    <!-- ==================================================================================================  -->
+
+    <!-- Generate the derived data-type elements based upon derived simpleType ****************************  -->
+
+    <!-- ==================================================================================================  -->
+
+    <!-- Generate the data-type ComplexTypes **************************************************************  -->
+
+    <xs:complexType name="Group.Type">
+        <xs:annotation>
+            <xs:documentation>
+                The Group datatype is the top-level container for the Group data model.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="gms:sourcedId"/>
+            <xs:element ref="gms:groupType" minOccurs = "1" maxOccurs = "1"/>
+            <xs:element ref="gms:email" minOccurs = "0" maxOccurs = "1"/>
+            <xs:element ref="gms:url" minOccurs = "0" maxOccurs = "1"/>
+            <xs:element ref="gms:timeframe" minOccurs = "0" maxOccurs = "1"/>
+            <xs:element ref="gms:relationship" minOccurs = "0" maxOccurs = "1"/>
+            <xs:element ref="gms:enrollControl" minOccurs = "0" maxOccurs = "1"/>
+            <xs:element ref="gms:org" minOccurs = "0" maxOccurs = "1"/>
+            <xs:element ref="gms:description" minOccurs = "0" maxOccurs = "1"/>
+            <xs:element ref="gms:dataSource" minOccurs = "0" maxOccurs = "1"/>
+            <xs:element ref="gms:recordInfo" minOccurs = "0" maxOccurs = "1"/>
+            <xs:element ref="gms:extension" minOccurs = "0" maxOccurs = "1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Relationship.Type">
+        <xs:annotation>
+            <xs:documentation>
+                The Relationship data-type is the container for ...
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="gms:relationId" minOccurs = "1" maxOccurs = "1"/>
+            <xs:element ref="gms:relation" minOccurs = "1" maxOccurs = "1"/>
+            <xs:element ref="gms:sourcedId" minOccurs = "1" maxOccurs = "1"/>
+            <xs:element ref="gms:label" minOccurs = "1" maxOccurs = "1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="GroupType.Type">
+        <xs:annotation>
+            <xs:documentation>
+                The GroupType data-type is the container for ..
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="gms:scheme" minOccurs = "1" maxOccurs = "1"/>
+            <xs:element ref="gms:typevalue" minOccurs = "1" maxOccurs = "unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="TypeValue.Type">
+        <xs:annotation>
+            <xs:documentation>
+                The TypeValue data-type is the container for ...
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="gms:type" minOccurs = "1" maxOccurs = "1"/>
+            <xs:element ref="gms:level" minOccurs = "1" maxOccurs = "1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="imsx_StatusInfo.Type">
+        <xs:annotation>
+            <xs:documentation>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="gms:imsx_codeMajor" minOccurs = "1" maxOccurs = "1"/>
+            <xs:element ref="gms:imsx_severity" minOccurs = "1" maxOccurs = "1"/>
+            <xs:element ref="gms:imsx_messageRefIdentifier" minOccurs = "1" maxOccurs = "1"/>
+            <xs:element ref="gms:imsx_operationRefIdentifier" minOccurs = "0" maxOccurs = "unbounded"/>
+            <xs:element ref="gms:imsx_description" minOccurs = "0" maxOccurs = "1"/>
+            <xs:element ref="gms:imsx_codeMinor" minOccurs = "0" maxOccurs = "1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="imsx_CodeMinor.Type">
+        <xs:annotation>
+            <xs:documentation>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="gms:imsx_codeMinorField" minOccurs = "1" maxOccurs = "unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="imsx_CodeMinorField.Type">
+        <xs:annotation>
+            <xs:documentation>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="gms:imsx_codeMinorFieldName" minOccurs = "1" maxOccurs = "1"/>
+            <xs:element ref="gms:imsx_codeMinorFieldValue" minOccurs = "1" maxOccurs = "1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="imsx_RequestHeaderInfo.Type">
+        <xs:annotation>
+            <xs:documentation>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="gms:imsx_version" minOccurs = "0" maxOccurs = "1"/>
+            <xs:element ref="gms:imsx_messageIdentifier" minOccurs = "1" maxOccurs = "1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="imsx_ResponseHeaderInfo.Type">
+        <xs:annotation>
+            <xs:documentation>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="gms:imsx_version" minOccurs = "0" maxOccurs = "1"/>
+            <xs:element ref="gms:imsx_messageIdentifier" minOccurs = "1" maxOccurs = "1"/>
+            <xs:element ref="gms:imsx_statusInfo" minOccurs = "1" maxOccurs = "1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="GUIDSet.Type">
+        <xs:annotation>
+            <xs:documentation>
+                The GUIDSet data-type is the container for ...
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="gms:sourcedId" minOccurs = "0" maxOccurs = "unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Description.Type">
+        <xs:annotation>
+            <xs:documentation>
+                The Description data-type is the container for ...
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="gms:shortDescription" minOccurs = "1" maxOccurs = "1"/>
+            <xs:element ref="gms:longDescription" minOccurs = "0" maxOccurs = "1"/>
+            <xs:element ref="gms:fullDescription" minOccurs = "0" maxOccurs = "1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Fulldescription.Type">
+        <xs:annotation>
+            <xs:documentation>
+                The FullDescription type is the container for ...
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="gms:mediamode" minOccurs = "1" maxOccurs = "1"/>
+            <xs:element ref="gms:contentRefType" minOccurs = "1" maxOccurs = "1"/>
+            <xs:element ref="gms:mimeType" minOccurs = "1" maxOccurs = "1"/>
+            <xs:element ref="gms:content" minOccurs = "1" maxOccurs = "1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Org.Type">
+        <xs:annotation>
+            <xs:documentation>
+                The Org data-type is the container for ...
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="orgName" type="gms:Text.Type" minOccurs = "0" maxOccurs = "1"/>
+            <xs:element ref="gms:orgUnit" minOccurs = "0" maxOccurs = "1"/>
+            <xs:element ref="gms:type" minOccurs = "0" maxOccurs = "1"/>
+            <xs:element ref="gms:id" minOccurs = "0" maxOccurs = "1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="TimeFrame.Type">
+        <xs:annotation>
+            <xs:documentation>
+                The TimeFrame data-type is the container for ...
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="gms:begin" minOccurs = "0" maxOccurs = "1"/>
+            <xs:element ref="gms:end" minOccurs = "0" maxOccurs = "1"/>
+            <xs:element ref="gms:adminPeriod" minOccurs = "0" maxOccurs = "1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="EnrollControl.Type">
+        <xs:annotation>
+            <xs:documentation>
+                The EnrollControl data-type is the container for ...
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="gms:enrollAccept" minOccurs = "0" maxOccurs = "1"/>
+            <xs:element ref="gms:enrollAllowed" minOccurs = "0" maxOccurs = "1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RestrictDate.Type">
+        <xs:annotation>
+            <xs:documentation>
+                The RestrictDate data-type is the container for ...
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="gms:date" minOccurs = "0" maxOccurs = "1"/>
+            <xs:element ref="gms:restrict" minOccurs = "0" maxOccurs = "1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Text.Type">
+        <xs:annotation>
+            <xs:documentation>
+                The Text data-type is the container for ...
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="gms:language" minOccurs = "1" maxOccurs = "1"/>
+            <xs:element ref="gms:text" minOccurs = "1" maxOccurs = "1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Metadata.Type">
+        <xs:annotation>
+            <xs:documentation>
+                The Metadata data-type is the container for ...
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="IMSExtension.Type">
+        <xs:annotation>
+            <xs:documentation>
+                The IMSExtension data-type is the container for ...
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="gms:extensionField" minOccurs = "1" maxOccurs = "unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ExtensionField.Type">
+        <xs:annotation>
+            <xs:documentation>
+                The ExtensionField data-type is the container for ...
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="gms:fieldName" minOccurs = "1" maxOccurs = "1"/>
+            <xs:element ref="gms:fieldType" minOccurs = "1" maxOccurs = "1"/>
+            <xs:element ref="gms:fieldValue" minOccurs = "1" maxOccurs = "1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- ==================================================================================================  -->
+
+    <!-- Declaration of the elements **********************************************************************  -->
+
+    <xs:element name="groupType" type="gms:GroupType.Type"/>
+
+    <xs:element name="timeframe" type="gms:TimeFrame.Type"/>
+
+    <xs:element name="enrollControl" type="gms:EnrollControl.Type"/>
+
+    <xs:element name="org" type="gms:Org.Type"/>
+
+    <xs:element name="description" type="gms:Description.Type"/>
+
+    <xs:element name="recordInfo" type="gms:Metadata.Type"/>
+
+    <xs:element name="extension" type="gms:IMSExtension.Type"/>
+
+    <xs:element name="label" type="gms:Text.Type"/>
+
+    <xs:element name="scheme" type="gms:Text.Type"/>
+
+    <xs:element name="typevalue" type="gms:TypeValue.Type"/>
+
+    <xs:element name="type" type="gms:Text.Type"/>
+
+    <xs:element name="level" type="gms:Text.Type"/>
+
+    <xs:element name="imsx_codeMinor" type="gms:imsx_CodeMinor.Type"/>
+
+    <xs:element name="imsx_codeMinorField" type="gms:imsx_CodeMinorField.Type"/>
+
+    <xs:element name="imsx_statusInfo" type="gms:imsx_StatusInfo.Type"/>
+
+    <xs:element name="fullDescription" type="gms:Fulldescription.Type"/>
+
+    <xs:element name="orgUnit" type="gms:Text.Type"/>
+
+    <xs:element name="id" type="gms:Text.Type"/>
+
+    <xs:element name="begin" type="gms:RestrictDate.Type"/>
+
+    <xs:element name="end" type="gms:RestrictDate.Type"/>
+
+    <xs:element name="extensionField" type="gms:ExtensionField.Type"/>
+
+    <xs:element name="dataSource" type="gms:GUID.Type"/>
+
+    <!-- ==================================================================================================  -->
+
+    <!-- Declaration of the message parameter elements ****************************************************  -->
+
+    <xs:element name="sourcedId" type="gms:GUID.Type"/>
+
+    <xs:element name="group" type="gms:Group.Type"/>
+
+    <xs:element name="relationship" type="gms:Relationship.Type"/>
+
+    <xs:element name="relationId" type="gms:GUID.Type"/>
+
+<!-- 
+    <xs:element name="Group" type="gms:Group.Type"/>
+ -->
+    <xs:element name="sourcedIdSet" type="gms:GUIDSet.Type"/>
+
+    <xs:element name="personSourcedId" type="gms:GUID.Type"/>
+
+    <xs:element name="groupsIdentifierSet" type="gms:GUIDSet.Type"/>
+
+    <xs:element name="fromSavePoint" type="gms:SequenceIdentifier.Type"/>
+
+    <xs:element name="savePoint" type="gms:SequenceIdentifier.Type"/>
+
+    <xs:element name="dataFile" type="gms:URL.Type"/>
+
+    <xs:element name="queryObject" type="gms:QueryObject.Type"/>
+
+    <xs:element name="newSourcedId" type="gms:GUID.Type"/>
+
+    <!-- ==================================================================================================  -->
+
+    <!-- Declaration of the message body elements *********************************************************  -->
+
+    <xs:element name="createGroupRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="gms:sourcedId"/>
+                <xs:element ref="gms:group"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="createGroupResponse">
+        <xs:complexType/>
+    </xs:element>
+
+    <xs:element name="createByProxyGroupRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="gms:group"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="createByProxyGroupResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="gms:sourcedId" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="deleteGroupRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="gms:sourcedId"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="deleteGroupResponse">
+        <xs:complexType/>
+    </xs:element>
+
+    <xs:element name="addGroupRelationshipRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="gms:sourcedId"/>
+                <xs:element ref="gms:relationship"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="addGroupRelationshipResponse">
+        <xs:complexType/>
+    </xs:element>
+
+    <xs:element name="removeGroupRelationshipRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="gms:sourcedId"/>
+                <xs:element ref="gms:relationId"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="removeGroupRelationshipResponse">
+        <xs:complexType/>
+    </xs:element>
+
+    <xs:element name="readGroupRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="gms:sourcedId"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="readGroupResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="gms:group" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="readAllGroupIdsRequest">
+        <xs:complexType/>
+    </xs:element>
+
+    <xs:element name="readAllGroupIdsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="gms:sourcedIdSet" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="readGroupIdsForPersonRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="gms:personSourcedId"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="readGroupIdsForPersonResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="gms:groupsIdentifierSet" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="readGroupIdsFromSavePointRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="gms:fromSavePoint"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="readGroupIdsFromSavePointResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="gms:sourcedIdSet" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="gms:savePoint" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="readGroupsRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="gms:sourcedIdSet"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="readGroupsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="gms:dataFile" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="readGroupsFromSavePointRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="gms:fromSavePoint"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="readGroupsFromSavePointResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="gms:dataFile" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="gms:savePoint" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="updateGroupRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="gms:sourcedId"/>
+                <xs:element ref="gms:group"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="updateGroupResponse">
+        <xs:complexType/>
+    </xs:element>
+
+    <xs:element name="replaceGroupRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="gms:sourcedId"/>
+                <xs:element ref="gms:group"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="replaceGroupResponse">
+        <xs:complexType/>
+    </xs:element>
+
+    <xs:element name="discoverGroupIdsRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="gms:queryObject"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="discoverGroupIdsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="gms:sourcedIdSet" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="changeGroupIdentifierRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="gms:sourcedId"/>
+                <xs:element ref="gms:newSourcedId"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="changeGroupIdentifierResponse">
+        <xs:complexType/>
+    </xs:element>
+
+    <!-- ==================================================================================================  -->
+
+    <!-- Declaration of the root element(s) ***************************************************************  -->
+
+    <xs:element name="imsx_syncRequestHeaderInfo" type="gms:imsx_RequestHeaderInfo.Type"/>
+    <xs:element name="imsx_syncResponseHeaderInfo" type="gms:imsx_ResponseHeaderInfo.Type"/>
+
+    <!-- ==================================================================================================  -->
+    <xs:element name="enterprise">
+        <xs:complexType>
+            <xs:sequence maxOccurs="1">
+                <xs:element ref="gms:group" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

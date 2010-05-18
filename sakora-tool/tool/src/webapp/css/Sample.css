@@ -1,0 +1,47 @@
+/*
+ Licensed to the Sakai Foundation under one or more contributor
+ license agreements. See the NOTICE file distributed with this
+ work for additional information regarding copyright ownership.
+ The Sakai Foundation licenses this file to you under the Apache
+ License, Version 2.0 (the "License"); you may not use this file
+ except in compliance with the License. You may obtain a copy of
+ the License at:
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on
+ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied. See the License for the
+ specific language governing permissions and limitations
+ under the License.
+*/
+.firstColumn {
+    width: 5%;
+    text-align: center; 
+}
+.secondColumn {
+    width: 65%;
+	text-align: left;
+}
+.thirdColumn {
+    width: 10%;
+	text-align: center;
+}
+.fourthColumn {
+	width: 20%;
+	text-align: left;
+}
+.firstHeader {
+	text-align: center;
+}
+.secondtHeader {
+	text-align: left;
+}
+.thirdHeader {
+	text-align: center;
+}
+.fourthHeader {
+	text-align: left;
+}
+

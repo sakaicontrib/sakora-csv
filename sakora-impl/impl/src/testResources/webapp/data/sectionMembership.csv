@@ -1,0 +1,9 @@
+Section or Course Eid, User Eid, Role (I = Instructor, S = Student, GSI = Teaching Assistant), Status (enrolled, wait), Credits (optional), Grading (optional, only applies to students)
+TEST101_Ryan_B, joshryan, I, enrolled
+TEST101_Ryan_A, joshryan, I, enrolled
+Math_101_Summer_2_2009_A, joshryan, I, enrolled
+TEST101_Ryan_B, barney, S, enrolled, 4
+TEST101_Ryan_A, fred, S, enrolled, 3
+TEST101_Ryan_A, wilma, S, enrolled
+TEST101_Ryan_A, kazoo, GSI, enrolled
+TEST101_Ryan_B, bambam, GSI, enrolled

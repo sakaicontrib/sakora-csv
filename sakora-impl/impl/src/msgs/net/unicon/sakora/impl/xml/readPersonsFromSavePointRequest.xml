@@ -1,0 +1,5 @@
+<readPersonsFromSavePointRequest 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.oracle.com/Enterprise/HCM/services/PersonManagementServiceSyncService.1"> 
+	<fromSavePoint>20080101</fromSavePoint>
+</readPersonsFromSavePointRequest >

@@ -1,0 +1,22 @@
+<?xml version="1.0"?><createSectionAssociationRequest xmlns="http://www.imsglobal.org/services/es/cms2p0/xsd/imscms_v2p0">
+   <sourcedId>001012-1-0590-I0</sourcedId>
+   <sectionAssociation>
+      <sourcedId>001012-1-0590-I0</sourcedId>
+      <status>Active</status>
+      <courseSectionIdList>
+         <courseSectionId>001012-1-0590-1-001-2348</courseSectionId>
+         <courseSectionId>001012-1-0590-1-002-2350</courseSectionId>
+         <courseSectionId>001012-1-0590-1-003-2404</courseSectionId>
+         <courseSectionId>001012-1-0590-1-004-2406</courseSectionId>
+         <courseSectionId>001012-1-0590-1-005-2450</courseSectionId>
+      </courseSectionIdList>
+      <dataSource>CS</dataSource>
+      <extension>
+         <extensionField>
+            <fieldName>Mode</fieldName>
+            <fieldType>String</fieldType>
+            <fieldValue>A</fieldValue>
+         </extensionField>
+      </extension>
+   </sectionAssociation>
+</createSectionAssociationRequest>

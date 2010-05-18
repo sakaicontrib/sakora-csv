@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.imsglobal.org/services/es/gms2p0/xsd/imsgms_v2p0" version="IMS GMS 2.0" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gms="http://www.imsglobal.org/services/es/gms2p0/xsd/imsgms_v2p0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <xs:simpleType name="SequenceIdentifier.Type">
+    <xs:restriction base="xs:dateTime"/>
+  </xs:simpleType>
+  <xs:element name="readGroupsFromSavePointRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="gms:fromSavePoint"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="fromSavePoint" type="gms:SequenceIdentifier.Type"/>
+</xs:schema>
