@@ -18,8 +18,6 @@
  */
 package net.unicon.sakora.api.csv;
 
-import net.unicon.sakora.api.ws.ImsSyncContext;
-
 public interface CsvHandler {
 
 	public void readInput(CsvSyncContext syncContext);
