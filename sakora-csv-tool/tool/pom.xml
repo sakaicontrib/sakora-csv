@@ -57,10 +57,6 @@
       <groupId>org.sakaiproject</groupId>
       <artifactId>sakai-scheduler-api</artifactId>
     </dependency>
-    <!--dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-    </dependency-->
     <dependency>
       <groupId>servlets.com</groupId>
       <artifactId>cos</artifactId>
