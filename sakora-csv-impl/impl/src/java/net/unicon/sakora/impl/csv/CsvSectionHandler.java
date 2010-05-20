@@ -100,6 +100,7 @@ public class CsvSectionHandler extends CsvHandlerBase {
 				section.setParent(parent);
 				if (cmService.isEnrollmentSetDefined(enrollmentSetEid))	
 					section.setEnrollmentSet(cmService.getEnrollmentSet(enrollmentSetEid));
+				cmAdmin.updateSection(section);
 				updates++;
 			}
 			else {
