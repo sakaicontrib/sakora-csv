@@ -42,7 +42,6 @@ public class CsvCourseOfferingHandler extends CsvHandlerBase {
 	@Override
 	protected void readInputLine(CsvSyncContext context, String[] line) {
 
-		time = new Date();
 		final int minFieldCount = 7;
 
 		if (line != null && line.length >= minFieldCount) {

@@ -108,7 +108,6 @@ public abstract class CsvHandlerBase implements CsvHandler {
 		updates = 0;
 		deletes = 0;
 		try {
-			time = new Date();
 			// TODO: support for reading input from CHS started but not yet finished
 			if (false /* is a valid content entity reference */) {
 				try {

@@ -43,7 +43,6 @@ public class CsvEnrollmentSetHandler extends CsvHandlerBase {
 	@Override
 	protected void readInputLine(CsvSyncContext context, String[] line) {
 
-		time = new Date();
 		final int minFieldCount = 6;
 
 		if (line != null && line.length >= minFieldCount) {
