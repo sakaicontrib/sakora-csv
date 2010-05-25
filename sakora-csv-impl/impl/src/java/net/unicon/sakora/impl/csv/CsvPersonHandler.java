@@ -104,10 +104,12 @@ public class CsvPersonHandler extends CsvHandlerBase {
 				if (existingId == null || "".equals(existingId)) {
 					if ( optionalFields.containsKey(ID_FIELD_NAME) ) {
 						newId = optionalFields.get(ID_FIELD_NAME);
-					} else {
+					}
+					if ( newId == null || "".equals(newId) ) {
 						newId = idManager.createUuid();
 					}
 					edit = userDirService.addUser(newId, eid);
+					newId = edit.getId();
 				} else {
 					edit = userDirService.editUser(existingId);
 				}
