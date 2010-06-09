@@ -8,10 +8,5 @@
       <property name="inputTime" type="timestamp" column="INPUT_TIME" />
    </class>
    
-   <database-object>
-       <create>create index SAKORA_PERSON_SEARCH_IDX on SAKORA_PERSON (INPUT_TIME)</create>
-       <drop></drop>
-       <dialect-scope name="org.hibernate.dialect.MySQLDialect"/> 
-   </database-object>
 </hibernate-mapping>
 
