@@ -33,7 +33,7 @@
         <url>http://www.unicon.net/</url>
     </organization>
     <inceptionYear>2007</inceptionYear>
-    <version>1.5-SNAPSHOT</version>
+    <version>1.5</version>
     <packaging>pom</packaging>
     <description>
     </description>
@@ -46,9 +46,9 @@
     </modules>
 
     <scm>
-      <connection>scm:svn:https://source.sakaiproject.org/contrib/unicon/sakora-csv/trunk</connection>
-      <developerConnection>scm:svn:https://source.sakaiproject.org/contrib/unicon/sakora-csv/trunk</developerConnection>
-      <url>https://source.sakaiproject.org/contrib/unicon/sakora-csv/trunk</url>
+      <connection>scm:svn:https://source.sakaiproject.org/contrib/unicon/sakora-csv/tags/sakora-csv-1.5</connection>
+      <developerConnection>scm:svn:https://source.sakaiproject.org/contrib/unicon/sakora-csv/tags/sakora-csv-1.5</developerConnection>
+      <url>https://source.sakaiproject.org/contrib/unicon/sakora-csv/tags/sakora-csv-1.5</url>
     </scm>
 
     <dependencyManagement>

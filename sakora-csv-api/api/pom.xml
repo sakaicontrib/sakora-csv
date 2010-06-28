@@ -22,7 +22,7 @@
   <parent>
     <artifactId>sakai-sakora-csv-base</artifactId>
     <groupId>net.unicon</groupId>
-    <version>1.5-SNAPSHOT</version>
+    <version>1.5</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <name>Simple Sakai SIS Integration Services (Sakora CSV) API</name>
