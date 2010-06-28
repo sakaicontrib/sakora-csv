@@ -121,19 +121,27 @@ public class CsvMembershipHandler extends CsvHandlerBase {
 
 				// Update or add Sakora membership entry (used for tracking deltas)
 				Search search = new Search();
-				search.addRestriction(new Restriction("inputTime", time, Restriction.NOT_EQUALS));
 				search.addRestriction(new Restriction("mode", mode, Restriction.EQUALS));
 				search.addRestriction(new Restriction("userEid", userEid));
 				search.addRestriction(new Restriction("containerEid", eid));
-				Membership existing = dao.findOneBySearch(Membership.class, search);
-				if (existing != null) {
-					existing.setInputTime(time);
-					existing.setRole(role);
-					dao.update(existing);
-				}
-				else
+				List<Membership> existing = dao.findBySearch(Membership.class, search);
+				if ( existing == null || existing.isEmpty() ) {
 					dao.save(new Membership(userEid, eid, role, mode, time));
-
+				} else {
+					for ( int i = 0 ; i < existing.size() ; i++ ) {
+						// guard against dupl records, which can lead
+						// to inadvertent CM membership deletion
+						if ( i == existing.size() - 1 ) {
+							existing.get(i).setInputTime(time);
+							existing.get(i).setRole(role);
+							dao.update(existing.get(i));
+						} else {
+							// Not in transaction so can't use delete(Object).
+							// Should really be fixed.
+							dao.delete(Membership.class, existing.get(i).getId());
+						}
+					}
+				}
 			} catch (IdNotFoundException idfe) {
 				dao.create(new SakoraLog(this.getClass().toString(), idfe.getLocalizedMessage()));
 			}
