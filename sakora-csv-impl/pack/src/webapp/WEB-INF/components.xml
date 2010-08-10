@@ -82,7 +82,7 @@
             </property>
     </bean>
 
-	<bean id="org.sakaiproject.poll.hibernate.AdditionalHibernateMappings"
+	<bean id="org.sakaiproject.sakora.api.model.hibernate.AdditionalHibernateMappings"
 		class="org.sakaiproject.springframework.orm.hibernate.impl.AdditionalHibernateMappingsImpl">
 		<property name="mappingResources">
 			<list>
