@@ -38,12 +38,29 @@
     <description>
     </description>
 
-    <modules>
+   <profiles>
+      <profile>
+         <id>full</id>
+         <activation>
+            <activeByDefault>true</activeByDefault>
+         </activation>
+         <modules>
+            <!-- put your full set of modules here -->
       <module>sakora-csv-api/api</module>
       <module>sakora-csv-impl/impl</module>
       <module>sakora-csv-impl/pack</module>
       <module>sakora-csv-tool/tool</module>
-    </modules>
+         </modules>
+      </profile>
+      <profile>
+         <id>ddl</id>
+         <modules>
+            <!-- put the path to the ddl pom.xml here -->
+            <module>sakora-csv-impl/impl/src/ddl</module>
+         </modules>
+      </profile>
+   </profiles>
+
 
     <scm>
       <connection>scm:svn:https://source.sakaiproject.org/contrib/unicon/sakora-csv/trunk</connection>
