@@ -22,7 +22,7 @@
     <parent>
         <artifactId>sakora-csv</artifactId>
         <groupId>net.unicon</groupId>
-        <version>1.7-SNAPSHOT</version>
+        <version>1.7</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <name>Simple Sakai SIS Integration Services (Sakora CSV) Component Packaging</name>
@@ -36,7 +36,7 @@
         <dependency>
             <groupId>net.unicon</groupId>
             <artifactId>sakai-sakora-csv-impl</artifactId>
-            <version>1.7-SNAPSHOT</version>
+            <version>1.7</version>
         </dependency>
     </dependencies>
 </project>
