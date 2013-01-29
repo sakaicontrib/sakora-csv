@@ -27,7 +27,7 @@
         <url>http://www.unicon.net/</url>
     </organization>
     <inceptionYear>2007</inceptionYear>
-    <version>1.7</version>
+    <version>1.8-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>CSV imports for Sakai Course Management
       More info at: https://confluence.sakaiproject.org/display/IMSES/Simple+Sakai+SIS+Services
@@ -64,9 +64,9 @@
    </profiles>
 
     <scm>
-      <connection>scm:svn:https://source.sakaiproject.org/contrib/unicon/sakora-csv/tags/sakora-csv-1.7</connection>
-      <developerConnection>scm:svn:https://source.sakaiproject.org/contrib/unicon/sakora-csv/tags/sakora-csv-1.7</developerConnection>
-      <url>https://source.sakaiproject.org/contrib/unicon/sakora-csv/tags/sakora-csv-1.7</url>
+      <connection>scm:svn:https://source.sakaiproject.org/contrib/unicon/sakora-csv/trunk</connection>
+      <developerConnection>scm:svn:https://source.sakaiproject.org/contrib/unicon/sakora-csv/trunk</developerConnection>
+      <url>https://source.sakaiproject.org/contrib/unicon/sakora-csv/trunk</url>
     </scm>
 
     <dependencyManagement>
