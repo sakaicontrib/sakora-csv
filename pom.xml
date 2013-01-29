@@ -19,12 +19,6 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <artifactId>master</artifactId>
-        <groupId>org.sakaiproject</groupId>
-        <version>2.7.0</version> 
-        <relativePath>../master/pom.xml</relativePath>
-    </parent>
     <name>Simple Sakai SIS Integration Services (Sakora CSV)</name>
     <groupId>net.unicon</groupId>
     <artifactId>sakai-sakora-csv-base</artifactId>
@@ -35,8 +29,16 @@
     <inceptionYear>2007</inceptionYear>
     <version>1.6-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <description>
+    <description>CSV imports for Sakai Course Management
+      More info at: https://confluence.sakaiproject.org/display/IMSES/Simple+Sakai+SIS+Services
     </description>
+
+    <parent>
+        <artifactId>master</artifactId>
+        <groupId>org.sakaiproject</groupId>
+        <version>2.8.2</version> 
+        <relativePath>../master/pom.xml</relativePath>
+    </parent>
 
    <profiles>
       <profile>
@@ -45,11 +47,11 @@
             <activeByDefault>true</activeByDefault>
          </activation>
          <modules>
-            <!-- put your full set of modules here -->
-      <module>sakora-csv-api/api</module>
-      <module>sakora-csv-impl/impl</module>
-      <module>sakora-csv-impl/pack</module>
-      <module>sakora-csv-tool/tool</module>
+           <!-- put your full set of modules here -->
+	   <module>sakora-csv-api/api</module>
+	   <module>sakora-csv-impl/impl</module>
+	   <module>sakora-csv-impl/pack</module>
+	   <module>sakora-csv-tool/tool</module>
          </modules>
       </profile>
       <profile>
@@ -60,7 +62,6 @@
          </modules>
       </profile>
    </profiles>
-
 
     <scm>
       <connection>scm:svn:https://source.sakaiproject.org/contrib/unicon/sakora-csv/trunk</connection>
@@ -94,6 +95,26 @@
       </repository>
     </repositories>
 
-    <build />
+    <build>
+      <plugins>
+	<plugin>
+	  <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.6</version>
+          <configuration>
+            <encoding>UTF-8</encoding>
+          </configuration>
+	</plugin>
+	<plugin>
+	  <groupId>org.apache.maven.plugins</groupId>
+	  <artifactId>maven-gpg-plugin</artifactId>
+	  <version>1.4</version>
+	  <configuration>
+	    <skip>true</skip>
+	  </configuration>
+	</plugin>
+      </plugins>
+    </build>
+
 </project>
 
