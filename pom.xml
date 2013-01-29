@@ -21,7 +21,7 @@
     <modelVersion>4.0.0</modelVersion>
     <name>Simple Sakai SIS Integration Services (Sakora CSV)</name>
     <groupId>net.unicon</groupId>
-    <artifactId>sakai-sakora-csv-base</artifactId>
+    <artifactId>sakora-csv</artifactId>
     <organization>
         <name>Unicon, Inc</name>
         <url>http://www.unicon.net/</url>
