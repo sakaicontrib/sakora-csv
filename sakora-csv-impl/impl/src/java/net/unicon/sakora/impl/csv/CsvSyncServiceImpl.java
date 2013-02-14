@@ -36,6 +36,8 @@ import org.sakaiproject.component.api.ServerConfigurationService;
 /**
  * CSV based CourseManagement Sync service
  * 
+ * @author Dan McCallum dmccallum@unicon.net
+ * @author Aaron Zeckoski azeckoski@unicon.net
  * @author Joshua Ryan
  */
 public class CsvSyncServiceImpl implements CsvSyncService {
@@ -346,6 +348,8 @@ public class CsvSyncServiceImpl implements CsvSyncService {
 		} else if ( !(dir.canWrite()) ) {
 			log.warn("The configured batch upload directory is not a writable [" + batchUploadDir + 
 					"]. CSV batch processing is highly unlikely to be successful.");
+		} else {
+		    log.info("SakoraCSV batch upload directory initialized: "+batchUploadDir);
 		}
 	}
 	
