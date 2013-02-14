@@ -29,7 +29,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 
 import net.unicon.sakora.api.csv.CsvHandler;
 import net.unicon.sakora.api.csv.CsvSyncContext;
@@ -92,15 +91,12 @@ public abstract class CsvHandlerBase implements CsvHandler {
 	protected int deletes = 0;
 	protected ContentHostingService contentHostingService = null;
 	protected ServerConfigurationService configurationService = null;
+	protected CsvCommonHandlerService commonHandlerService = null;
 
 	// By default date strings look like "2007-09-06", "2007-11-14"
 	protected String dateFormat = "yyyy-MM-dd";
 
-	public void init() {
-	    // shared init
-	    // load common config values
-	    ignoreMissingSessions = configurationService.getBoolean("net.unicon.sakora.csv.ignoreMissingSessions", ignoreMissingSessions);
-	}
+	public void init() {}
 	
 	public void destroy() {
 	    // shared destroy
@@ -399,45 +395,8 @@ public abstract class CsvHandlerBase implements CsvHandler {
 		this.configurationService = configurationService;
 	}
 
-	/**
-	 * controlled by net.unicon.sakora.csv.ignoreMissingSessions config, Default: false
-	 */
-	protected boolean ignoreMissingSessions = false;
-	public void setIgnoreMissingSessions(boolean ignoreMissingSessions) {
-        this.ignoreMissingSessions = ignoreMissingSessions;
-    }
-	public boolean isIgnoreMissingSessions() {
-        return ignoreMissingSessions;
+    public void setCommonHandlerService(CsvCommonHandlerService commonHandlerService) {
+        this.commonHandlerService = commonHandlerService;
     }
 
-	HashSet<String> currentAcademicSessionEids = new HashSet<String>(0);
-	protected int setCurrentAcademicSessions(String[] sessions) {
-	    if (sessions != null) {
-	        currentAcademicSessionEids = new HashSet<String>(sessions.length);
-	        for (int i = 0; i < sessions.length; i++) {
-	            currentAcademicSessionEids.add(sessions[i]);
-            }
-	    } else {
-	        currentAcademicSessionEids = new HashSet<String>(0);
-	    }
-        if (currentAcademicSessionEids.isEmpty()) {
-            log.warn("SakoraCSV has no current academic sessions, this is typically not a valid state, please check your sessions.csv file");
-        }
-	    return currentAcademicSessionEids.size();
-	}
-	protected boolean processAcademicSession(String academicSessionEid) {
-	    boolean process;
-	    if (isIgnoreMissingSessions()) {
-	        // check the list of sessions which are current and if this is not in that set then false
-	        if (currentAcademicSessionEids.contains(academicSessionEid)) {
-	            process = true;
-	        } else {
-	            process = false;
-	        }
-	    } else {
-	        // standard processing, process all sessions
-	        process = true;
-	    }
-	    return process;
-	}
 }

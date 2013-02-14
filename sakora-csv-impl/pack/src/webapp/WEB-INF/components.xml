@@ -101,6 +101,14 @@
 		<property name="serverConfigurationService" ref="org.sakaiproject.component.api.ServerConfigurationService" />
 	</bean>
 
+    <bean id="net.unicon.sakora.impl.csv.CsvCommonHandlerService" 
+            class="net.unicon.sakora.impl.csv.CsvCommonHandlerService"
+            init-method="init" destroy-method="destroy">
+        <property name="configurationService">
+            <ref bean="org.sakaiproject.component.api.ServerConfigurationService"/>
+        </property>
+    </bean>
+
 	<bean id="net.unicon.sakora.impl.csv.CsvHandlerBase" 
 		abstract="true"
 		init-method="init"
@@ -132,6 +140,7 @@
 		<property name="configurationService">
 			<ref bean="org.sakaiproject.component.api.ServerConfigurationService"/>
 		</property>
+        <property name="commonHandlerService" ref="net.unicon.sakora.impl.csv.CsvCommonHandlerService" />
 		<property name="searchPageSize" value="1000" />
 		<property name="dao" ref="net.unicon.sakora.impl.csv.dao.CsvSyncDao" />
 		<property name="hasHeader" value="true" />

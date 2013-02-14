@@ -26,7 +26,6 @@ import java.util.List;
 import net.unicon.sakora.api.csv.CsvSyncContext;
 import net.unicon.sakora.api.csv.model.Session;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.coursemanagement.api.AcademicSession;
@@ -43,21 +42,6 @@ import org.sakaiproject.genericdao.api.search.Search;
  */
 public class CsvAcademicSessionHandler extends CsvHandlerBase {
 	static final Log log = LogFactory.getLog(CsvAcademicSessionHandler.class);
-
-	/**
-	 * @deprecated UNUSED - this should be removed entirely
-	 */
-	private boolean deleteSession = false;
-
-	public void init() {
-	    super.init();
-        if (isIgnoreMissingSessions()) {
-            log.info("SakoraCSV ignoreMissingSessions is enabled: all data related to sessions not included in sessions.csv will be left skipped or otherwise unchanged");
-        } else {
-            log.info("SakoraCSV set to process missing sessions (ignoreMissingSessions=false): all data related to sessions not included in sessions.csv will be processed and REMOVED");
-        }
-	    //log.info("SakoraCSV AcademicSession handler: deleteSession="+(deleteSession?"true (academic sessions will be removed when they are not included in sessions.csv)":"false (no academic sessions will be removed)"));
-	}
 
 	@Override
 	protected void readInputLine(CsvSyncContext context, String[] line) {
@@ -130,22 +114,20 @@ public class CsvAcademicSessionHandler extends CsvHandlerBase {
 				search.setStart(search.getStart() + searchPageSize);
 			}
 		}
-        if (currentSessions.isEmpty() && !isIgnoreMissingSessions()) {
+        if (currentSessions.isEmpty() && !commonHandlerService.isIgnoreMissingSessions()) {
             // TODO should we die here? -AZ
+            /* 
+             * Might make sense to skip handling of CM files in this case. 
+             * If you completely aborted processing, though, this would mean you could not use this component strictly for batch loading of persons. 
+             * Not sure if anyone's actually doing that. But seems nice to have that sort of option if you aren't able to source attributes 
+             * from LDAP for whatever reason.
+             */
             log.error("SakoraCSV has no current academic sessions to process and session processing is on, this is an invalid state as it would cause all data (courses, memberships, etc.) to be disabled or removed, please check your sessions.csv file");
         }
         // set the current academic sessions according to the incoming sessions
 		cmAdmin.setCurrentAcademicSessions(currentSessions);
-		setCurrentAcademicSessions( currentSessions.toArray(new String[currentSessions.size()]) );
+		commonHandlerService.setCurrentAcademicSessions( currentSessions.toArray(new String[currentSessions.size()]) );
 		logoutFromSakai();
-	}
-
-	public boolean isDeleteSession() {
-		return deleteSession;
-	}
-
-	public void setDeleteSession(boolean deleteSession) {
-		this.deleteSession = deleteSession;
 	}
 
 }

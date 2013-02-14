@@ -31,8 +31,9 @@ import org.sakaiproject.coursemanagement.api.CourseOffering;
  * Reads in Course Offerings from csv extracts, expected format is:
  * Eid, Session Eid, Title, Description, Status, Start Date, End Date, Canonical Course Eid
  * 
+ * @author Dan McCallum dmccallum@unicon.net
+ * @author Aaron Zeckoski azeckoski@unicon.net
  * @author Joshua Ryan
- *
  */
 public class CsvCourseOfferingHandler extends CsvHandlerBase {
 	static final Log log = LogFactory.getLog(CsvCourseOfferingHandler.class);
@@ -75,8 +76,8 @@ public class CsvCourseOfferingHandler extends CsvHandlerBase {
 					|| !isValid(endDate, "End Date", eid)
 					|| !isValid(sessionEid, "Session Eid", eid)) {
 				log.error("Missing required parameter(s), skipping item " + eid);
-			}
-			else if (cmService.isCourseOfferingDefined(eid)) {
+
+			} else if (cmService.isCourseOfferingDefined(eid)) {
 				CourseOffering courseOffering = cmService.getCourseOffering(eid);
 				courseOffering.setTitle(title);
 				courseOffering.setDescription(description);
@@ -86,13 +87,14 @@ public class CsvCourseOfferingHandler extends CsvHandlerBase {
 				courseOffering.setEndDate(endDate);
 				cmAdmin.updateCourseOffering(courseOffering);
 				updates++;
-			}
-			else {
+
+			} else {
 				cmAdmin.createCourseOffering(eid, title, description, status, sessionEid, canonicalCourseEid, startDate, endDate);
 				adds++;
 			}
-			if (courseSet != null && cmService.isCourseSetDefined(courseSet))
+			if (courseSet != null && cmService.isCourseSetDefined(courseSet)) {
 				cmAdmin.addCourseOfferingToCourseSet(courseSet, eid);
+			}
 		} else {
 			log.error("Skipping short line (expected at least [" + minFieldCount + 
 					"] fields): [" + (line == null ? null : Arrays.toString(line)) + "]");
@@ -106,7 +108,7 @@ public class CsvCourseOfferingHandler extends CsvHandlerBase {
 	
 	/**
 	 * @see #setHandleCanonicalCourseReferences(boolean)
-	 * @return
+	 * @return true if references should be handled
 	 */
 	public boolean isHandleCanonicalCourseReferences() {
 		return handleCanonicalCourseReferences;
