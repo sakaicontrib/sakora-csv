@@ -18,13 +18,19 @@
  */
 package net.unicon.sakora.impl.csv;
 
-import java.util.HashMap;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
+
+import net.unicon.sakora.api.csv.CsvHandler;
+import net.unicon.sakora.api.csv.CsvSyncContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.sakaiproject.component.api.ServerConfigurationService;
+import org.sakaiproject.coursemanagement.api.CourseManagementAdministration;
+import org.sakaiproject.coursemanagement.api.CourseManagementService;
 
 /**
  * Handled any common processing that needs to be chared between the CSV handlers
@@ -33,9 +39,20 @@ import org.sakaiproject.component.api.ServerConfigurationService;
  * @author Aaron Zeckoski azeckoski@unicon.net
  */
 public class CsvCommonHandlerService {
+    public static final String SYNC_VAR_ID = "id";
+    public static final String SYNC_VAR_CONTEXT = "context";
+    public static final String SYNC_VAR_STATUS = "status";
+    public static final String SYNC_VAR_HANDLER = "handler";
+    public static final String SYNC_VAR_HANDLER_STATE = "handler_state";
+
     static final Log log = LogFactory.getLog(CsvCommonHandlerService.class);
 
-    protected ServerConfigurationService configurationService = null;
+    protected ServerConfigurationService configurationService;
+    protected CourseManagementAdministration cmAdmin;
+    protected CourseManagementService cmService;
+
+    private volatile int runCounter = 0;
+    private ConcurrentHashMap<String, Object> syncVars = new ConcurrentHashMap<String, Object>();
 
     public void init() {
         // load common config values
@@ -47,32 +64,38 @@ public class CsvCommonHandlerService {
         }
     }
 
-    private int runCounter = 0;
+    public void destroy() {
+        syncVars = null;
+    }
+
+    /* We won't allow multiple syncs to run so no need for the thread safety -AZ
     private static final ThreadLocal<HashMap<String, Object>> runVars = new ThreadLocal<HashMap<String,Object>>() {
         @Override
         protected HashMap<String, Object> initialValue() {
             return new HashMap<String, Object>();
         }
-    };
+    };*/
 
-    public synchronized void initRun() {
+    public synchronized String initRun(CsvSyncContext context) {
         // run this before a run starts
-        runVars.remove(); // reset
+        syncVars.clear(); //runVars.remove(); // reset the run vars
         // setup the run id
-        int runId = ++runCounter;
-        runVars.get().put("id", runId);
-        runVars.get().put("status", "running");
+        String runId = ++runCounter + ":" + (new Date().getTime() / 1000);
+        syncVars.put(SYNC_VAR_ID, runId);
+        syncVars.put(SYNC_VAR_STATUS, "running");
+        syncVars.put(SYNC_VAR_CONTEXT, context);
+        return runId;
     }
 
     public synchronized void completeRun(boolean success) {
         // run this after a run completes
-        runVars.remove();
+        syncVars.put(SYNC_VAR_STATUS, success?"complete":"failed");
     }
 
     @SuppressWarnings("unchecked")
     public <T> T getCurrentSyncVar(String name, Class<T> type) {
-        if (runVars.get().containsKey(name)) {
-            return (T) runVars.get().get(name);
+        if (syncVars.containsKey(name)) {
+            return (T) syncVars.get(name);
         }
         return null;
     }
@@ -87,17 +110,46 @@ public class CsvCommonHandlerService {
      */
     public void setCurrentSyncVar(String name, Object value) {
         if (value == null) {
-            runVars.get().remove(name);
+            syncVars.remove(name);
         } else {
-            runVars.get().put(name, value);
+            syncVars.put(name, value);
        }
     }
 
     /**
-     * @return the current sync run for this thread OR null if there is not one
+     * @return the current sync run for this thread OR null if there is not one (no sync is running)
      */
     public String getCurrentSyncRunId() {
-        return getCurrentSyncVar("id", String.class);
+        return getCurrentSyncVar(SYNC_VAR_ID, String.class);
+    }
+
+    /**
+     * @return the current sync context for this thread OR null if there is not one (no sync is running)
+     */
+    public CsvSyncContext getCurrentSyncRunContext() {
+        return getCurrentSyncVar(SYNC_VAR_CONTEXT, CsvSyncContext.class);
+    }
+
+    public String getCurrentSyncState() {
+        String status = getCurrentSyncVar(SYNC_VAR_STATUS, String.class);
+        if (status.equals("running")) {
+            String state = getCurrentSyncVar(SYNC_VAR_HANDLER_STATE, String.class);
+            CsvHandler handler = getCurrentSyncVar(SYNC_VAR_HANDLER, CsvHandler.class);
+            if (handler != null) {
+                String handlerName = handler.getClass().getSimpleName().replace("Handler", "").replace("Csv", "");
+                status = "Sync ("+getCurrentSyncRunId()+"): "+handlerName+" state is: "+state;
+            }
+        }
+        return status;
+    }
+
+    public void setCurrentHandlerState(String state, CsvHandler handler) {
+        /* Allows us to take actions when the state changes (like logging for example)
+         */
+        setCurrentSyncVar(SYNC_VAR_HANDLER_STATE, state);
+        setCurrentSyncVar(SYNC_VAR_HANDLER, handler);
+        String handlerName = handler.getClass().getSimpleName().replace("Handler", "").replace("Csv", "");
+        log.info("SakoraCSV: Sync ("+getCurrentSyncRunId()+"): "+handlerName+" state is: "+state);
     }
 
     /**
@@ -148,6 +200,14 @@ public class CsvCommonHandlerService {
 
     public void setConfigurationService(ServerConfigurationService configurationService) {
         this.configurationService = configurationService;
+    }
+
+    public void setCmAdmin(CourseManagementAdministration cmAdmin) {
+        this.cmAdmin = cmAdmin;
+    }
+
+    public void setCmService(CourseManagementService cmService) {
+        this.cmService = cmService;
     }
 
 }

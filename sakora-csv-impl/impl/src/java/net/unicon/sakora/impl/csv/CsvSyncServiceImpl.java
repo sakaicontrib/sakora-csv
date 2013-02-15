@@ -92,10 +92,32 @@ public class CsvSyncServiceImpl implements CsvSyncService {
 	private CsvSectionHandler sectionHandler;
 	private CsvSectionMeetingHandler sectionMeetingHandler;
 	private ServerConfigurationService configurationService;
+	private CsvCommonHandlerService commonHandlerService;
 	private CsvSyncDao dbLog;
+
 	private boolean cleanupData;
 	private String batchUploadDir;
+
 	private volatile boolean pleaseStop;
+	/*
+	 * NOTE: it is not safe for 2 syncs to run at once so this will protect that from happening,
+	 * at least on the same machine anyway, really we should probably have something in the DB to stop this on
+	 * the entire cluster but that's something to think about for later
+	 */
+	private volatile boolean running = false; // indicates if there is a sync already running
+
+	public boolean isSyncRunning() {
+	    return running;
+	}
+
+    public String getSyncCurrentId() {
+        return commonHandlerService.getCurrentSyncRunId();
+    }
+
+	public String getSyncCurrentState() {
+	    return commonHandlerService.getCurrentSyncState();
+	}
+
 
 	/**
 	 * Algorithm for delegating to individual handlers.
@@ -121,12 +143,15 @@ public class CsvSyncServiceImpl implements CsvSyncService {
 				throw new IllegalStateException("CSV sync service received a stop request. Abandoning input read. This exception is thrown to ensure proper cleanup of overall batch state.");
 			}
 			
+			commonHandlerService.setCurrentHandlerState("start", handler);
+			
 			// Batches need to be processed as a group, so move all currently
 			// delivered files into a processing dir such that they are
 			// less likely to be overwritten during processing by a subsequent
 			// upload.
 			if ( syncContext.getProperties().get(BATCH_PROCESSING_DIR) == null ) {
 				try {
+				    commonHandlerService.setCurrentHandlerState("move", handler);
 					moveBatch(syncContext);
 				} catch ( IOException e ) {
 					throw new IllegalStateException("Unable to move batch for processing", e);
@@ -136,17 +161,20 @@ public class CsvSyncServiceImpl implements CsvSyncService {
 			if (log.isDebugEnabled()) {
 				log.debug("reading " + action);
 			}
+			commonHandlerService.setCurrentHandlerState("read", handler);
 			handler.readInput(syncContext);
 
 			if (log.isDebugEnabled()) {
 				log.debug("processing " + action);
 			}
+			commonHandlerService.setCurrentHandlerState("process", handler);
 			handler.process(syncContext);
 
 			if (cleanupData) {
 				if (log.isDebugEnabled()) {
 					log.debug("cleaning up " + action);
 				}
+				commonHandlerService.setCurrentHandlerState("cleanup", handler);
 				handler.cleanUp(syncContext);
 			}
 		} catch ( Exception e ) {
@@ -156,6 +184,7 @@ public class CsvSyncServiceImpl implements CsvSyncService {
 			// were to write logic to attempt to pick up where we left off.
 			// It's much, much easier to just skip the rest of this batch
 			// and upload a new one.
+		    commonHandlerService.setCurrentHandlerState("fail", handler);
 			syncContext.getProperties().put(IS_BATCH_OK, "false");
 			String msg = "Failed to process batch at [" + 
 				syncContext.getProperties().get(BATCH_PROCESSING_DIR) + 
@@ -163,6 +192,7 @@ public class CsvSyncServiceImpl implements CsvSyncService {
 			log.error(msg, e);
 			dbLog.create(new SakoraLog(this.getClass().toString(), msg + "[" + e.getLocalizedMessage() + "]"));
 		} finally {
+		    commonHandlerService.setCurrentHandlerState("done", handler);
 			String isFinalAction = syncContext.getProperties().get(IS_FINAL_ACTION);
 			if ( isFinalAction != null && Boolean.parseBoolean(isFinalAction) ) {
 				markBatchFinished(syncContext);
@@ -171,23 +201,48 @@ public class CsvSyncServiceImpl implements CsvSyncService {
 	}
 	
 	public void sync(CsvSyncContext context) {
+	    if (context == null) {
+            String msg = "context is not set for sync method call, invalid state, cancelling sync processing";
+            log.error(msg);
+            dbLog.create(new SakoraLog(this.getClass().toString(), msg));
+	        throw new IllegalArgumentException(msg);
+	    }
+	    if (running) {
+            String msg = "There appears to be a CSV sync already in process ("
+                    +commonHandlerService.getCurrentSyncState()+"), 2 syncs cannot run at once, aborting this sync attempt...";
+            log.error(msg);
+            dbLog.create(new SakoraLog(this.getClass().toString(), msg));
+            throw new IllegalArgumentException(msg);
+	    }
 		if ( !(isBatchUploaded()) ) {
 			String msg = "No batch found in upload dir [" + batchUploadDir + "]. Skipping all processing.";
 			log.info(msg);
 			dbLog.create(new SakoraLog(this.getClass().toString(), msg));
 			return;
 		}
-		handleAction(accademicSessionHandler, "Sessions", context);
-		handleAction(courseSetHandler, "Course Sets", context);
-		handleAction(canonicalCourseHandler, "Canonical Courses", context);
-		handleAction(courseOfferingHandler, "Course Offerings", context);
-		handleAction(enrollmentSetHandler, "Enrollment Sets", context);
-		handleAction(sectionHandler, "Sections", context);
-		handleAction(sectionMeetingHandler, "Seciton Meetings", context);
-		handleAction(personHandler, "Users", context);
-		handleAction(courseMembershipHandler, "Course Membership", context);
-		context.getProperties().put(IS_FINAL_ACTION, "true");
-		handleAction(sectionMembershipHandler, "Section Membership", context);
+		running = true;
+		commonHandlerService.initRun(context);
+		try {
+    		handleAction(accademicSessionHandler, "Sessions", context);
+    		handleAction(courseSetHandler, "Course Sets", context);
+    		handleAction(canonicalCourseHandler, "Canonical Courses", context);
+    		handleAction(courseOfferingHandler, "Course Offerings", context);
+    		handleAction(enrollmentSetHandler, "Enrollment Sets", context);
+    		handleAction(sectionHandler, "Sections", context);
+    		handleAction(sectionMeetingHandler, "Section Meetings", context);
+    		handleAction(personHandler, "Users", context);
+    		handleAction(courseMembershipHandler, "Course Membership", context);
+    		context.getProperties().put(IS_FINAL_ACTION, "true");
+    		handleAction(sectionMembershipHandler, "Section Membership", context);
+		} finally {
+		    boolean success = true;
+		    String isBatchOk = context.getProperties().get(IS_BATCH_OK);
+		    if ( pleaseStop || (isBatchOk != null && !(Boolean.parseBoolean(isBatchOk))) ) {
+		        success = false;
+		    }
+		    commonHandlerService.completeRun(success);
+		    running = false;
+		}
 	}
 	
 	private boolean isBatchUploaded() {
@@ -575,4 +630,9 @@ public class CsvSyncServiceImpl implements CsvSyncService {
 	public void setDbLog(CsvSyncDao dbLog) {
 		this.dbLog = dbLog;
 	}
+
+    public void setCommonHandlerService(CsvCommonHandlerService commonHandlerService) {
+        this.commonHandlerService = commonHandlerService;
+    }
+
 }

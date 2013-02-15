@@ -34,7 +34,7 @@ public class CsvLoaderJobBean implements StatefulJob {
 	
 	private CsvSyncService csvSyncService;
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		JobDetail detail = context.getJobDetail();
 		JobDataMap map = detail.getJobDataMap();

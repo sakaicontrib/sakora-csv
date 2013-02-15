@@ -107,6 +107,12 @@
         <property name="configurationService">
             <ref bean="org.sakaiproject.component.api.ServerConfigurationService"/>
         </property>
+        <property name="cmAdmin">
+            <ref bean="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
+        </property>
+        <property name="cmService">
+            <ref bean="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+        </property>
     </bean>
 
 	<bean id="net.unicon.sakora.impl.csv.CsvHandlerBase" 
