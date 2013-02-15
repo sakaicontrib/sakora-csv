@@ -35,8 +35,9 @@ import org.sakaiproject.genericdao.api.search.Search;
  * Reads in Enrollment data from csv extracts, expect format is:
  * Enrollment Set Eid, User Eid, Status, Enrollment Credits, Grading Scheme
  * 
+ * @author Dan McCallum dmccallum@unicon.net
+ * @author Aaron Zeckoski azeckoski@unicon.net
  * @author Joshua Ryan
- *
  */
 public class CsvEnrollmentHandler extends CsvHandlerBase {
 	static final Log log = LogFactory.getLog(CsvEnrollmentHandler.class);

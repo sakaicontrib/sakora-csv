@@ -93,7 +93,8 @@ public class CsvCourseOfferingHandler extends CsvHandlerBase {
 			            cmAdmin.createCourseOffering(eid, title, description, status, sessionEid, canonicalCourseEid, startDate, endDate);
 			            adds++;
 			        }
-			        commonHandlerService.addCurrentCourseOffering(eid);
+			        int total = commonHandlerService.addCurrentCourseOffering(eid);
+			        if (log.isDebugEnabled()) log.debug("Added course offering ("+eid+") to the current list: "+total);
 			        if (courseSet != null && cmService.isCourseSetDefined(courseSet)) {
 			            cmAdmin.addCourseOfferingToCourseSet(courseSet, eid);
 			        }

@@ -30,8 +30,9 @@ import org.sakaiproject.coursemanagement.api.EnrollmentSet;
  * Reads in Enrollment Set data from csv extracts, expect format is:
  * Eid, Title, Description, Category, Course Offering Eid, Default Enrollment Credits
  * 
+ * @author Dan McCallum dmccallum@unicon.net
+ * @author Aaron Zeckoski azeckoski@unicon.net
  * @author Joshua Ryan
- *
  */
 public class CsvEnrollmentSetHandler extends CsvHandlerBase {
 	static final Log log = LogFactory.getLog(CsvEnrollmentSetHandler.class);
@@ -59,18 +60,24 @@ public class CsvEnrollmentSetHandler extends CsvHandlerBase {
 					|| !isValid(description, "Description", eid)
 					|| !isValid(courseOfferingEid, "Course Offering Eid", eid)) {
 				log.error("Missing required parameter(s), skipping item " + eid);
-			}
-			else if (cmService.isEnrollmentSetDefined(eid)) {
-				EnrollmentSet enrollment = cmService.getEnrollmentSet(eid);
-				enrollment.setTitle(title);
-				enrollment.setDescription(description);
-				enrollment.setDefaultEnrollmentCredits(defaultEnrollmentCredits);
-				enrollment.setCategory(category);
-				updates++;
-			}
-			else {
-				cmAdmin.createEnrollmentSet(eid, title, description, category, defaultEnrollmentCredits, courseOfferingEid, null);
-				adds++;
+			} else {
+			    if (commonHandlerService.processCourseOffering(courseOfferingEid)) {
+			        if (cmService.isEnrollmentSetDefined(eid)) {
+			            EnrollmentSet enrollment = cmService.getEnrollmentSet(eid);
+			            enrollment.setTitle(title);
+			            enrollment.setDescription(description);
+			            enrollment.setDefaultEnrollmentCredits(defaultEnrollmentCredits);
+			            enrollment.setCategory(category);
+			            updates++;
+			        } else {
+			            cmAdmin.createEnrollmentSet(eid, title, description, category, defaultEnrollmentCredits, courseOfferingEid, null);
+			            adds++;
+			        }
+			        int total = commonHandlerService.addCurrentEnrollmentSet(eid);
+			        if (log.isDebugEnabled()) log.debug("Added enrollment set ("+eid+") to the current list: "+total);
+			    } else {
+			        if (log.isDebugEnabled()) log.debug("Skipped processing enrollment set ("+eid+") because it is in course offering ("+courseOfferingEid+") which is part of an academic session which is being skipped");
+			    }
 			}
 		} else {
 			log.error("Skipping short line (expected at least [" + minFieldCount + 

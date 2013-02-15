@@ -153,6 +153,13 @@ public class CsvCommonHandlerService {
         log.info("SakoraCSV: Sync ("+getCurrentSyncRunId()+"): "+handlerName+" state is: "+state);
     }
 
+    /* 
+     * Academic Session Skip handling:
+     * If the flag is set then all data processing for anything not in the current (i.e. included in the feed) academic sessions
+     * will be skipped. This includes the sessions themselves (they will not be disabled or removed or flagged), 
+     * the course offerings, the enrollment sets, and the enrollments.
+     */
+
     /**
      * controlled by net.unicon.sakora.csv.ignoreMissingSessions config, Default: false
      */
@@ -164,6 +171,7 @@ public class CsvCommonHandlerService {
         return ignoreMissingSessions;
     }
 
+    // ACADEMIC SESSIONS
     protected int setCurrentAcademicSessions(String[] sessions) {
         HashSet<String> currentAcademicSessionEids;
         if (sessions != null) {
@@ -187,7 +195,7 @@ public class CsvCommonHandlerService {
             // check the list of sessions which are current and if this is not in that set then false
             @SuppressWarnings("unchecked")
             Set<String> currentAcademicSessionEids = (Set<String>) getCurrentSyncVar("currentSessionEids", Set.class);
-            if (currentAcademicSessionEids.contains(academicSessionEid)) {
+            if (currentAcademicSessionEids != null && currentAcademicSessionEids.contains(academicSessionEid)) {
                 process = true;
             } else {
                 process = false;
@@ -199,6 +207,7 @@ public class CsvCommonHandlerService {
         return process;
     }
 
+    // COURSE OFFERINGS
     protected int addCurrentCourseOffering(String courseOfferingEid) {
         @SuppressWarnings("unchecked")
         Set<String> currentCourseOfferingEids = (Set<String>) getCurrentSyncVar("currentCourseOfferingEids", Set.class);
@@ -218,7 +227,39 @@ public class CsvCommonHandlerService {
             // check the list of offerings which are current and if course offering is not in that then skip it
             @SuppressWarnings("unchecked")
             Set<String> currentCourseOfferingEids = (Set<String>) getCurrentSyncVar("currentSessionEids", Set.class);
-            if (currentCourseOfferingEids.contains(courseOfferingEid)) {
+            if (currentCourseOfferingEids != null && currentCourseOfferingEids.contains(courseOfferingEid)) {
+                process = true;
+            } else {
+                process = false;
+            }
+        } else {
+            // standard processing, process all course offerings
+            process = true;
+        }
+        return process;
+    }
+
+    // ENROLLMENT SETS
+    protected int addCurrentEnrollmentSet(String enrollmentSetEid) {
+        @SuppressWarnings("unchecked")
+        Set<String> currentEnrollmentSetEids = (Set<String>) getCurrentSyncVar("currentEnrollmentSetEids", Set.class);
+        if (currentEnrollmentSetEids == null) {
+            currentEnrollmentSetEids = new HashSet<String>();
+            setCurrentSyncVar("currentEnrollmentSetEids", currentEnrollmentSetEids);
+        }
+        if (enrollmentSetEid != null) {
+            currentEnrollmentSetEids.add(enrollmentSetEid);
+        }
+        return currentEnrollmentSetEids.size();
+    }
+
+    protected boolean processEnrollmentSet(String enrollmentSetEid) {
+        boolean process;
+        if (isIgnoreMissingSessions()) {
+            // check the list of offerings which are current and if course offering is not in that then skip it
+            @SuppressWarnings("unchecked")
+            Set<String> currentEnrollmentSetEids = (Set<String>) getCurrentSyncVar("currentEnrollmentSetEids", Set.class);
+            if (currentEnrollmentSetEids != null && currentEnrollmentSetEids.contains(enrollmentSetEid)) {
                 process = true;
             } else {
                 process = false;
