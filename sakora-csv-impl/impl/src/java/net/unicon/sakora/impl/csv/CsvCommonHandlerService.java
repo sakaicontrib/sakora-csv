@@ -40,13 +40,18 @@ import org.sakaiproject.coursemanagement.api.CourseManagementService;
  * @author Aaron Zeckoski azeckoski@unicon.net
  */
 public class CsvCommonHandlerService {
+    static final Log log = LogFactory.getLog(CsvCommonHandlerService.class);
+
     public static final String SYNC_VAR_ID = "id";
     public static final String SYNC_VAR_CONTEXT = "context";
     public static final String SYNC_VAR_STATUS = "status";
     public static final String SYNC_VAR_HANDLER = "handler";
     public static final String SYNC_VAR_HANDLER_STATE = "handler_state";
 
-    static final Log log = LogFactory.getLog(CsvCommonHandlerService.class);
+    private static final String CURRENT_ENROLLMENT_SET_EIDS = "currentEnrollmentSetEids";
+    private static final String CURRENT_SECTION_EIDS = "currentSectionEids";
+    private static final String CURRENT_COURSE_OFFERING_EIDS = "currentCourseOfferingEids";
+    private static final String CURRENT_SESSION_EIDS = "currentSessionEids";
 
     protected ServerConfigurationService configurationService;
     protected CourseManagementAdministration cmAdmin;
@@ -185,7 +190,7 @@ public class CsvCommonHandlerService {
         if (currentAcademicSessionEids.isEmpty()) {
             log.warn("SakoraCSV has no current academic sessions, this is typically not a valid state, please check your sessions.csv file");
         }
-        setCurrentSyncVar("currentSessionEids", currentAcademicSessionEids);
+        setCurrentSyncVar(CURRENT_SESSION_EIDS, currentAcademicSessionEids);
         return currentAcademicSessionEids.size();
     }
 
@@ -194,7 +199,7 @@ public class CsvCommonHandlerService {
         if (isIgnoreMissingSessions()) {
             // check the list of sessions which are current and if this is not in that set then false
             @SuppressWarnings("unchecked")
-            Set<String> currentAcademicSessionEids = (Set<String>) getCurrentSyncVar("currentSessionEids", Set.class);
+            Set<String> currentAcademicSessionEids = (Set<String>) getCurrentSyncVar(CURRENT_SESSION_EIDS, Set.class);
             if (currentAcademicSessionEids != null && currentAcademicSessionEids.contains(academicSessionEid)) {
                 process = true;
             } else {
@@ -207,13 +212,22 @@ public class CsvCommonHandlerService {
         return process;
     }
 
+    protected Set<String> getCurrentAcademicSessionEids() {
+        @SuppressWarnings("unchecked")
+        Set<String> currentSessionEids = (Set<String>) getCurrentSyncVar(CURRENT_SESSION_EIDS, Set.class);
+        if (currentSessionEids == null) {
+            currentSessionEids = new HashSet<String>(0);
+        }
+        return currentSessionEids;
+    }
+
     // COURSE OFFERINGS
     protected int addCurrentCourseOffering(String courseOfferingEid) {
         @SuppressWarnings("unchecked")
-        Set<String> currentCourseOfferingEids = (Set<String>) getCurrentSyncVar("currentCourseOfferingEids", Set.class);
+        Set<String> currentCourseOfferingEids = (Set<String>) getCurrentSyncVar(CURRENT_COURSE_OFFERING_EIDS, Set.class);
         if (currentCourseOfferingEids == null) {
             currentCourseOfferingEids = new HashSet<String>();
-            setCurrentSyncVar("currentCourseOfferingEids", currentCourseOfferingEids);
+            setCurrentSyncVar(CURRENT_COURSE_OFFERING_EIDS, currentCourseOfferingEids);
         }
         if (courseOfferingEid != null) {
             currentCourseOfferingEids.add(courseOfferingEid);
@@ -226,7 +240,7 @@ public class CsvCommonHandlerService {
         if (isIgnoreMissingSessions()) {
             // check the list of offerings which are current and if course offering is not in that then skip it
             @SuppressWarnings("unchecked")
-            Set<String> currentCourseOfferingEids = (Set<String>) getCurrentSyncVar("currentSessionEids", Set.class);
+            Set<String> currentCourseOfferingEids = (Set<String>) getCurrentSyncVar(CURRENT_COURSE_OFFERING_EIDS, Set.class);
             if (currentCourseOfferingEids != null && currentCourseOfferingEids.contains(courseOfferingEid)) {
                 process = true;
             } else {
@@ -239,13 +253,63 @@ public class CsvCommonHandlerService {
         return process;
     }
 
+    protected Set<String> getCurrentCourseOfferingEids() {
+        @SuppressWarnings("unchecked")
+        Set<String> currentCourseOfferingEids = (Set<String>) getCurrentSyncVar(CURRENT_COURSE_OFFERING_EIDS, Set.class);
+        if (currentCourseOfferingEids == null) {
+            currentCourseOfferingEids = new HashSet<String>(0);
+        }
+        return currentCourseOfferingEids;
+    }
+
+    // SECTIONS
+    protected int addCurrentSection(String sectionEid) {
+        @SuppressWarnings("unchecked")
+        Set<String> currentSectionEids = (Set<String>) getCurrentSyncVar(CURRENT_SECTION_EIDS, Set.class);
+        if (currentSectionEids == null) {
+            currentSectionEids = new HashSet<String>();
+            setCurrentSyncVar(CURRENT_SECTION_EIDS, currentSectionEids);
+        }
+        if (sectionEid != null) {
+            currentSectionEids.add(sectionEid);
+        }
+        return currentSectionEids.size();
+    }
+
+    protected boolean processSection(String sectionEid) {
+        boolean process;
+        if (isIgnoreMissingSessions()) {
+            // check the list of sections which are current and if section is not in that then skip it
+            @SuppressWarnings("unchecked")
+            Set<String> currentSectionEids = (Set<String>) getCurrentSyncVar(CURRENT_SECTION_EIDS, Set.class);
+            if (currentSectionEids != null && currentSectionEids.contains(sectionEid)) {
+                process = true;
+            } else {
+                process = false;
+            }
+        } else {
+            // standard processing, process all course offerings
+            process = true;
+        }
+        return process;
+    }
+
+    protected Set<String> getCurrentSectionEids() {
+        @SuppressWarnings("unchecked")
+        Set<String> currentSectionEids = (Set<String>) getCurrentSyncVar(CURRENT_SECTION_EIDS, Set.class);
+        if (currentSectionEids == null) {
+            currentSectionEids = new HashSet<String>(0);
+        }
+        return currentSectionEids;
+    }
+
     // ENROLLMENT SETS
     protected int addCurrentEnrollmentSet(String enrollmentSetEid) {
         @SuppressWarnings("unchecked")
-        Set<String> currentEnrollmentSetEids = (Set<String>) getCurrentSyncVar("currentEnrollmentSetEids", Set.class);
+        Set<String> currentEnrollmentSetEids = (Set<String>) getCurrentSyncVar(CURRENT_ENROLLMENT_SET_EIDS, Set.class);
         if (currentEnrollmentSetEids == null) {
             currentEnrollmentSetEids = new HashSet<String>();
-            setCurrentSyncVar("currentEnrollmentSetEids", currentEnrollmentSetEids);
+            setCurrentSyncVar(CURRENT_ENROLLMENT_SET_EIDS, currentEnrollmentSetEids);
         }
         if (enrollmentSetEid != null) {
             currentEnrollmentSetEids.add(enrollmentSetEid);
@@ -258,7 +322,7 @@ public class CsvCommonHandlerService {
         if (isIgnoreMissingSessions()) {
             // check the list of offerings which are current and if course offering is not in that then skip it
             @SuppressWarnings("unchecked")
-            Set<String> currentEnrollmentSetEids = (Set<String>) getCurrentSyncVar("currentEnrollmentSetEids", Set.class);
+            Set<String> currentEnrollmentSetEids = (Set<String>) getCurrentSyncVar(CURRENT_ENROLLMENT_SET_EIDS, Set.class);
             if (currentEnrollmentSetEids != null && currentEnrollmentSetEids.contains(enrollmentSetEid)) {
                 process = true;
             } else {
@@ -270,6 +334,16 @@ public class CsvCommonHandlerService {
         }
         return process;
     }
+
+    protected Set<String> getCurrentEnrollmentSets() {
+        @SuppressWarnings("unchecked")
+        Set<String> currentEnrollmentSetEids = (Set<String>) getCurrentSyncVar(CURRENT_ENROLLMENT_SET_EIDS, Set.class);
+        if (currentEnrollmentSetEids == null) {
+            currentEnrollmentSetEids = new HashSet<String>(0);
+        }
+        return currentEnrollmentSetEids;
+    }
+
 
 
     public void setConfigurationService(ServerConfigurationService configurationService) {

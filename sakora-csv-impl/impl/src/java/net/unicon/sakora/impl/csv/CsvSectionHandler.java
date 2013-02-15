@@ -32,8 +32,8 @@ import org.sakaiproject.coursemanagement.api.Section;
  * Reads in Section definitions from csv extracts, expected format is:
  * Eid, Title, Description, Category, Parent Section Eid, Enrollment Set Eid, Course Offering Eid
  * 
+ * @author Aaron Zeckoski azeckoski@unicon.net
  * @author Joshua Ryan
- *
  */
 @SuppressWarnings("serial")
 public class CsvSectionHandler extends CsvHandlerBase {
@@ -64,46 +64,54 @@ public class CsvSectionHandler extends CsvHandlerBase {
 			String enrollmentSetEid = line[5];
 			String courseOfferingEid = line[6];
 
-			if ( category == null || cmService.getSectionCategoryDescription(category) == null ) {
-				boolean createCategory = true;
-				if ( category == null ) {
-					category = defaultSectionCategoryCode;
-					createCategory = cmService.getSectionCategoryDescription(category) == null;
-				}
-				if ( createCategory ) {
-					String categoryDescription =  sectionCategoryMap.get(category);
-					categoryDescription = categoryDescription == null ? category : categoryDescription;
-					if ( log.isDebugEnabled() ) {
-						log.debug("Creating section category, code: [" + category + 
-								"], desc: [" + categoryDescription + "]");
-					}
-					cmAdmin.addSectionCategory(category, categoryDescription);
-				}
-			}
-
 			if (!isValid(title, "Title", eid)
 					|| !isValid(description, "Description", eid)
 					|| !isValid(courseOfferingEid, "Course Offering Eid", eid)) {
 				log.error("Missing required parameter(s), skipping item " + eid);
-			}
-			else if(cmService.isSectionDefined(eid)) {
-				Section section = cmService.getSection(eid);
-				section.setTitle(title);
-				section.setDescription(description);
+			} else {
+			    if (commonHandlerService.processCourseOffering(courseOfferingEid)) {
+			        // moved the category logic in here because it really should not run unless the line is valid
+			        if ( category == null || cmService.getSectionCategoryDescription(category) == null ) {
+			            boolean createCategory = true;
+			            if ( category == null ) {
+			                category = defaultSectionCategoryCode;
+			                createCategory = cmService.getSectionCategoryDescription(category) == null;
+			            }
+			            if ( createCategory ) {
+			                String categoryDescription =  sectionCategoryMap.get(category);
+			                categoryDescription = categoryDescription == null ? category : categoryDescription;
+			                if ( log.isDebugEnabled() ) {
+			                    log.debug("Creating section category, code: [" + category + 
+			                            "], desc: [" + categoryDescription + "]");
+			                }
+			                cmAdmin.addSectionCategory(category, categoryDescription);
+			            }
+			        }
 
-				section.setCategory(category);
-				Section parent = null;
-				if (cmService.isSectionDefined(parentSectionEid))
-					parent = cmService.getSection(parentSectionEid);
-				section.setParent(parent);
-				if (cmService.isEnrollmentSetDefined(enrollmentSetEid))	
-					section.setEnrollmentSet(cmService.getEnrollmentSet(enrollmentSetEid));
-				cmAdmin.updateSection(section);
-				updates++;
-			}
-			else {
-				cmAdmin.createSection(eid, title, description, category, parentSectionEid, courseOfferingEid, enrollmentSetEid);
-				adds++;
+			        if (cmService.isSectionDefined(eid)) {
+			            Section section = cmService.getSection(eid);
+			            section.setTitle(title);
+			            section.setDescription(description);
+			            section.setCategory(category);
+			            Section parent = null;
+			            if (cmService.isSectionDefined(parentSectionEid)) {
+			                parent = cmService.getSection(parentSectionEid);
+			            }
+			            section.setParent(parent);
+			            if (cmService.isEnrollmentSetDefined(enrollmentSetEid)) {
+			                section.setEnrollmentSet(cmService.getEnrollmentSet(enrollmentSetEid));
+			            }
+			            cmAdmin.updateSection(section);
+			            updates++;
+			        } else {
+			            cmAdmin.createSection(eid, title, description, category, parentSectionEid, courseOfferingEid, enrollmentSetEid);
+			            adds++;
+			        }
+			        int total = commonHandlerService.addCurrentSection(eid);
+			        if (log.isDebugEnabled()) log.debug("Added section ("+eid+") to the current list: "+total);
+			    } else {
+			        if (log.isDebugEnabled()) log.debug("Skipped processing course section ("+eid+") because it is in an offering ("+courseOfferingEid+") which is part of an academic session which is being skipped");
+			    }
 			}
 		} else {
 			log.error("Skipping short line (expected at least [" + minFieldCount + 

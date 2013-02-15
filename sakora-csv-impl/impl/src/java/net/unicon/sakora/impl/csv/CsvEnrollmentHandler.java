@@ -20,6 +20,7 @@ package net.unicon.sakora.impl.csv;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import net.unicon.sakora.api.csv.CsvSyncContext;
 import net.unicon.sakora.api.csv.model.Membership;
@@ -64,21 +65,24 @@ public class CsvEnrollmentHandler extends CsvHandlerBase {
 			if (!isValid(userEid, "User Eid", eid)
 					|| !isValid(status, "Status", eid)) {
 				log.error("Missing required parameter(s), skipping item " + eid);
-			}
-			else if (!cmService.isEnrollmentSetDefined(eid)) {
-				log.error("Invalid ErollmentSet Eid " + eid);
-				dao.create(new SakoraLog(this.getClass().toString(), "Invalid ErollmentSet Eid " + eid));
-			}
-			else {
-				cmAdmin.addOrUpdateEnrollment(userEid, eid, status, credits, gradingScheme);
-				dao.save(new Membership(userEid, eid, studentRole, "enrollment", time));
-				adds++;
+			} else {
+			    if (commonHandlerService.processEnrollmentSet(eid)) {
+			        if (!cmService.isEnrollmentSetDefined(eid)) {
+			            log.error("Invalid EnrollmentSet Eid " + eid);
+			            dao.create(new SakoraLog(this.getClass().toString(), "Invalid EnrollmentSet Eid " + eid));
+			        } else {
+			            cmAdmin.addOrUpdateEnrollment(userEid, eid, status, credits, gradingScheme);
+			            dao.save(new Membership(userEid, eid, studentRole, "enrollment", time));
+			            adds++;
+			        }
+			    } else {
+			        if (log.isDebugEnabled()) log.debug("Skipped processing enrollment for user ("+userEid+") because it is in enrollment set ("+eid+") which is part of an academic session which is being skipped");
+			    }
 			}
 		} else {
 			log.error("Skipping short line (expected at least [" + minFieldCount + 
 					"] fields): [" + (line == null ? null : Arrays.toString(line)) + "]");
 		}
-
 	}
 	
 	@Override
@@ -92,6 +96,17 @@ public class CsvEnrollmentHandler extends CsvHandlerBase {
 
 		boolean done = false;
 
+		// filter out anything which is not part of the current set of enrollment sets
+		if (commonHandlerService.isIgnoreMissingSessions()) {
+		    Set<String> enrollmentSetEids = commonHandlerService.getCurrentEnrollmentSets();
+		    if (enrollmentSetEids.isEmpty()) {
+		        // no sets are current so we skip everything
+		        done = true;
+		        log.warn("SakoraCSV EnrollmentHandler processInternal: No current enrollment sets so we are skipping all internal enrollment post CSV read processing");
+		    }
+		    search.addRestriction( new Restriction("containerEid", enrollmentSetEids) );
+		}
+
 		// TODO should bail if a stop has been requested
 		while (!done) {
 			List<Membership> memberships = dao.findBySearch(Membership.class, search);
@@ -104,10 +119,11 @@ public class CsvEnrollmentHandler extends CsvHandlerBase {
 				}
 			}
 
-			if (memberships == null || memberships.size() == 0)
+			if (memberships == null || memberships.size() == 0) {
 				done = true;
-			else
+			} else {
 				search.setStart(search.getStart() + searchPageSize);
+			}
 		}
 
 		logoutFromSakai();
