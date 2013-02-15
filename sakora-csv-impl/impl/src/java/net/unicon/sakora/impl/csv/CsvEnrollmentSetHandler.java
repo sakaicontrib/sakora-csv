@@ -19,7 +19,6 @@
 package net.unicon.sakora.impl.csv;
 
 import java.util.Arrays;
-import java.util.Date;
 
 import net.unicon.sakora.api.csv.CsvSyncContext;
 

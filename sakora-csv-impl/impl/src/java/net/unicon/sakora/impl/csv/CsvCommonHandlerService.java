@@ -20,6 +20,7 @@ package net.unicon.sakora.impl.csv;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.unicon.sakora.api.csv.CsvHandler;
@@ -185,7 +186,7 @@ public class CsvCommonHandlerService {
         if (isIgnoreMissingSessions()) {
             // check the list of sessions which are current and if this is not in that set then false
             @SuppressWarnings("unchecked")
-            HashSet<String> currentAcademicSessionEids = (HashSet<String>) getCurrentSyncVar("currentSessionEids", HashSet.class);
+            Set<String> currentAcademicSessionEids = (Set<String>) getCurrentSyncVar("currentSessionEids", Set.class);
             if (currentAcademicSessionEids.contains(academicSessionEid)) {
                 process = true;
             } else {
@@ -197,6 +198,38 @@ public class CsvCommonHandlerService {
         }
         return process;
     }
+
+    protected int addCurrentCourseOffering(String courseOfferingEid) {
+        @SuppressWarnings("unchecked")
+        Set<String> currentCourseOfferingEids = (Set<String>) getCurrentSyncVar("currentCourseOfferingEids", Set.class);
+        if (currentCourseOfferingEids == null) {
+            currentCourseOfferingEids = new HashSet<String>();
+            setCurrentSyncVar("currentCourseOfferingEids", currentCourseOfferingEids);
+        }
+        if (courseOfferingEid != null) {
+            currentCourseOfferingEids.add(courseOfferingEid);
+        }
+        return currentCourseOfferingEids.size();
+    }
+
+    protected boolean processCourseOffering(String courseOfferingEid) {
+        boolean process;
+        if (isIgnoreMissingSessions()) {
+            // check the list of offerings which are current and if course offering is not in that then skip it
+            @SuppressWarnings("unchecked")
+            Set<String> currentCourseOfferingEids = (Set<String>) getCurrentSyncVar("currentSessionEids", Set.class);
+            if (currentCourseOfferingEids.contains(courseOfferingEid)) {
+                process = true;
+            } else {
+                process = false;
+            }
+        } else {
+            // standard processing, process all course offerings
+            process = true;
+        }
+        return process;
+    }
+
 
     public void setConfigurationService(ServerConfigurationService configurationService) {
         this.configurationService = configurationService;

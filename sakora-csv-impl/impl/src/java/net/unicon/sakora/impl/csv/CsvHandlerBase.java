@@ -104,10 +104,10 @@ public abstract class CsvHandlerBase implements CsvHandler {
 	}
 
 	protected void setup(CsvSyncContext context) {
-		// intentionally avoid storing this as an instance member to
-		// try to get away from storing processing state in singleton
-		// beans
-		String csvPath =  context.getProperties().get(CsvSyncServiceImpl.BATCH_PROCESSING_DIR) + File.separator + csvFileName;
+		/* intentionally avoid storing this as an instance member to
+		 * try to get away from storing processing state in singleton beans
+		 */
+		String csvPath = context.getProperties().get(CsvSyncServiceImpl.BATCH_PROCESSING_DIR) + File.separator + csvFileName;
 		context.getProperties().put(BATCH_FILE_PATH, csvPath);
 		context.getProperties().put(READ_ALL_LINES, "false");
 		csvr = null;
@@ -129,8 +129,7 @@ public abstract class CsvHandlerBase implements CsvHandler {
 				} catch (TypeException e) {
 					e.printStackTrace();
 				}
-			}
-			else {
+			} else {
 				inputFile = new File(csvPath);
 				br = new BufferedReader(new FileReader(inputFile));
 			}
@@ -140,15 +139,16 @@ public abstract class CsvHandlerBase implements CsvHandler {
 			time = new Date();
 
 			// if the csv files have headers, skip them
-			if (hasHeader)
+			if (hasHeader) {
 				csvr.readNext();
-			} catch (FileNotFoundException ffe) {
-				dao.create(new SakoraLog(this.getClass().toString(), ffe.getLocalizedMessage()));
-				log.warn("CSV reader failed to locate file [" + csvPath + "]", ffe);
-			} catch (IOException ioe) {
-				dao.create(new SakoraLog(this.getClass().toString(), ioe.getLocalizedMessage()));
-				log.warn("CSV reader failed to read from file [" + csvPath + "]", ioe);
 			}
+		} catch (FileNotFoundException ffe) {
+			dao.create(new SakoraLog(this.getClass().toString(), ffe.getLocalizedMessage()));
+			log.warn("CSV reader failed to locate file [" + csvPath + "]", ffe);
+		} catch (IOException ioe) {
+			dao.create(new SakoraLog(this.getClass().toString(), ioe.getLocalizedMessage()));
+			log.warn("CSV reader failed to read from file [" + csvPath + "]", ioe);
+		}
 	}
 
 	public void cleanUp(CsvSyncContext context) {

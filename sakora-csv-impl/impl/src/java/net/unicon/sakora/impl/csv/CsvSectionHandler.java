@@ -19,7 +19,6 @@
 package net.unicon.sakora.impl.csv;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 

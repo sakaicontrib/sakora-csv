@@ -77,27 +77,33 @@ public class CsvCourseOfferingHandler extends CsvHandlerBase {
 					|| !isValid(sessionEid, "Session Eid", eid)) {
 				log.error("Missing required parameter(s), skipping item " + eid);
 
-			} else if (cmService.isCourseOfferingDefined(eid)) {
-				CourseOffering courseOffering = cmService.getCourseOffering(eid);
-				courseOffering.setTitle(title);
-				courseOffering.setDescription(description);
-				courseOffering.setStatus(status);
-				courseOffering.setAcademicSession(cmService.getAcademicSession(sessionEid));
-				courseOffering.setStartDate(startDate);
-				courseOffering.setEndDate(endDate);
-				cmAdmin.updateCourseOffering(courseOffering);
-				updates++;
-
 			} else {
-				cmAdmin.createCourseOffering(eid, title, description, status, sessionEid, canonicalCourseEid, startDate, endDate);
-				adds++;
-			}
-			if (courseSet != null && cmService.isCourseSetDefined(courseSet)) {
-				cmAdmin.addCourseOfferingToCourseSet(courseSet, eid);
+			    if (commonHandlerService.processAcademicSession(sessionEid)) {
+			        if (cmService.isCourseOfferingDefined(eid)) {
+			            CourseOffering courseOffering = cmService.getCourseOffering(eid);
+			            courseOffering.setTitle(title);
+			            courseOffering.setDescription(description);
+			            courseOffering.setStatus(status);
+			            courseOffering.setAcademicSession(cmService.getAcademicSession(sessionEid));
+			            courseOffering.setStartDate(startDate);
+			            courseOffering.setEndDate(endDate);
+			            cmAdmin.updateCourseOffering(courseOffering);
+			            updates++;
+			        } else {
+			            cmAdmin.createCourseOffering(eid, title, description, status, sessionEid, canonicalCourseEid, startDate, endDate);
+			            adds++;
+			        }
+			        commonHandlerService.addCurrentCourseOffering(eid);
+			        if (courseSet != null && cmService.isCourseSetDefined(courseSet)) {
+			            cmAdmin.addCourseOfferingToCourseSet(courseSet, eid);
+			        }
+			    } else {
+			        if (log.isDebugEnabled()) log.debug("Skipped processing course offering ("+eid+") because it is in an academic session ("+sessionEid+") which is being skipped");
+			    }
 			}
 		} else {
-			log.error("Skipping short line (expected at least [" + minFieldCount + 
-					"] fields): [" + (line == null ? null : Arrays.toString(line)) + "]");
+		    log.error("Skipping short line (expected at least [" + minFieldCount + 
+		            "] fields): [" + (line == null ? null : Arrays.toString(line)) + "]");
 		}
 	}
 
