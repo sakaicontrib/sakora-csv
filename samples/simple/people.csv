@@ -1,0 +1,3 @@
+Eid,LastName,FirstName,Email,Password,Type,OptionalAttribute
+inst1,One,Instructor,,inst1,registered,
+stud1,One,Student,,stud1,registered,
