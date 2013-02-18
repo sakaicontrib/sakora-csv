@@ -49,7 +49,7 @@ public class CsvSectionMeetingHandler extends CsvHandlerBase {
 			line = trimAll(line);
 
 			// for clarity
-			String eid = line[0];
+			String eid = line[0]; // section EID
 			String location = line[1];
 			String notes = line[2];
 			Time startTime = null;
@@ -63,18 +63,22 @@ public class CsvSectionMeetingHandler extends CsvHandlerBase {
 					|| !isValid(startTime, "Start Time", eid)
 					|| !isValid(endTime, "End Time", eid)) {
 				log.error("Missing required parameter(s), skipping item " + eid);
-			}
-			else if(cmService.isSectionDefined(eid)) {
-				Section section = cmService.getSection(eid);
-				Meeting meeting = cmAdmin.newSectionMeeting(eid, location, startTime, endTime, notes);
-				if (!section.getMeetings().contains(meeting)) {
-					section.getMeetings().add(meeting);
-					adds++;
-				}
-				cmAdmin.updateSection(section);
-			}
-			else {
-				log.error("CsvSectionMeetingHandler :: can't add meeting to invalid section");
+			} else {
+			    if (commonHandlerService.processSection(eid)) {
+			        if (cmService.isSectionDefined(eid)) {
+			            Section section = cmService.getSection(eid);
+			            Meeting meeting = cmAdmin.newSectionMeeting(eid, location, startTime, endTime, notes);
+			            if (!section.getMeetings().contains(meeting)) {
+			                section.getMeetings().add(meeting);
+			                adds++;
+			            }
+			            cmAdmin.updateSection(section);
+			        } else {
+			            log.error("CsvSectionMeetingHandler :: can't add meeting to invalid section");
+			        }
+			    } else {
+			        if (log.isDebugEnabled()) log.debug("Skipped processing course section meeting because it is in a section ("+eid+") which is part of an academic session which is being skipped");
+			    }
 			}
 		} else {
 			log.error("Skipping short line (expected at least [" + minFieldCount + 

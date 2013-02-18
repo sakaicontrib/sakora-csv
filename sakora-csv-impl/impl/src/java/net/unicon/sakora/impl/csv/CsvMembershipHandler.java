@@ -40,8 +40,8 @@ import org.sakaiproject.genericdao.api.search.Search;
  * 
  * * denotes completely optional fields, blank or missing values are fine, default values will be used.
  * 
+ * @author Aaron Zeckoski azeckoski@unicon.net
  * @author Joshua Ryan
- *
  */
 public class CsvMembershipHandler extends CsvHandlerBase {
 	static final Log log = LogFactory.getLog(CsvMembershipHandler.class);
@@ -69,78 +69,91 @@ public class CsvMembershipHandler extends CsvHandlerBase {
 			String role = line[2];
 			String status = line[3];
 			String credits = defaultCredits;
-			if (line.length > 4 && line[4] != null)
+			if (line.length > 4 && line[4] != null) {
 				credits = line[4];
+			}
 			String gradingScheme = defaultGradingScheme;
-			if (line.length > 5 && line[5] != null)
+			if (line.length > 5 && line[5] != null) {
 				gradingScheme = line[5];
+			}
 
 			try {
+			    boolean processedEnrollment = false; 
 				if (!isValid(userEid, "User Eid", eid)
 						|| !isValid(role, "Role", eid)
 						|| !isValid(status, "Status", eid)) {
 					log.error("Missing required parameter(s), skipping item " + eid);
-				}
-				else if ("section".equals(mode)) {
-					Section section = cmService.getSection(eid);
-					EnrollmentSet enrolled = section.getEnrollmentSet();
+				} else if ("section".equals(mode)) {
+				    // SECTION MEMBERSHIPS
+				    if (commonHandlerService.processSection(eid)) {
+				        Section section = cmService.getSection(eid);
+				        EnrollmentSet enrolled = section.getEnrollmentSet();
 
-					if (enrolled == null) {
-						// no enrollment set yet - create one
-						String esEid = section.getEid() + "_ES";
+				        if (enrolled == null) {
+				            // no enrollment set yet - create one
+				            String esEid = section.getEid() + "_ES";
 
-						if ( log.isDebugEnabled() ) {
-							log.debug("Section [" + section.getEid() + 
-									"] has no enrollment set, creating one with eid [" + esEid + "]");
-						}
-
-						enrolled = cmAdmin.createEnrollmentSet(esEid, section.getTitle(), section.getDescription(),
-								(section.getCategory() == null ? defaultEnrollmentSetCategory : section.getCategory()), 
-								defaultCredits, section.getCourseOfferingEid(), null);
-						section.setEnrollmentSet(enrolled);
-						cmAdmin.updateSection(section);
-					}
-					if (role.equalsIgnoreCase(instructorRole)) {
-						if (enrolled.getOfficialInstructors() == null) {
-							enrolled.setOfficialInstructors(new HashSet<String>());
-						}
-						enrolled.getOfficialInstructors().add(userEid);
-					}
-					cmAdmin.addOrUpdateSectionMembership(userEid, role, eid, status);
-					if (role.equalsIgnoreCase(studentRole)) {
-						if (credits == null || defaultCredits.equals(credits))
-							credits = enrolled.getDefaultEnrollmentCredits();
-						cmAdmin.addOrUpdateEnrollment(userEid, enrolled.getEid(), status, credits, gradingScheme);
-					}
-					updates++; // hard to say if it was an add or an update
-				}
-				else {
-					cmAdmin.addOrUpdateCourseOfferingMembership(userEid, role, eid, status);
-					updates++; // hard to say if it was an add or an update
-				}
-
-				// Update or add Sakora membership entry (used for tracking deltas)
-				Search search = new Search();
-				search.addRestriction(new Restriction("mode", mode, Restriction.EQUALS));
-				search.addRestriction(new Restriction("userEid", userEid));
-				search.addRestriction(new Restriction("containerEid", eid));
-				List<Membership> existing = dao.findBySearch(Membership.class, search);
-				if ( existing == null || existing.isEmpty() ) {
-					dao.save(new Membership(userEid, eid, role, mode, time));
+				            if ( log.isDebugEnabled() ) {
+				                log.debug("Section [" + section.getEid() + "] has no enrollment set, creating one with eid [" + esEid + "]");
+				            }
+				            enrolled = cmAdmin.createEnrollmentSet(esEid, section.getTitle(), section.getDescription(),
+				                    (section.getCategory() == null ? defaultEnrollmentSetCategory : section.getCategory()), 
+				                    defaultCredits, section.getCourseOfferingEid(), null);
+				            section.setEnrollmentSet(enrolled);
+				            cmAdmin.updateSection(section);
+				        }
+				        if (role.equalsIgnoreCase(instructorRole)) {
+				            if (enrolled.getOfficialInstructors() == null) {
+				                enrolled.setOfficialInstructors(new HashSet<String>());
+				            }
+				            enrolled.getOfficialInstructors().add(userEid);
+				        }
+				        cmAdmin.addOrUpdateSectionMembership(userEid, role, eid, status);
+				        if (role.equalsIgnoreCase(studentRole)) {
+				            if (credits == null || defaultCredits.equals(credits)) {
+				                credits = enrolled.getDefaultEnrollmentCredits();
+				            }
+				            cmAdmin.addOrUpdateEnrollment(userEid, enrolled.getEid(), status, credits, gradingScheme);
+				        }
+				        updates++; // hard to say if it was an add or an update
+				        processedEnrollment = true;
+				    } else {
+				        if (log.isDebugEnabled()) log.debug("Skipped processing section membership for user ("+userEid+") in section ("+eid+") because it is part of an academic session which is being skipped");
+				    }
 				} else {
-					for ( int i = 0 ; i < existing.size() ; i++ ) {
-						// guard against dupl records, which can lead
-						// to inadvertent CM membership deletion
-						if ( i == existing.size() - 1 ) {
-							existing.get(i).setInputTime(time);
-							existing.get(i).setRole(role);
-							dao.update(existing.get(i));
-						} else {
-							// Not in transaction so can't use delete(Object).
-							// Should really be fixed.
-							dao.delete(Membership.class, existing.get(i).getId());
-						}
-					}
+				    // COURSE MEMBERSHIPS
+				    if (commonHandlerService.processCourseOffering(eid)) {
+				        cmAdmin.addOrUpdateCourseOfferingMembership(userEid, role, eid, status);
+				        updates++; // hard to say if it was an add or an update
+				        processedEnrollment = true;
+				    } else {
+				        if (log.isDebugEnabled()) log.debug("Skipped processing membership for user ("+userEid+") in course offering ("+eid+") because it is part of an academic session which is being skipped");
+				    }
+				}
+
+				if (processedEnrollment) {
+				    // Update or add Sakora membership entry (used for tracking deltas)
+				    Search search = new Search();
+				    search.addRestriction(new Restriction("mode", mode, Restriction.EQUALS));
+				    search.addRestriction(new Restriction("userEid", userEid));
+				    search.addRestriction(new Restriction("containerEid", eid));
+				    List<Membership> existing = dao.findBySearch(Membership.class, search);
+				    if ( existing == null || existing.isEmpty() ) {
+				        dao.save(new Membership(userEid, eid, role, mode, time));
+				    } else {
+				        for ( int i = 0 ; i < existing.size() ; i++ ) {
+				            // guard against dupl records, which can lead to inadvertent CM membership deletion
+				            if ( i == existing.size() - 1 ) {
+				                existing.get(i).setInputTime(time);
+				                existing.get(i).setRole(role);
+				                dao.update(existing.get(i));
+				            } else {
+				                // Not in transaction so can't use delete(Object).
+				                // Should really be fixed.
+				                dao.delete(Membership.class, existing.get(i).getId());
+				            }
+				        }
+				    }
 				}
 			} catch (IdNotFoundException idfe) {
 				dao.create(new SakoraLog(this.getClass().toString(), idfe.getLocalizedMessage()));
@@ -160,6 +173,7 @@ public class CsvMembershipHandler extends CsvHandlerBase {
 		search.addRestriction(new Restriction("mode", mode, Restriction.EQUALS));
 		search.setLimit(searchPageSize);
 
+		// TODO skip the memberships removals which are not part of this AS
 		boolean done = false;
 
 		while (!done) {

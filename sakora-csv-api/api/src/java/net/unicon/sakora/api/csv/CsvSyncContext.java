@@ -30,7 +30,7 @@ public interface CsvSyncContext {
 	 * this map unless you intend for that state to affect
 	 * processing of the next batch.
 	 * 
-	 * @return
+	 * @return Map of name->value properties from the current CSV context
 	 */
 	Map<String,String> getProperties();
 	void setProperties(Map<String,String> state);
