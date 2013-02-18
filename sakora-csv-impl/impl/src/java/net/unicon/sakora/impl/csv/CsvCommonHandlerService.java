@@ -53,6 +53,9 @@ public class CsvCommonHandlerService {
     private static final String CURRENT_COURSE_OFFERING_EIDS = "currentCourseOfferingEids";
     private static final String CURRENT_SESSION_EIDS = "currentSessionEids";
 
+    private static final String IGNORE_ENROLLMENT_REMOVALS = "ignoreEnrollmentRemovals";
+    private static final String IGNORE_MISSING_SESSIONS = "ignoreMissingSessions";
+
     protected ServerConfigurationService configurationService;
     protected CourseManagementAdministration cmAdmin;
     protected CourseManagementService cmService;
@@ -63,10 +66,14 @@ public class CsvCommonHandlerService {
     public void init() {
         // load common config values
         ignoreMissingSessions = configurationService.getBoolean("net.unicon.sakora.csv.ignoreMissingSessions", ignoreMissingSessions);
-        if (isIgnoreMissingSessions()) {
+        if (ignoreMissingSessions()) {
             log.info("SakoraCSV ignoreMissingSessions is enabled: all data related to sessions not included in sessions.csv will be left skipped or otherwise unchanged");
         } else {
             log.info("SakoraCSV set to process missing sessions (ignoreMissingSessions=false): all data related to sessions not included in sessions.csv will be processed and REMOVED");
+        }
+        ignoreEnrollmentRemovals = configurationService.getBoolean("net.unicon.sakora.csv.ignoreEnrollmentRemovals", ignoreEnrollmentRemovals);
+        if (ignoreEnrollmentRemovals()) {
+            log.info("SakoraCSV ignoreEnrollmentRemovals is enabled: all enrollment removal processing will be skipped");
         }
     }
 
@@ -90,14 +97,36 @@ public class CsvCommonHandlerService {
         syncVars.put(SYNC_VAR_ID, runId);
         syncVars.put(SYNC_VAR_STATUS, "running");
         syncVars.put(SYNC_VAR_CONTEXT, context);
+        // Do some logging
+        log.info("SakoraCSV sync run ("+runId+") starting: "+context);
+        // process context overrides
+        if (context.getProperties().containsKey(IGNORE_MISSING_SESSIONS)) {
+            Boolean ims = Boolean.parseBoolean(context.getProperties().get(IGNORE_MISSING_SESSIONS));
+            setIgnoreMissingSessions(ims);
+            log.info("SakoraCSV sync run ("+runId+") overriding ignoreMissingSessions: "+ims);
+        }
+        if (context.getProperties().containsKey(IGNORE_ENROLLMENT_REMOVALS)) {
+            Boolean ier = Boolean.parseBoolean(context.getProperties().get(IGNORE_ENROLLMENT_REMOVALS));
+            setIgnoreMissingSessions(ier);
+            log.info("SakoraCSV sync run ("+runId+") overriding ignoreEnrollmentRemovals: "+ier);
+        }
         return runId;
     }
 
     public synchronized void completeRun(boolean success) {
         // run this after a run completes
+        String runId = getCurrentSyncRunId();
+        log.info("SakoraCSV sync run ("+runId+") completed: success="+success);
         syncVars.put(SYNC_VAR_STATUS, success?"complete":"failed");
     }
 
+    /**
+     * Retrieve a variable stored for the current sync processing if it is set
+     * 
+     * @param name string key
+     * @param type the type of the variable (for compiler happiness only, will not be converted)
+     * @return the value OR null if it is not set
+     */
     @SuppressWarnings("unchecked")
     public <T> T getCurrentSyncVar(String name, Class<T> type) {
         if (syncVars.containsKey(name)) {
@@ -158,14 +187,45 @@ public class CsvCommonHandlerService {
         log.info("SakoraCSV: Sync ("+getCurrentSyncRunId()+"): "+handlerName+" state is: "+state);
     }
 
-    /* 
+    /**
+     * REMOVAL MODE handling
+     * If false (DEFAULT), remove all memberships which are missing from current feed.
+     * If true, no memberships removals are processed for feed (all removal processing is skipped)
+     * 
+     * controlled by net.unicon.sakora.csv.ignoreEnrollmentRemovals, Default: false
+     */
+    protected boolean ignoreEnrollmentRemovals = false;
+    public void setIgnoreEnrollmentRemovals(boolean ignoreEnrollmentRemovals) {
+        this.ignoreEnrollmentRemovals = ignoreEnrollmentRemovals;
+    }
+    public boolean isIgnoreEnrollmentRemovals() {
+        return ignoreEnrollmentRemovals;
+    }
+    /**
+     * Allows the current setting to be overridden for the current sync run only
+     * @param ier null clears the override, see {@link #ignoreEnrollmentRemovals}
+     */
+    public void overrideIgnoreEnrollmentRemovals(Boolean ier) {
+        setCurrentSyncVar(IGNORE_ENROLLMENT_REMOVALS, ier);
+        if (ier != null) {
+            log.info("Overriding the ignoreEnrollmentRemovals value of "+ignoreEnrollmentRemovals+" with "+ier.booleanValue()+" for current sync: "+getCurrentSyncRunId());
+        }
+    }
+    public boolean ignoreEnrollmentRemovals() {
+        Boolean ier = getCurrentSyncVar(IGNORE_ENROLLMENT_REMOVALS, Boolean.class);
+        if (ier != null) {
+            // override from the current run
+            return ier.booleanValue();
+        }
+        return ignoreEnrollmentRemovals;
+    }
+
+    /**
      * Academic Session Skip handling:
      * If the flag is set then all data processing for anything not in the current (i.e. included in the feed) academic sessions
      * will be skipped. This includes the sessions themselves (they will not be disabled or removed or flagged), 
      * the course offerings, the enrollment sets, and the enrollments.
-     */
-
-    /**
+     * 
      * controlled by net.unicon.sakora.csv.ignoreMissingSessions config, Default: false
      */
     protected boolean ignoreMissingSessions = false;
@@ -173,6 +233,24 @@ public class CsvCommonHandlerService {
         this.ignoreMissingSessions = ignoreMissingSessions;
     }
     public boolean isIgnoreMissingSessions() {
+        return ignoreMissingSessions;
+    }
+    /**
+     * Allows the current setting to be overridden for the current sync run only
+     * @param ims null clears the override, see {@link #ignoreMissingSessions}
+     */
+    public void overrideIgnoreMissingSessions(Boolean ims) {
+        setCurrentSyncVar(IGNORE_MISSING_SESSIONS, ims);
+        if (ims != null) {
+            log.info("Overriding the ignoreMissingSessions value of "+ignoreMissingSessions+" with "+ims.booleanValue()+" for current sync: "+getCurrentSyncRunId());
+        }
+    }
+    public boolean ignoreMissingSessions() {
+        Boolean ims = getCurrentSyncVar(IGNORE_MISSING_SESSIONS, Boolean.class);
+        if (ims != null) {
+            // override from the current run
+            return ims.booleanValue();
+        }
         return ignoreMissingSessions;
     }
 
@@ -196,7 +274,7 @@ public class CsvCommonHandlerService {
 
     protected boolean processAcademicSession(String academicSessionEid) {
         boolean process;
-        if (isIgnoreMissingSessions()) {
+        if (ignoreMissingSessions()) {
             // check the list of sessions which are current and if this is not in that set then false
             @SuppressWarnings("unchecked")
             Set<String> currentAcademicSessionEids = (Set<String>) getCurrentSyncVar(CURRENT_SESSION_EIDS, Set.class);
@@ -237,7 +315,7 @@ public class CsvCommonHandlerService {
 
     protected boolean processCourseOffering(String courseOfferingEid) {
         boolean process;
-        if (isIgnoreMissingSessions()) {
+        if (ignoreMissingSessions()) {
             // check the list of offerings which are current and if course offering is not in that then skip it
             @SuppressWarnings("unchecked")
             Set<String> currentCourseOfferingEids = (Set<String>) getCurrentSyncVar(CURRENT_COURSE_OFFERING_EIDS, Set.class);
@@ -278,7 +356,7 @@ public class CsvCommonHandlerService {
 
     protected boolean processSection(String sectionEid) {
         boolean process;
-        if (isIgnoreMissingSessions()) {
+        if (ignoreMissingSessions()) {
             // check the list of sections which are current and if section is not in that then skip it
             @SuppressWarnings("unchecked")
             Set<String> currentSectionEids = (Set<String>) getCurrentSyncVar(CURRENT_SECTION_EIDS, Set.class);
@@ -319,7 +397,7 @@ public class CsvCommonHandlerService {
 
     protected boolean processEnrollmentSet(String enrollmentSetEid) {
         boolean process;
-        if (isIgnoreMissingSessions()) {
+        if (ignoreMissingSessions()) {
             // check the list of offerings which are current and if course offering is not in that then skip it
             @SuppressWarnings("unchecked")
             Set<String> currentEnrollmentSetEids = (Set<String>) getCurrentSyncVar(CURRENT_ENROLLMENT_SET_EIDS, Set.class);

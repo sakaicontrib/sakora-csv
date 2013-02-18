@@ -179,7 +179,7 @@ public class CsvMembershipHandler extends CsvHandlerBase {
 		boolean done = false;
 
 		// filter out anything which is not part of the current set of offerings/sections
-		if (commonHandlerService.isIgnoreMissingSessions()) {
+		if (commonHandlerService.ignoreMissingSessions()) {
 		    Set<String> enrollmentContainerEids;
 		    if (MODE_SECTION.equals(mode)) {
 		        enrollmentContainerEids = commonHandlerService.getCurrentSectionEids();

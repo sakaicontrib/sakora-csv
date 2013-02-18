@@ -215,17 +215,16 @@ public class CsvPersonHandler extends CsvHandlerBase {
 
 		boolean done = false;
 		
-		// TODO should bail if a stop has been requested
 		while (!done) {
 			List<Person> people = dao.findBySearch(Person.class, search);
 			for (Person user : people) {
 				try {
 					UserEdit target = userDirService.editUser(user.getUserId());
-					if (deleteUsers)
+					if (deleteUsers) {
 						userDirService.removeUser(target);
-					else
+					} else {
 						target.setType(suspended);
-
+					}
 					// commit the changes
 					userDirService.commitEdit(target);
 					deletes++;
@@ -247,10 +246,12 @@ public class CsvPersonHandler extends CsvHandlerBase {
 					log.error("CsvPersonHandler: " + upe.getMessage());
 				}
 			}
-			if (people == null || people.size() == 0)
+			if (people == null || people.size() == 0) {
 				done = true;
-			else
+			} else {
 				search.setStart(search.getStart() + searchPageSize);
+			}
+			// should we halt if a stop was requested via pleaseStop?
 		}
 
 		logoutFromSakai();

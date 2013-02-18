@@ -97,7 +97,7 @@ public class CsvEnrollmentHandler extends CsvHandlerBase {
 		boolean done = false;
 
 		// filter out anything which is not part of the current set of enrollment sets
-		if (commonHandlerService.isIgnoreMissingSessions()) {
+		if (commonHandlerService.ignoreMissingSessions()) {
 		    Set<String> enrollmentSetEids = commonHandlerService.getCurrentEnrollmentSets();
 		    if (enrollmentSetEids.isEmpty()) {
 		        // no sets are current so we skip everything

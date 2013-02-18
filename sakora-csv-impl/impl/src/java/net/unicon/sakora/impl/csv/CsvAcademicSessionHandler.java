@@ -114,7 +114,7 @@ public class CsvAcademicSessionHandler extends CsvHandlerBase {
 				search.setStart(search.getStart() + searchPageSize);
 			}
 		}
-        if (currentSessions.isEmpty() && !commonHandlerService.isIgnoreMissingSessions()) {
+        if (currentSessions.isEmpty() && !commonHandlerService.ignoreMissingSessions()) {
             // TODO should we die here? -AZ
             /* 
              * Might make sense to skip handling of CM files in this case. 
