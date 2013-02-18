@@ -131,7 +131,7 @@ public class CsvUploadServlet extends HttpServlet {
 		        }
 		    }
 		    else if ( ("ignoreMissingSessions".equals(part.getName()) 
-		            || "ignoreEnrollmentRemovals".equals(part.getName())
+		            || "ignoreMembershipRemovals".equals(part.getName())
 		            ) && part.isParam()) {
 		        ParamPart paramPart = (ParamPart) part;
 		        Boolean val = Boolean.parseBoolean(paramPart.getStringValue());

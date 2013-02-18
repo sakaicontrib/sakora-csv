@@ -53,7 +53,7 @@ public class CsvCommonHandlerService {
     private static final String CURRENT_COURSE_OFFERING_EIDS = "currentCourseOfferingEids";
     private static final String CURRENT_SESSION_EIDS = "currentSessionEids";
 
-    private static final String IGNORE_ENROLLMENT_REMOVALS = "ignoreEnrollmentRemovals";
+    private static final String IGNORE_MEMBERSHIP_REMOVALS = "ignoreMembershipRemovals";
     private static final String IGNORE_MISSING_SESSIONS = "ignoreMissingSessions";
 
     protected ServerConfigurationService configurationService;
@@ -71,9 +71,9 @@ public class CsvCommonHandlerService {
         } else {
             log.info("SakoraCSV set to process missing sessions (ignoreMissingSessions=false): all data related to sessions not included in sessions.csv will be processed and REMOVED");
         }
-        ignoreEnrollmentRemovals = configurationService.getBoolean("net.unicon.sakora.csv.ignoreEnrollmentRemovals", ignoreEnrollmentRemovals);
-        if (ignoreEnrollmentRemovals()) {
-            log.info("SakoraCSV ignoreEnrollmentRemovals is enabled: all enrollment removal processing will be skipped");
+        ignoreMembershipRemovals = configurationService.getBoolean("net.unicon.sakora.csv.ignoreMembershipRemovals", ignoreMembershipRemovals);
+        if (ignoreMembershipRemovals()) {
+            log.info("SakoraCSV ignoreMembershipRemovals is enabled: all enrollment removal processing will be skipped");
         }
     }
 
@@ -105,10 +105,10 @@ public class CsvCommonHandlerService {
             setIgnoreMissingSessions(ims);
             log.info("SakoraCSV sync run ("+runId+") overriding ignoreMissingSessions: "+ims);
         }
-        if (context.getProperties().containsKey(IGNORE_ENROLLMENT_REMOVALS)) {
-            Boolean ier = Boolean.parseBoolean(context.getProperties().get(IGNORE_ENROLLMENT_REMOVALS));
+        if (context.getProperties().containsKey(IGNORE_MEMBERSHIP_REMOVALS)) {
+            Boolean ier = Boolean.parseBoolean(context.getProperties().get(IGNORE_MEMBERSHIP_REMOVALS));
             setIgnoreMissingSessions(ier);
-            log.info("SakoraCSV sync run ("+runId+") overriding ignoreEnrollmentRemovals: "+ier);
+            log.info("SakoraCSV sync run ("+runId+") overriding ignoreMembershipRemovals: "+ier);
         }
         return runId;
     }
@@ -192,32 +192,32 @@ public class CsvCommonHandlerService {
      * If false (DEFAULT), remove all memberships which are missing from current feed.
      * If true, no memberships removals are processed for feed (all removal processing is skipped)
      * 
-     * controlled by net.unicon.sakora.csv.ignoreEnrollmentRemovals, Default: false
+     * controlled by net.unicon.sakora.csv.ignoreMembershipRemovals, Default: false
      */
-    protected boolean ignoreEnrollmentRemovals = false;
-    public void setIgnoreEnrollmentRemovals(boolean ignoreEnrollmentRemovals) {
-        this.ignoreEnrollmentRemovals = ignoreEnrollmentRemovals;
+    protected boolean ignoreMembershipRemovals = false;
+    public void setIgnoreMembershipRemovals(boolean ignoreMembershipRemovals) {
+        this.ignoreMembershipRemovals = ignoreMembershipRemovals;
     }
-    public boolean isIgnoreEnrollmentRemovals() {
-        return ignoreEnrollmentRemovals;
+    public boolean isIgnoreMembershipRemovals() {
+        return ignoreMembershipRemovals;
     }
     /**
      * Allows the current setting to be overridden for the current sync run only
-     * @param ier null clears the override, see {@link #ignoreEnrollmentRemovals}
+     * @param ier null clears the override, see {@link #ignoreMembershipRemovals}
      */
-    public void overrideIgnoreEnrollmentRemovals(Boolean ier) {
-        setCurrentSyncVar(IGNORE_ENROLLMENT_REMOVALS, ier);
+    public void overrideIgnoreMembershipRemovals(Boolean ier) {
+        setCurrentSyncVar(IGNORE_MEMBERSHIP_REMOVALS, ier);
         if (ier != null) {
-            log.info("Overriding the ignoreEnrollmentRemovals value of "+ignoreEnrollmentRemovals+" with "+ier.booleanValue()+" for current sync: "+getCurrentSyncRunId());
+            log.info("Overriding the ignoreMembershipRemovals value of "+ignoreMembershipRemovals+" with "+ier.booleanValue()+" for current sync: "+getCurrentSyncRunId());
         }
     }
-    public boolean ignoreEnrollmentRemovals() {
-        Boolean ier = getCurrentSyncVar(IGNORE_ENROLLMENT_REMOVALS, Boolean.class);
+    public boolean ignoreMembershipRemovals() {
+        Boolean ier = getCurrentSyncVar(IGNORE_MEMBERSHIP_REMOVALS, Boolean.class);
         if (ier != null) {
             // override from the current run
             return ier.booleanValue();
         }
-        return ignoreEnrollmentRemovals;
+        return ignoreMembershipRemovals;
     }
 
     /**

@@ -13,3 +13,8 @@ Configuration options (others documented on the confluence page):
 # when false (legacy), all courses, users, and memberships related to sessions not included is removed or disabled
 # Default: false (matches legacy behavior)
 #net.unicon.sakora.csv.ignoreMissingSessions=true
+# Configure Sakora to ignore all memberships removals processing
+# If false (legacy), remove all memberships which are missing from current feed.
+# If true, no memberships removals are processed for feed (all removal processing is skipped)
+# Default: false (matches legacy behavior)
+#net.unicon.sakora.csv.ignoreMembershipRemovals=true

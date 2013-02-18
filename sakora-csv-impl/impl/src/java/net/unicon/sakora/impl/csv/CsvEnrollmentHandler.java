@@ -87,51 +87,55 @@ public class CsvEnrollmentHandler extends CsvHandlerBase {
 	
 	@Override
 	protected void processInternal(CsvSyncContext context) {
-		loginToSakai();
-		// look for all enrollments previously defined but not included in this snapshot
-		Search search = new Search();
-		search.addRestriction(new Restriction("inputTime", time, Restriction.NOT_EQUALS));
-		search.addRestriction(new Restriction("mode", "enrollment", Restriction.EQUALS));
-		search.setLimit(searchPageSize);
+	    if (commonHandlerService.ignoreMembershipRemovals()) {
+	        if (log.isDebugEnabled()) log.debug("SakoraCSV skipping enrollment membership processing, ignoreMembershipRemovals=true");
+	    } else {
+	        // do removal processing
+	        loginToSakai();
+	        // look for all enrollments previously defined but not included in this snapshot
+	        Search search = new Search();
+	        search.addRestriction(new Restriction("inputTime", time, Restriction.NOT_EQUALS));
+	        search.addRestriction(new Restriction("mode", "enrollment", Restriction.EQUALS));
+	        search.setLimit(searchPageSize);
 
-		boolean done = false;
+	        boolean done = false;
 
-		// filter out anything which is not part of the current set of enrollment sets
-		if (commonHandlerService.ignoreMissingSessions()) {
-		    Set<String> enrollmentSetEids = commonHandlerService.getCurrentEnrollmentSets();
-		    if (enrollmentSetEids.isEmpty()) {
-		        // no sets are current so we skip everything
-		        done = true;
-		        log.warn("SakoraCSV EnrollmentHandler processInternal: No current enrollment sets so we are skipping all internal enrollment post CSV read processing");
-		    } else {
-		        search.addRestriction( new Restriction("containerEid", enrollmentSetEids) );
-		        log.info("SakoraCSV limiting enrollment membership removals to "+enrollmentSetEids.size()+" enrollment sets: "+enrollmentSetEids);
-		    }
-		}
+	        // filter out anything which is not part of the current set of enrollment sets
+	        if (commonHandlerService.ignoreMissingSessions()) {
+	            Set<String> enrollmentSetEids = commonHandlerService.getCurrentEnrollmentSets();
+	            if (enrollmentSetEids.isEmpty()) {
+	                // no sets are current so we skip everything
+	                done = true;
+	                log.warn("SakoraCSV EnrollmentHandler processInternal: No current enrollment sets so we are skipping all internal enrollment post CSV read processing");
+	            } else {
+	                search.addRestriction( new Restriction("containerEid", enrollmentSetEids) );
+	                log.info("SakoraCSV limiting enrollment membership removals to "+enrollmentSetEids.size()+" enrollment sets: "+enrollmentSetEids);
+	            }
+	        }
 
-		while (!done) {
-			List<Membership> memberships = dao.findBySearch(Membership.class, search);
-			if (log.isDebugEnabled()) log.debug("SakoraCSV processing "+memberships.size()+" enrollment membership removals");
-			for (Membership membership : memberships) {
-				try {
-					cmAdmin.addOrUpdateEnrollment(membership.getUserEid(), membership.getContainerEid(), "dropped", "0", "");
-				} catch (IdNotFoundException idfe) {
-					dao.create(new SakoraLog(this.getClass().toString(), idfe.getLocalizedMessage()));
-				}
-			}
+	        while (!done) {
+	            List<Membership> memberships = dao.findBySearch(Membership.class, search);
+	            if (log.isDebugEnabled()) log.debug("SakoraCSV processing "+memberships.size()+" enrollment membership removals");
+	            for (Membership membership : memberships) {
+	                try {
+	                    cmAdmin.addOrUpdateEnrollment(membership.getUserEid(), membership.getContainerEid(), "dropped", "0", "");
+	                } catch (IdNotFoundException idfe) {
+	                    dao.create(new SakoraLog(this.getClass().toString(), idfe.getLocalizedMessage()));
+	                }
+	            }
 
-			if (memberships == null || memberships.size() == 0) {
-				done = true;
-			} else {
-				search.setStart(search.getStart() + searchPageSize);
-			}
-			// should we halt if a stop was requested via pleaseStop?
-		}
+	            if (memberships == null || memberships.size() == 0) {
+	                done = true;
+	            } else {
+	                search.setStart(search.getStart() + searchPageSize);
+	            }
+	            // should we halt if a stop was requested via pleaseStop?
+	        }
 
-		logoutFromSakai();
-		dao.create(new SakoraLog(this.getClass().toString(),
-				"Finished processing input, added or updated " 
-				+ updates + " items and removed " + deletes));
+	        logoutFromSakai();
+	    }
+	    dao.create(new SakoraLog(this.getClass().toString(),
+	            "Finished processing input, added or updated " + updates + " items and removed " + deletes));
 	}
 
 	public String getStudentRole() {

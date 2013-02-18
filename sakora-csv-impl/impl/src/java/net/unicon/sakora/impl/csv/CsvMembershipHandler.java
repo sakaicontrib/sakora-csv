@@ -135,25 +135,29 @@ public class CsvMembershipHandler extends CsvHandlerBase {
 				}
 
 				if (processedEnrollment) {
-				    // Update or add Sakora membership entry (used for tracking deltas)
-				    Search search = new Search();
-				    search.addRestriction(new Restriction("mode", mode, Restriction.EQUALS));
-				    search.addRestriction(new Restriction("userEid", userEid));
-				    search.addRestriction(new Restriction("containerEid", eid));
-				    List<Membership> existing = dao.findBySearch(Membership.class, search);
-				    if ( existing == null || existing.isEmpty() ) {
-				        dao.save(new Membership(userEid, eid, role, mode, time));
+				    if (commonHandlerService.ignoreMembershipRemovals()) {
+				        if (log.isDebugEnabled()) log.debug("SakoraCSV skipping sakora membership table update for user ("+userEid+") and "+mode+" ("+eid+") because ignoreMembershipRemovals=true");
 				    } else {
-				        for ( int i = 0 ; i < existing.size() ; i++ ) {
-				            // guard against dupl records, which can lead to inadvertent CM membership deletion
-				            if ( i == existing.size() - 1 ) {
-				                existing.get(i).setInputTime(time);
-				                existing.get(i).setRole(role);
-				                dao.update(existing.get(i));
-				            } else {
-				                // Not in transaction so can't use delete(Object).
-				                // Should really be fixed.
-				                dao.delete(Membership.class, existing.get(i).getId());
+				        // Update or add Sakora membership entry (used for tracking deltas)
+				        Search search = new Search();
+				        search.addRestriction(new Restriction("mode", mode, Restriction.EQUALS));
+				        search.addRestriction(new Restriction("userEid", userEid));
+				        search.addRestriction(new Restriction("containerEid", eid));
+				        List<Membership> existing = dao.findBySearch(Membership.class, search);
+				        if ( existing == null || existing.isEmpty() ) {
+				            dao.save(new Membership(userEid, eid, role, mode, time));
+				        } else {
+				            for ( int i = 0 ; i < existing.size() ; i++ ) {
+				                // guard against dupl records, which can lead to inadvertent CM membership deletion
+				                if ( i == existing.size() - 1 ) {
+				                    existing.get(i).setInputTime(time);
+				                    existing.get(i).setRole(role);
+				                    dao.update(existing.get(i));
+				                } else {
+				                    // Not in transaction so can't use delete(Object).
+				                    // Should really be fixed.
+				                    dao.delete(Membership.class, existing.get(i).getId());
+				                }
 				            }
 				        }
 				    }
@@ -169,71 +173,75 @@ public class CsvMembershipHandler extends CsvHandlerBase {
 
 	@Override
 	protected void processInternal(CsvSyncContext context) {
-		loginToSakai();
-		// look for all enrollments previously defined but not included in this snapshot
-		Search search = new Search();
-		search.addRestriction(new Restriction("inputTime", time, Restriction.NOT_EQUALS));
-		search.addRestriction(new Restriction("mode", mode, Restriction.EQUALS));
-		search.setLimit(searchPageSize);
+	    if (commonHandlerService.ignoreMembershipRemovals()) {
+	        if (log.isDebugEnabled()) log.debug("SakoraCSV skipping "+mode+" membership processing, ignoreMembershipRemovals=true");
+	    } else {
+	        // do removal processing
+	        loginToSakai();
+	        // look for all enrollments previously defined but not included in this snapshot
+	        Search search = new Search();
+	        search.addRestriction(new Restriction("inputTime", time, Restriction.NOT_EQUALS));
+	        search.addRestriction(new Restriction("mode", mode, Restriction.EQUALS));
+	        search.setLimit(searchPageSize);
 
-		boolean done = false;
+	        boolean done = false;
 
-		// filter out anything which is not part of the current set of offerings/sections
-		if (commonHandlerService.ignoreMissingSessions()) {
-		    Set<String> enrollmentContainerEids;
-		    if (MODE_SECTION.equals(mode)) {
-		        enrollmentContainerEids = commonHandlerService.getCurrentSectionEids();
-		    } else {
-		        // course enrollments
-		        enrollmentContainerEids = commonHandlerService.getCurrentCourseOfferingEids();
-		    }
-		    if (enrollmentContainerEids.isEmpty()) {
-		        // no offerings or sections are current so we skip everything
-		        done = true;
-		        String handler = MODE_SECTION.equals(mode) ? "SectionMembershipHandler" : "CourseMembershipHandler";
-		        log.warn("SakoraCSV "+handler+" processInternal: No current containers so we are skipping all internal memberships post CSV read processing");
-		    } else {
-		        search.addRestriction( new Restriction("containerEid", enrollmentContainerEids) );
-		        log.info("SakoraCSV limiting "+mode+" membership removals to "+enrollmentContainerEids.size()+" "+mode+" containers: "+enrollmentContainerEids);
-		    }
-		}
+	        // filter out anything which is not part of the current set of offerings/sections
+	        if (commonHandlerService.ignoreMissingSessions()) {
+	            Set<String> enrollmentContainerEids;
+	            if (MODE_SECTION.equals(mode)) {
+	                enrollmentContainerEids = commonHandlerService.getCurrentSectionEids();
+	            } else {
+	                // course enrollments
+	                enrollmentContainerEids = commonHandlerService.getCurrentCourseOfferingEids();
+	            }
+	            if (enrollmentContainerEids.isEmpty()) {
+	                // no offerings or sections are current so we skip everything
+	                done = true;
+	                String handler = MODE_SECTION.equals(mode) ? "SectionMembershipHandler" : "CourseMembershipHandler";
+	                log.warn("SakoraCSV "+handler+" processInternal: No current containers so we are skipping all internal memberships post CSV read processing");
+	            } else {
+	                search.addRestriction( new Restriction("containerEid", enrollmentContainerEids) );
+	                log.info("SakoraCSV limiting "+mode+" membership removals to "+enrollmentContainerEids.size()+" "+mode+" containers: "+enrollmentContainerEids);
+	            }
+	        }
 
-		while (!done) {
-			List<Membership> memberships = dao.findBySearch(Membership.class, search);
-			if (log.isDebugEnabled()) log.debug("SakoraCSV processing "+memberships.size()+" "+mode+" membership removals");
-			for (Membership membership : memberships) {
-				try {
-					if (MODE_SECTION.equals(mode)) {
-						cmAdmin.removeSectionMembership(membership.getUserEid(), membership.getContainerEid());
-						Section section = cmService.getSection(membership.getContainerEid());
-						if (section != null) {
-							EnrollmentSet enrolled = section.getEnrollmentSet();
-							cmAdmin.removeEnrollment(membership.getUserEid(), enrolled.getEid());
-							if (log.isDebugEnabled()) log.debug("SakoraCSV removed "+mode+" membership for "+membership.getUserEid()+": "+membership);
-							deletes++;
-						}
-					} else {
-						cmAdmin.removeCourseOfferingMembership(membership.getUserEid(), membership.getContainerEid());
-						if (log.isDebugEnabled()) log.debug("SakoraCSV removed "+mode+" membership for "+membership.getUserEid()+": "+membership);
-						deletes++;
-					}
-				} catch (IdNotFoundException idfe) {
-					dao.create(new SakoraLog(this.getClass().toString(), idfe.getLocalizedMessage()));
-				}
-			}
+	        while (!done) {
+	            List<Membership> memberships = dao.findBySearch(Membership.class, search);
+	            if (log.isDebugEnabled()) log.debug("SakoraCSV processing "+memberships.size()+" "+mode+" membership removals");
+	            for (Membership membership : memberships) {
+	                try {
+	                    if (MODE_SECTION.equals(mode)) {
+	                        cmAdmin.removeSectionMembership(membership.getUserEid(), membership.getContainerEid());
+	                        Section section = cmService.getSection(membership.getContainerEid());
+	                        if (section != null) {
+	                            EnrollmentSet enrolled = section.getEnrollmentSet();
+	                            cmAdmin.removeEnrollment(membership.getUserEid(), enrolled.getEid());
+	                            if (log.isDebugEnabled()) log.debug("SakoraCSV removed "+mode+" membership for "+membership.getUserEid()+": "+membership);
+	                            deletes++;
+	                        }
+	                    } else {
+	                        cmAdmin.removeCourseOfferingMembership(membership.getUserEid(), membership.getContainerEid());
+	                        if (log.isDebugEnabled()) log.debug("SakoraCSV removed "+mode+" membership for "+membership.getUserEid()+": "+membership);
+	                        deletes++;
+	                    }
+	                } catch (IdNotFoundException idfe) {
+	                    dao.create(new SakoraLog(this.getClass().toString(), idfe.getLocalizedMessage()));
+	                }
+	            }
 
-			if (memberships == null || memberships.size() == 0) {
-				done = true;
-			} else {
-				search.setStart(search.getStart() + searchPageSize);
-			}
-			// should we halt if a stop was requested via pleaseStop?
-		}
+	            if (memberships == null || memberships.size() == 0) {
+	                done = true;
+	            } else {
+	                search.setStart(search.getStart() + searchPageSize);
+	            }
+	            // should we halt if a stop was requested via pleaseStop?
+	        }
 
-		logoutFromSakai();
-		dao.create(new SakoraLog(this.getClass().toString(),
-				"Finished processing input, added or updated " 
-				+ updates + " items and removed " + deletes));
+	        logoutFromSakai();
+	    }
+	    dao.create(new SakoraLog(this.getClass().toString(),
+	            "Finished processing input, added or updated " + updates + " items and removed " + deletes));
 	}
 
 	public String getTaRole() {
