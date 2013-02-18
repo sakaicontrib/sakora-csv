@@ -21,6 +21,7 @@ package net.unicon.sakora.impl.csv;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.unicon.sakora.api.csv.CsvSyncContext;
 import net.unicon.sakora.api.csv.model.Membership;
@@ -44,15 +45,17 @@ import org.sakaiproject.genericdao.api.search.Search;
  * @author Joshua Ryan
  */
 public class CsvMembershipHandler extends CsvHandlerBase {
-	static final Log log = LogFactory.getLog(CsvMembershipHandler.class);
 
-	private String defaultCredits = "0";
+    static final Log log = LogFactory.getLog(CsvMembershipHandler.class);
+
+    static final String MODE_SECTION = "section";
+
+    private String defaultCredits = "0";
 	private String defaultGradingScheme = "Letter Grade";
     private String taRole;
     private String studentRole;
     private String instructorRole;
-    private String mode = "section";
-    private boolean lazyEnrollmentMode = false;   // Allows simple flat enrollment handling without sets or sections
+    private String mode = MODE_SECTION; // set by the spring config (course or section)
     private String defaultEnrollmentSetCategory = "NONE";
 
 	@Override
@@ -83,7 +86,7 @@ public class CsvMembershipHandler extends CsvHandlerBase {
 						|| !isValid(role, "Role", eid)
 						|| !isValid(status, "Status", eid)) {
 					log.error("Missing required parameter(s), skipping item " + eid);
-				} else if ("section".equals(mode)) {
+				} else if (MODE_SECTION.equals(mode)) {
 				    // SECTION MEMBERSHIPS
 				    if (commonHandlerService.processSection(eid)) {
 				        Section section = cmService.getSection(eid);
@@ -173,35 +176,58 @@ public class CsvMembershipHandler extends CsvHandlerBase {
 		search.addRestriction(new Restriction("mode", mode, Restriction.EQUALS));
 		search.setLimit(searchPageSize);
 
-		// TODO skip the memberships removals which are not part of this AS
 		boolean done = false;
+
+		// filter out anything which is not part of the current set of offerings/sections
+		if (commonHandlerService.isIgnoreMissingSessions()) {
+		    Set<String> enrollmentContainerEids;
+		    if (MODE_SECTION.equals(mode)) {
+		        enrollmentContainerEids = commonHandlerService.getCurrentSectionEids();
+		    } else {
+		        // course enrollments
+		        enrollmentContainerEids = commonHandlerService.getCurrentCourseOfferingEids();
+		    }
+		    if (enrollmentContainerEids.isEmpty()) {
+		        // no offerings or sections are current so we skip everything
+		        done = true;
+		        String handler = MODE_SECTION.equals(mode) ? "SectionMembershipHandler" : "CourseMembershipHandler";
+		        log.warn("SakoraCSV "+handler+" processInternal: No current containers so we are skipping all internal memberships post CSV read processing");
+		    } else {
+		        search.addRestriction( new Restriction("containerEid", enrollmentContainerEids) );
+		        log.info("SakoraCSV limiting "+mode+" membership removals to "+enrollmentContainerEids.size()+" "+mode+" containers: "+enrollmentContainerEids);
+		    }
+		}
 
 		while (!done) {
 			List<Membership> memberships = dao.findBySearch(Membership.class, search);
+			if (log.isDebugEnabled()) log.debug("SakoraCSV processing "+memberships.size()+" "+mode+" membership removals");
 			for (Membership membership : memberships) {
 				try {
-					if ("section".equals(mode)) {
+					if (MODE_SECTION.equals(mode)) {
 						cmAdmin.removeSectionMembership(membership.getUserEid(), membership.getContainerEid());
 						Section section = cmService.getSection(membership.getContainerEid());
 						if (section != null) {
 							EnrollmentSet enrolled = section.getEnrollmentSet();
 							cmAdmin.removeEnrollment(membership.getUserEid(), enrolled.getEid());
+							if (log.isDebugEnabled()) log.debug("SakoraCSV removed "+mode+" membership for "+membership.getUserEid()+": "+membership);
 							deletes++;
 						}
-					}
-					else {
+					} else {
 						cmAdmin.removeCourseOfferingMembership(membership.getUserEid(), membership.getContainerEid());
+						if (log.isDebugEnabled()) log.debug("SakoraCSV removed "+mode+" membership for "+membership.getUserEid()+": "+membership);
+						deletes++;
 					}
-				}
-				catch (IdNotFoundException idfe) {
+				} catch (IdNotFoundException idfe) {
 					dao.create(new SakoraLog(this.getClass().toString(), idfe.getLocalizedMessage()));
 				}
 			}
 
-			if (memberships == null || memberships.size() == 0)
+			if (memberships == null || memberships.size() == 0) {
 				done = true;
-			else
+			} else {
 				search.setStart(search.getStart() + searchPageSize);
+			}
+			// should we halt if a stop was requested via pleaseStop?
 		}
 
 		logoutFromSakai();
@@ -258,14 +284,6 @@ public class CsvMembershipHandler extends CsvHandlerBase {
 		this.instructorRole = instructorRole;
 	}
 
-	public boolean isLazyEnrollmentMode() {
-		return lazyEnrollmentMode;
-	}
-
-	public void setLazyEnrollmentMode(boolean lazyEnrollmentMode) {
-		this.lazyEnrollmentMode = lazyEnrollmentMode;
-	}
-	
 	public String getDefaultEnrollmentSetCategory() {
 		return defaultEnrollmentSetCategory;
 	}

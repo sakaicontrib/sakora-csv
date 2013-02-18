@@ -103,18 +103,19 @@ public class CsvEnrollmentHandler extends CsvHandlerBase {
 		        // no sets are current so we skip everything
 		        done = true;
 		        log.warn("SakoraCSV EnrollmentHandler processInternal: No current enrollment sets so we are skipping all internal enrollment post CSV read processing");
+		    } else {
+		        search.addRestriction( new Restriction("containerEid", enrollmentSetEids) );
+		        log.info("SakoraCSV limiting enrollment membership removals to "+enrollmentSetEids.size()+" enrollment sets: "+enrollmentSetEids);
 		    }
-		    search.addRestriction( new Restriction("containerEid", enrollmentSetEids) );
 		}
 
-		// TODO should bail if a stop has been requested
 		while (!done) {
 			List<Membership> memberships = dao.findBySearch(Membership.class, search);
+			if (log.isDebugEnabled()) log.debug("SakoraCSV processing "+memberships.size()+" enrollment membership removals");
 			for (Membership membership : memberships) {
 				try {
 					cmAdmin.addOrUpdateEnrollment(membership.getUserEid(), membership.getContainerEid(), "dropped", "0", "");
-				}
-				catch (IdNotFoundException idfe) {
+				} catch (IdNotFoundException idfe) {
 					dao.create(new SakoraLog(this.getClass().toString(), idfe.getLocalizedMessage()));
 				}
 			}
@@ -124,6 +125,7 @@ public class CsvEnrollmentHandler extends CsvHandlerBase {
 			} else {
 				search.setStart(search.getStart() + searchPageSize);
 			}
+			// should we halt if a stop was requested via pleaseStop?
 		}
 
 		logoutFromSakai();
