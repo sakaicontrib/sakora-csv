@@ -1,0 +1,9 @@
+CSV Samples:
+These samples are here to allow for better developer testing
+(and to provide some decent samples for anyone looking to implement their own CSV feeds)
+
+SQL cleanup script:
+There is also a cleanup sql script which is for testing purposes only and will clean out all the CM tables
+(effectively resetting the system to the state it was in before any feeds were processed).
+
+-Aaron Zeckoski (azeckoski @ Unicon.net) (azeckoski @ vt.edu)
