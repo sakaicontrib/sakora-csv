@@ -174,29 +174,28 @@ public class CsvCommonHandlerService {
                 sb.append(String.format("%4d", errors));
                 sb.append(" errors in ");
                 sb.append(String.format("%4d", seconds));
-                sb.append(" seconds:");
-                sb.append(" add=");
+                sb.append(" seconds: ");
                 sb.append(String.format("%4d", adds));
-                sb.append(", upd=");
+                sb.append(" adds, ");
                 sb.append(String.format("%4d", updates));
-                sb.append(", del=");
+                sb.append(" updates, ");
                 sb.append(String.format("%4d", deletes));
-                sb.append("\n");
+                sb.append(" deletes\n");
             }
             // total summary (start, end, totals)
-            sb.append("  --- TOTAL:    processed ");
+            sb.append("  --- TOTAL:           processed ");
             sb.append(total_lines);
             sb.append(" lines with ");
             sb.append(total_errors);
             sb.append(" errors in ");
             sb.append(total_seconds);
-            sb.append(" seconds:");
-            sb.append(" add=");
-            sb.append(total_adds);
-            sb.append(", upd=");
-            sb.append(total_updates);
-            sb.append(", del=");
-            sb.append(total_deletes);
+            sb.append(" seconds: ");
+            sb.append(String.format("%5d", total_adds));
+            sb.append(" adds, ");
+            sb.append(String.format("%5d", total_updates));
+            sb.append(" updates, ");
+            sb.append(String.format("%5d", total_deletes));
+            sb.append(" deletes\n");
             syncVars.put(SYNC_VAR_SUMMARY, sb.toString());
             log.info("SakoraCSV sync run ("+runId+") statistics:\n"+sb.toString());
         }
