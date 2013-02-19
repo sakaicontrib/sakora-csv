@@ -404,6 +404,7 @@ public class CsvSyncServiceImpl implements CsvSyncService {
 			log.warn("The configured batch upload directory is not a writable [" + batchUploadDir + 
 					"]. CSV batch processing is highly unlikely to be successful.");
 		} else {
+		    batchUploadDir = dir.getAbsolutePath(); // this will cleanup the path
 		    log.info("SakoraCSV batch upload directory initialized: "+batchUploadDir);
 		}
 	}
