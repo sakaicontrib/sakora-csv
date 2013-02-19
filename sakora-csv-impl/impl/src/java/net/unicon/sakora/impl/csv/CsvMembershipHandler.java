@@ -86,6 +86,7 @@ public class CsvMembershipHandler extends CsvHandlerBase {
 						|| !isValid(role, "Role", eid)
 						|| !isValid(status, "Status", eid)) {
 					log.error("Missing required parameter(s), skipping item " + eid);
+					errors++;
 				} else if (MODE_SECTION.equals(mode)) {
 				    // SECTION MEMBERSHIPS
 				    if (commonHandlerService.processSection(eid)) {
@@ -168,6 +169,7 @@ public class CsvMembershipHandler extends CsvHandlerBase {
 		} else {
 			log.error("Skipping short line (expected at least [" + minFieldCount + 
 					"] fields): [" + (line == null ? null : Arrays.toString(line)) + "]");
+			errors++;
 		}
 	}
 

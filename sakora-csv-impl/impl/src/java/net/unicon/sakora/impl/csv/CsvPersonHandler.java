@@ -96,7 +96,9 @@ public class CsvPersonHandler extends CsvHandlerBase {
 			// why doesn't UserDirectoryService have a userExists type method?
 			try {
 				existingId = userDirService.getUserId(eid);
-			} catch (UserNotDefinedException unde) {}
+			} catch (UserNotDefinedException unde) {
+			    // empty on purpose
+			}
 
 			try {
 				UserEdit edit = null;
@@ -137,18 +139,21 @@ public class CsvPersonHandler extends CsvHandlerBase {
 
 				userDirService.commitEdit(edit);
 
-				if (existingId == null)
+				if (existingId == null) {
 					adds++;
-				else
+				} else {
 					updates++;
+				}
 			}
 			catch(UserIdInvalidException uiie) {
 				dao.create(new SakoraLog(this.getClass().toString(), uiie.getLocalizedMessage()));
 				log.error("CsvPersonHandler: " + uiie.getMessage());
+				errors++;
 			}
 			catch(UserNotDefinedException unde) {
 				dao.create(new SakoraLog(this.getClass().toString(), unde.getLocalizedMessage()));
 				log.error("CsvPersonHandler: " + unde.getMessage());
+				errors++;
 			}
 			catch(UserAlreadyDefinedException uade) {
 				// This will happen too often to care about
@@ -158,10 +163,12 @@ public class CsvPersonHandler extends CsvHandlerBase {
 			catch(UserLockedException ule) {
 				dao.create(new SakoraLog(this.getClass().toString(), ule.getLocalizedMessage()));
 				log.error("CsvPersonHandler: " + ule.getMessage());
+				errors++;
 			}
 			catch(UserPermissionException upe) {
 				dao.create(new SakoraLog(this.getClass().toString(), upe.getLocalizedMessage()));
 				log.error("CsvPersonHandler: " + upe.getMessage());
+				errors++;
 			}
 
 			// Log users read in for delta calculation, update existing and create new
@@ -169,6 +176,7 @@ public class CsvPersonHandler extends CsvHandlerBase {
 		} else {
 			log.error("Skipping short line (expected at least [" + minFieldCount + 
 					"] fields): [" + (line == null ? null : Arrays.toString(line)) + "]");
+			errors++;
 		}
 	}
 

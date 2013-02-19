@@ -55,6 +55,7 @@ public class CsvCanonicalCourseHandler extends CsvHandlerBase {
 			if (!isValid(title, "Title", eid)
 					|| !isValid(description, "Description", eid)) {
 				log.error("Missing required parameter(s), skipping item " + eid);
+				errors++;
 			}
 			else if (!cmService.isCanonicalCourseDefined(eid)) {
 				cmAdmin.createCanonicalCourse(eid, title, description);
@@ -67,11 +68,13 @@ public class CsvCanonicalCourseHandler extends CsvHandlerBase {
 				cmAdmin.updateCanonicalCourse(canonicalCourse);
 				updates++;
 			}
-			if (courseSet != null && cmService.isCourseSetDefined(courseSet))
+			if (courseSet != null && cmService.isCourseSetDefined(courseSet)) {
 				cmAdmin.addCanonicalCourseToCourseSet(courseSet, eid);
+			}
 		} else {
 			log.error("Skipping short line (expected at least [" + minFieldCount + 
 					"] fields): [" + (line == null ? null : Arrays.toString(line)) + "]");
+			errors++;
 		}
 	}
 

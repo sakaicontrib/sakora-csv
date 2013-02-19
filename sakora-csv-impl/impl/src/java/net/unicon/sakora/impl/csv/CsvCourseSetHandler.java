@@ -57,6 +57,7 @@ public class CsvCourseSetHandler extends CsvHandlerBase {
 			if (!isValid(title, "Title", eid)
 					|| !isValid(description, "Description", eid)) {
 				log.error("Missing required parameter(s), skipping item " + eid);
+				errors++;
 			}
 			else if(cmService.isCourseSetDefined(eid)) {
 				CourseSet courseSet = cmService.getCourseSet(eid);
@@ -75,6 +76,7 @@ public class CsvCourseSetHandler extends CsvHandlerBase {
 		} else {
 			log.error("Skipping short line (expected at least [" + minFieldCount + 
 					"] fields): [" + (line == null ? null : Arrays.toString(line)) + "]");
+			errors++;
 		}
 	}
 

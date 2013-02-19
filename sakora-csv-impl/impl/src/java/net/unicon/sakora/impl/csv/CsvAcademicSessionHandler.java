@@ -63,6 +63,7 @@ public class CsvAcademicSessionHandler extends CsvHandlerBase {
 					|| !isValid(startDate, "Start Date", eid)
 					|| !isValid(endDate, "End Date", eid)) {
 				log.error("SakoraCSV Missing required parameter(s), skipping item " + eid);
+				errors++;
 			}
 			else if (cmService.isAcademicSessionDefined(eid)) {
 				AcademicSession session = cmService.getAcademicSession(eid);
@@ -84,11 +85,13 @@ public class CsvAcademicSessionHandler extends CsvHandlerBase {
 				existing.setInputTime(time);
 				dao.update(existing);
 			}
-			else
+			else {
 				dao.save(new Session(eid, time));
+			}
 		} else {
 			log.error("SakoraCSV Skipping short line (expected at least [" + minFieldCount + 
 					"] fields): [" + (line == null ? null : Arrays.toString(line)) + "]");
+			errors++;
 		}
 	}
 	

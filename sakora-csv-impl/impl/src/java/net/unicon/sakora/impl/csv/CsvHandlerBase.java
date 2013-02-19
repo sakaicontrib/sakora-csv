@@ -86,6 +86,8 @@ public abstract class CsvHandlerBase implements CsvHandler {
 	protected File inputFile = null;
 	protected BufferedReader br = null;
 	protected CSVReader csvr = null;
+	protected int lines = 0;
+	protected int errors = 0;
 	protected int adds = 0;
 	protected int updates = 0;
 	protected int deletes = 0;
@@ -104,7 +106,44 @@ public abstract class CsvHandlerBase implements CsvHandler {
 	}
 
 	/**
-	 * Handled initial setup of the sync context
+	 * Executed immediately before the sync processing for this handler is complete
+	 * @param context
+	 */
+   public void before(CsvSyncContext context) {
+       // reset the stats counters
+       lines = 0;
+       errors = 0;
+       adds = 0;
+       updates = 0;
+       deletes = 0;
+
+       time = new Date();
+   }
+
+   /**
+    * Executed after the sync processing for this handler is complete,
+    * NOTE: check the SyncContext IS_BATCH_OK or the current handler state var to see if there was an error
+    * @param context
+    */
+   public void after(CsvSyncContext context) {
+       String handlerName = this.getClass().getSimpleName().replace("Handler", "").replace("Csv", "");
+       if ("fail".equals(commonHandlerService.getCurrentSyncState())) {
+           // error
+           handlerName += " [FAILED]";
+       } else {
+           // success
+           handlerName += " completed";
+       }
+       if (errors > 0) {
+           log.warn("SakoraCSV handler "+handlerName+" encountered "+errors+" errors while processing "+lines+" lines, please check and correct the feed");
+       }
+       log.info("SakoraCSV handler "+handlerName+" processing "+lines+" lines with "+errors+" errors: adds="+adds+", updates="+updates+", deletes="+deletes);
+   }
+
+	/**
+	 * Handled initial setup of the sync context,
+	 * called from {@link #readInput(CsvSyncContext)}
+	 * 
 	 * @param context the sync context
 	 * @return true if the file was read successfully, false otherwise
 	 */
@@ -117,10 +156,6 @@ public abstract class CsvHandlerBase implements CsvHandler {
 		context.getProperties().put(BATCH_FILE_PATH, csvPath);
 		context.getProperties().put(READ_ALL_LINES, "false");
 		csvr = null;
-		// reset the stats counters
-		adds = 0;
-		updates = 0;
-		deletes = 0;
 		try {
 			// TODO: support for reading input from CHS started but not yet finished
 			if (false /* is a valid content entity reference */) {
@@ -141,8 +176,6 @@ public abstract class CsvHandlerBase implements CsvHandler {
 			}
 
 			csvr = new CSVReader(br);
-
-			time = new Date();
 
 			// if the csv files have headers, skip them
 			if (hasHeader) {
@@ -201,6 +234,7 @@ public abstract class CsvHandlerBase implements CsvHandler {
 		                log.debug("Handling line: " + Arrays.toString(line));
 		            }
 		            readInputLine(context, line);
+		            lines++;
 		            linesReadCnt++;
 		        }
 		        context.getProperties().put(READ_ALL_LINES, (linesReadCnt > 0 ? "true" : "false"));

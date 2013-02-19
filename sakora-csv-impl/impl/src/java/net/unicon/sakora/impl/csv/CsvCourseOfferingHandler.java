@@ -76,6 +76,7 @@ public class CsvCourseOfferingHandler extends CsvHandlerBase {
 					|| !isValid(endDate, "End Date", eid)
 					|| !isValid(sessionEid, "Session Eid", eid)) {
 				log.error("Missing required parameter(s), skipping item " + eid);
+				errors++;
 
 			} else {
 			    if (commonHandlerService.processAcademicSession(sessionEid)) {
@@ -105,6 +106,7 @@ public class CsvCourseOfferingHandler extends CsvHandlerBase {
 		} else {
 		    log.error("Skipping short line (expected at least [" + minFieldCount + 
 		            "] fields): [" + (line == null ? null : Arrays.toString(line)) + "]");
+		    errors++;
 		}
 	}
 

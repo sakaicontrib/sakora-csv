@@ -60,6 +60,7 @@ public class CsvEnrollmentSetHandler extends CsvHandlerBase {
 					|| !isValid(description, "Description", eid)
 					|| !isValid(courseOfferingEid, "Course Offering Eid", eid)) {
 				log.error("Missing required parameter(s), skipping item " + eid);
+				errors++;
 			} else {
 			    if (commonHandlerService.processCourseOffering(courseOfferingEid)) {
 			        if (cmService.isEnrollmentSetDefined(eid)) {
@@ -82,6 +83,7 @@ public class CsvEnrollmentSetHandler extends CsvHandlerBase {
 		} else {
 			log.error("Skipping short line (expected at least [" + minFieldCount + 
 					"] fields): [" + (line == null ? null : Arrays.toString(line)) + "]");
+			errors++;
 		}
 	}
 

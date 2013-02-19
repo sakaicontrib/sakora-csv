@@ -95,7 +95,7 @@ public class CsvSyncServiceImpl implements CsvSyncService {
 	private CsvCommonHandlerService commonHandlerService;
 	private CsvSyncDao dbLog;
 
-	private boolean cleanupData;
+	private boolean cleanupData = true;
 	private String batchUploadDir;
 
 	private volatile boolean pleaseStop;
@@ -144,6 +144,7 @@ public class CsvSyncServiceImpl implements CsvSyncService {
 			}
 			
 			commonHandlerService.setCurrentHandlerState("start", handler);
+			handler.before(syncContext);
 			
 			// Batches need to be processed as a group, so move all currently
 			// delivered files into a processing dir such that they are
@@ -192,6 +193,7 @@ public class CsvSyncServiceImpl implements CsvSyncService {
 			log.error(msg, e);
 			dbLog.create(new SakoraLog(this.getClass().toString(), msg + "[" + e.getLocalizedMessage() + "]"));
 		} finally {
+		    handler.after(syncContext);
 		    commonHandlerService.setCurrentHandlerState("done", handler);
 			String isFinalAction = syncContext.getProperties().get(IS_FINAL_ACTION);
 			if ( isFinalAction != null && Boolean.parseBoolean(isFinalAction) ) {

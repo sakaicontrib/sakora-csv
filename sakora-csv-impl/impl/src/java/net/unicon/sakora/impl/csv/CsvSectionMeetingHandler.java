@@ -63,6 +63,7 @@ public class CsvSectionMeetingHandler extends CsvHandlerBase {
 					|| !isValid(startTime, "Start Time", eid)
 					|| !isValid(endTime, "End Time", eid)) {
 				log.error("Missing required parameter(s), skipping item " + eid);
+				errors++;
 			} else {
 			    if (commonHandlerService.processSection(eid)) {
 			        if (cmService.isSectionDefined(eid)) {
@@ -83,6 +84,7 @@ public class CsvSectionMeetingHandler extends CsvHandlerBase {
 		} else {
 			log.error("Skipping short line (expected at least [" + minFieldCount + 
 					"] fields): [" + (line == null ? null : Arrays.toString(line)) + "]");
+			errors++;
 		}
 	}
 

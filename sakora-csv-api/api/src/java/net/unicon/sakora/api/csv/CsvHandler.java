@@ -19,8 +19,9 @@
 package net.unicon.sakora.api.csv;
 
 public interface CsvHandler {
-
+    public void before(CsvSyncContext syncContext);
 	public void readInput(CsvSyncContext syncContext);
 	public void process(CsvSyncContext syncContext);
 	public void cleanUp(CsvSyncContext syncContext);
+    public void after(CsvSyncContext syncContext);
 }

@@ -68,6 +68,7 @@ public class CsvSectionHandler extends CsvHandlerBase {
 					|| !isValid(description, "Description", eid)
 					|| !isValid(courseOfferingEid, "Course Offering Eid", eid)) {
 				log.error("Missing required parameter(s), skipping item " + eid);
+				errors++;
 			} else {
 			    if (commonHandlerService.processCourseOffering(courseOfferingEid)) {
 			        // moved the category logic in here because it really should not run unless the line is valid
@@ -116,6 +117,7 @@ public class CsvSectionHandler extends CsvHandlerBase {
 		} else {
 			log.error("Skipping short line (expected at least [" + minFieldCount + 
 					"] fields): [" + (line == null ? null : Arrays.toString(line)) + "]");
+			errors++;
 		}
 	}
 
