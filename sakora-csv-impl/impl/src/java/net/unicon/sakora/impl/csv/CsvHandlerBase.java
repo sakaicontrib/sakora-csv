@@ -103,10 +103,16 @@ public abstract class CsvHandlerBase implements CsvHandler {
 		pleaseStop = true;
 	}
 
-	protected void setup(CsvSyncContext context) {
+	/**
+	 * Handled initial setup of the sync context
+	 * @param context the sync context
+	 * @return true if the file was read successfully, false otherwise
+	 */
+	protected boolean setup(CsvSyncContext context) {
 		/* intentionally avoid storing this as an instance member to
 		 * try to get away from storing processing state in singleton beans
 		 */
+	    boolean fileWasRead = false;
 		String csvPath = context.getProperties().get(CsvSyncServiceImpl.BATCH_PROCESSING_DIR) + File.separator + csvFileName;
 		context.getProperties().put(BATCH_FILE_PATH, csvPath);
 		context.getProperties().put(READ_ALL_LINES, "false");
@@ -142,13 +148,15 @@ public abstract class CsvHandlerBase implements CsvHandler {
 			if (hasHeader) {
 				csvr.readNext();
 			}
+			fileWasRead = true;
 		} catch (FileNotFoundException ffe) {
-			dao.create(new SakoraLog(this.getClass().toString(), ffe.getLocalizedMessage()));
-			log.warn("CSV reader failed to locate file [" + csvPath + "]", ffe);
+		    dao.create(new SakoraLog(this.getClass().toString(), ffe.getLocalizedMessage()));
+		    log.info("CSV reader failed to locate file [" + csvPath + "] (this is OK if you did not upload this file as part of the feed): "+ffe.getLocalizedMessage());
 		} catch (IOException ioe) {
 			dao.create(new SakoraLog(this.getClass().toString(), ioe.getLocalizedMessage()));
-			log.warn("CSV reader failed to read from file [" + csvPath + "]", ioe);
+			log.warn("CSV reader failed to read from file [" + csvPath + "]: "+ioe, ioe);
 		}
+		return fileWasRead;
 	}
 
 	public void cleanUp(CsvSyncContext context) {
@@ -176,38 +184,43 @@ public abstract class CsvHandlerBase implements CsvHandler {
 		if ( pleaseStop ) {
 			throw new IllegalStateException("Handler received a stop request. Abandoning input read of [" + context.getProperties().get(BATCH_FILE_PATH) + "]. This exception is thrown to ensure proper cleanup of overall batch state.");
 		}
-		setup(context);
+		boolean success = setup(context);
 		if ( pleaseStop ) {
 			throw new IllegalStateException("Handler received a stop request. Abandoning input read of [" + context.getProperties().get(BATCH_FILE_PATH) + "]. This exception is thrown to ensure proper cleanup of overall batch state.");
 		}
-		loginToSakai();
-		String[] line = null;
-		try {
-			int linesReadCnt = 0;
-			while (csvr != null && (line = csvr.readNext()) != null) {
-				if ( pleaseStop ) {
-					throw new IllegalStateException("Handler received a stop request. Abandoning input read of [" + context.getProperties().get(BATCH_FILE_PATH) + "]. This exception is thrown to ensure proper cleanup of overall batch state.");
-				}
-				if ( log.isDebugEnabled() ) {
-					log.debug("Handling line: " + Arrays.toString(line));
-				}
-				readInputLine(context, line);
-				linesReadCnt++;
-			}
-			context.getProperties().put(READ_ALL_LINES, (linesReadCnt > 0 ? "true" : "false"));
-		} catch ( IOException e ) {
-			dao.create(new SakoraLog(this.getClass().toString(), getClass().getSimpleName() + ":: IO error reading " + context.getProperties().get(BATCH_FILE_PATH)));
-			log.error("CsvMembershipHandler:: IO error reading " + context.getProperties().get(BATCH_FILE_PATH));
-		} catch ( IdNotFoundException ine ) {
-			dao.create(new SakoraLog(this.getClass().toString(), getClass().getSimpleName() + ":: " + ine.getLocalizedMessage()));
-			log.error(getClass().getSimpleName() + ":: " + ine.getLocalizedMessage());
-		}	
-		finally {
-
-			logoutFromSakai();
-			dao.create(new SakoraLog(this.getClass().toString(),
-					(pleaseStop ? "Aborted" : "Finished") + 
-					" reading input from [" + context.getProperties().get(BATCH_FILE_PATH) + "], added " + adds + " and updated " + updates));
+		if (success) {
+		    loginToSakai();
+		    String[] line = null;
+		    try {
+		        int linesReadCnt = 0;
+		        while (csvr != null && (line = csvr.readNext()) != null) {
+		            if ( pleaseStop ) {
+		                throw new IllegalStateException("Handler received a stop request. Abandoning input read of [" + context.getProperties().get(BATCH_FILE_PATH) + "]. This exception is thrown to ensure proper cleanup of overall batch state.");
+		            }
+		            if ( log.isDebugEnabled() ) {
+		                log.debug("Handling line: " + Arrays.toString(line));
+		            }
+		            readInputLine(context, line);
+		            linesReadCnt++;
+		        }
+		        context.getProperties().put(READ_ALL_LINES, (linesReadCnt > 0 ? "true" : "false"));
+		    } catch ( IOException e ) {
+		        // this is very unlikely since the file read attempt was already made previously and would have died before getting here
+		        dao.create(new SakoraLog(this.getClass().toString(), getClass().getSimpleName() + ":: IO error reading " + context.getProperties().get(BATCH_FILE_PATH)));
+		        log.error(getClass().getSimpleName() + ":: IO error reading " + context.getProperties().get(BATCH_FILE_PATH) + ": "+e, e);
+		    } catch ( IdNotFoundException ine ) {
+		        // can be thrown by methods in readInputLine but generally this is unlikely to happen because most (or all) handlers catch this exception themselves
+		        dao.create(new SakoraLog(this.getClass().toString(), getClass().getSimpleName() + ":: " + ine.getLocalizedMessage()));
+		        log.error(getClass().getSimpleName() + ":: " + ine.getLocalizedMessage(), ine);
+		    }
+		    finally {
+		        logoutFromSakai();
+		        dao.create(new SakoraLog(this.getClass().toString(),
+		                (pleaseStop ? "Aborted" : "Finished") + 
+		                " reading input from [" + context.getProperties().get(BATCH_FILE_PATH) + "], added " + adds + " and updated " + updates));
+		    }
+		} else {
+		    dao.create(new SakoraLog(this.getClass().toString(), "Unable to read input from [" + context.getProperties().get(BATCH_FILE_PATH) + "]"));
 		}
 	}
 	
