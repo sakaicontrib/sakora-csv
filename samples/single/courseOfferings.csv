@@ -1,2 +1,2 @@
 EID,SessionEID,Title,Description,Status,StartDate,EndDate,CanonicalCourseEID,CourseSetEID
-MATH_101_201301,201301,Intro to Math 1,Math 101 Desc,open,2013-01-15,2013-05-01,MATH_101,MATH
+MATH_101_1_201301,201301,Intro to Math 1,Math 101 Desc,open,2013-01-15,2013-05-01,MATH_101,MATH

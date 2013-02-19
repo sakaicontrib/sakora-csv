@@ -1,0 +1,5 @@
+EID,Title,Description,CourseSetEID
+MATH_101,Math 101,Intro to Math,MATH
+MATH_201,Math 201,Advanced Math,MATH
+CS_101,CS 101,Intro to CS,CS
+ENG_101,English 101,Intro to English,ENG

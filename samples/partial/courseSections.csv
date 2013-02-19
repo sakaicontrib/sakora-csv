@@ -1,0 +1,6 @@
+EID,Title,Description,Category,ParentSectionEID,EnrollmentSetEID,CourseOfferingEID
+MATH_101_2_201306_1,Math 101 1 Section 1,MWF Lecture,Lecture,,,MATH_101_2_201306
+MATH_101_2_201306_2,Math 101 1 Section 2,TH Lecture,Lecture,,,MATH_101_2_201306
+ENG_101_1_201308_1,Eng 101 1 Section 1,MWF Lecture,Lecture,,,ENG_101_1_201308
+ENG_101_1_201308_2,Eng 101 1 Section 2,TH Lecture,Lecture,,,ENG_101_1_201308
+ENG_101_1_201308_3,Eng 101 1 Section 3,MWF Lecture,Lecture,,,ENG_101_1_201308

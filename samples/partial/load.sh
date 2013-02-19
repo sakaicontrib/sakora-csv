@@ -1,6 +1,6 @@
 #!/bin/bash
 # Run this script from this directory after Sakai is already running
-# Load up a larger set of data (3 sessions, 20+ courses, 6 instructors, 20 students, 10+ sections)
+# Load up a partial set of data (a subset of the multiple set)
 curl -F "username=admin" -F "password=admin" \
  -F "runJob=true" \
  -F "sessions=@sessions.csv" \

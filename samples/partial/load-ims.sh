@@ -1,8 +1,9 @@
 #!/bin/bash
 # Run this script from this directory after Sakai is already running
-# Load up a larger set of data (3 sessions, 20+ courses, 6 instructors, 20 students, 10+ sections)
+# Should have already loaded the 'multiple' data set previously
+# Load up a partial data set with ignoreMissingSessions enabled
 curl -F "username=admin" -F "password=admin" \
- -F "runJob=true" \
+ -F "runJob=true" -F "ignoreMissingSessions=true" \
  -F "sessions=@sessions.csv" \
  -F "courseSets=@courseSets.csv" \
  -F "courses=@courses.csv" \

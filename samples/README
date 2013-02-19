@@ -2,6 +2,42 @@ CSV Samples:
 These samples are here to allow for better developer testing
 (and to provide some decent samples for anyone looking to implement their own CSV feeds)
 
+single    - very simple feeds which load just enough data to confirm that things are working (a tiny subset of multiple)
+multiple  - complex feeds which load multiple terms worth of data and lots of users
+partial   - a subset/variation on the 'multiple' feeds which can be used to test removals processing (missing spring term and some memberships have changed)
+
+Recommended testing plan:
+Clear the CM database tables and restart Sakai
+Load the single feed (using load.sh)
+Check the logs for errors and warnings (should find none)
+Load the single feed again (using load.sh)
+Check the logs for errors and warnings (should find none)
+
+Clear the CM database tables and restart Sakai
+Load the multiple feed (using load.sh)
+Check the logs for errors and warnings (should find none)
+Load the multiple feed again (using load.sh)
+Check the logs for errors and warnings (should find none)
+Load the partial feed (using load.sh)
+Check the logs for errors and warnings (should find none)
+Load the partial feed again (using load.sh)
+Check the logs for errors and warnings (should find none)
+
+Clear the CM database tables and restart Sakai
+Load the multiple feed (using load.sh)
+Load the partial feed (using load-ims.sh)
+Check the logs for errors and warnings (should find none)
+Load the partial feed again (using load-ims.sh)
+Check the logs for errors and warnings (should find none)
+
+Clear the CM database tables and restart Sakai
+Load the multiple feed (using load.sh)
+Load the partial feed (using load-imr.sh)
+Check the logs for errors and warnings (should find none)
+Load the partial feed again (using load-imr.sh)
+Check the logs for errors and warnings (should find none)
+
+
 SQL cleanup script:
 There is also a cleanup sql script which is for testing purposes only and will clean out all the CM tables
 (effectively resetting the system to the state it was in before any feeds were processed).
