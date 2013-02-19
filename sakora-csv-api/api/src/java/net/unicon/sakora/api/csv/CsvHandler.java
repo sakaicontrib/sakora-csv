@@ -18,10 +18,30 @@
  */
 package net.unicon.sakora.api.csv;
 
+import java.util.Map;
+
 public interface CsvHandler {
+    /**
+     * @return the name of this handler (should be unique)
+     */
+    public String getName();
+    /**
+     * @return the map of stats values (lines, errors, adds, updates, deletes, start, seconds, end),
+     * start and end are unix timestamps (in seconds), seconds is runtime for this handler processing
+     */
+    public Map<String, Integer> getStats();
+    /**
+     * Executed immediately before the sync processing for this handler is complete
+     * @param context
+     */
     public void before(CsvSyncContext syncContext);
 	public void readInput(CsvSyncContext syncContext);
 	public void process(CsvSyncContext syncContext);
 	public void cleanUp(CsvSyncContext syncContext);
+    /**
+     * Executed after the sync processing for this handler is complete,
+     * NOTE: check the SyncContext IS_BATCH_OK or the current handler state var to see if there was an error
+     * @param context
+     */
     public void after(CsvSyncContext syncContext);
 }

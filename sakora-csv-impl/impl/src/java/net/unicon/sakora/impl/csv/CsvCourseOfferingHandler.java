@@ -40,6 +40,11 @@ public class CsvCourseOfferingHandler extends CsvHandlerBase {
 	
 	private boolean handleCanonicalCourseReferences = true;
 
+    @Override
+    public String getName() {
+        return "CourseOffering";
+    }
+
 	@Override
 	protected void readInputLine(CsvSyncContext context, String[] line) {
 

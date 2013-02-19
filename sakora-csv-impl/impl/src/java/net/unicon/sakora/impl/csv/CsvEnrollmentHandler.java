@@ -47,6 +47,11 @@ public class CsvEnrollmentHandler extends CsvHandlerBase {
 	public CsvEnrollmentHandler() {
 	}
 
+    @Override
+    public String getName() {
+        return "Enrollment";
+    }
+
 	@Override
 	protected void readInputLine(CsvSyncContext context, String[] line) {
 

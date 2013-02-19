@@ -40,6 +40,11 @@ import org.sakaiproject.coursemanagement.api.Section;
 public class CsvSectionMeetingHandler extends CsvHandlerBase {
 	static final Log log = LogFactory.getLog(CsvSectionMeetingHandler.class);
 
+    @Override
+    public String getName() {
+        return "SectionMeeting";
+    }
+
 	@Override
 	protected void readInputLine(CsvSyncContext context, String[] line) {
 		

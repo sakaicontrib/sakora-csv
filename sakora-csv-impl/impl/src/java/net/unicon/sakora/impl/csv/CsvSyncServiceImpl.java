@@ -143,7 +143,7 @@ public class CsvSyncServiceImpl implements CsvSyncService {
 				throw new IllegalStateException("CSV sync service received a stop request. Abandoning input read. This exception is thrown to ensure proper cleanup of overall batch state.");
 			}
 			
-			commonHandlerService.setCurrentHandlerState("start", handler);
+			commonHandlerService.setCurrentHandlerState(CsvCommonHandlerService.STATE_START, handler);
 			handler.before(syncContext);
 			
 			// Batches need to be processed as a group, so move all currently
@@ -162,20 +162,20 @@ public class CsvSyncServiceImpl implements CsvSyncService {
 			if (log.isDebugEnabled()) {
 				log.debug("reading " + action);
 			}
-			commonHandlerService.setCurrentHandlerState("read", handler);
+			commonHandlerService.setCurrentHandlerState(CsvCommonHandlerService.STATE_READ, handler);
 			handler.readInput(syncContext);
 
 			if (log.isDebugEnabled()) {
 				log.debug("processing " + action);
 			}
-			commonHandlerService.setCurrentHandlerState("process", handler);
+			commonHandlerService.setCurrentHandlerState(CsvCommonHandlerService.STATE_PROCESS, handler);
 			handler.process(syncContext);
 
 			if (cleanupData) {
 				if (log.isDebugEnabled()) {
 					log.debug("cleaning up " + action);
 				}
-				commonHandlerService.setCurrentHandlerState("cleanup", handler);
+				commonHandlerService.setCurrentHandlerState(CsvCommonHandlerService.STATE_CLEANUP, handler);
 				handler.cleanUp(syncContext);
 			}
 		} catch ( Exception e ) {
@@ -185,7 +185,7 @@ public class CsvSyncServiceImpl implements CsvSyncService {
 			// were to write logic to attempt to pick up where we left off.
 			// It's much, much easier to just skip the rest of this batch
 			// and upload a new one.
-		    commonHandlerService.setCurrentHandlerState("fail", handler);
+		    commonHandlerService.setCurrentHandlerState(CsvCommonHandlerService.STATE_FAIL, handler);
 			syncContext.getProperties().put(IS_BATCH_OK, "false");
 			String msg = "Failed to process batch at [" + 
 				syncContext.getProperties().get(BATCH_PROCESSING_DIR) + 
@@ -194,7 +194,7 @@ public class CsvSyncServiceImpl implements CsvSyncService {
 			dbLog.create(new SakoraLog(this.getClass().toString(), msg + "[" + e.getLocalizedMessage() + "]"));
 		} finally {
 		    handler.after(syncContext);
-		    commonHandlerService.setCurrentHandlerState("done", handler);
+		    commonHandlerService.setCurrentHandlerState(CsvCommonHandlerService.STATE_DONE, handler);
 			String isFinalAction = syncContext.getProperties().get(IS_FINAL_ACTION);
 			if ( isFinalAction != null && Boolean.parseBoolean(isFinalAction) ) {
 				markBatchFinished(syncContext);

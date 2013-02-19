@@ -18,8 +18,11 @@
  */
 package net.unicon.sakora.impl.csv;
 
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -47,6 +50,20 @@ public class CsvCommonHandlerService {
     public static final String SYNC_VAR_STATUS = "status";
     public static final String SYNC_VAR_HANDLER = "handler";
     public static final String SYNC_VAR_HANDLER_STATE = "handler_state";
+    public static final String SYNC_VAR_HANDLER_STATS = "handler_stats";
+    public static final String SYNC_VAR_STARTDATE = "start_date";
+    public static final String SYNC_VAR_SUMMARY = "summary";
+
+    public static final String SYNC_STATE_RUNNING = "running";
+    public static final String SYNC_STATE_FAILED = "failed";
+    public static final String SYNC_STATE_COMPLETE = "complete";
+
+    public static final String STATE_START = "start";
+    public static final String STATE_READ = "read";
+    public static final String STATE_PROCESS = "process";
+    public static final String STATE_CLEANUP = "cleanup";
+    public static final String STATE_FAIL = "fail";
+    public static final String STATE_DONE = "done";
 
     private static final String CURRENT_ENROLLMENT_SET_EIDS = "currentEnrollmentSetEids";
     private static final String CURRENT_SECTION_EIDS = "currentSectionEids";
@@ -55,6 +72,8 @@ public class CsvCommonHandlerService {
 
     private static final String IGNORE_MEMBERSHIP_REMOVALS = "ignoreMembershipRemovals";
     private static final String IGNORE_MISSING_SESSIONS = "ignoreMissingSessions";
+
+
 
     protected ServerConfigurationService configurationService;
     protected CourseManagementAdministration cmAdmin;
@@ -95,8 +114,9 @@ public class CsvCommonHandlerService {
         // setup the run id
         String runId = ++runCounter + ":" + (new Date().getTime() / 1000);
         syncVars.put(SYNC_VAR_ID, runId);
-        syncVars.put(SYNC_VAR_STATUS, "running");
+        syncVars.put(SYNC_VAR_STATUS, SYNC_STATE_RUNNING);
         syncVars.put(SYNC_VAR_CONTEXT, context);
+        syncVars.put(SYNC_VAR_STARTDATE, new Date());
         // Do some logging
         log.info("SakoraCSV sync run ("+runId+") starting: "+context);
         // process context overrides
@@ -117,7 +137,70 @@ public class CsvCommonHandlerService {
         // run this after a run completes
         String runId = getCurrentSyncRunId();
         log.info("SakoraCSV sync run ("+runId+") completed: success="+success);
-        syncVars.put(SYNC_VAR_STATUS, success?"complete":"failed");
+        syncVars.put(SYNC_VAR_STATUS, success?SYNC_STATE_COMPLETE:SYNC_STATE_FAILED);
+        if (success) {
+            StringBuilder sb = new StringBuilder();
+            int total_lines = 0;
+            int total_errors = 0;
+            int total_adds = 0;
+            int total_updates = 0;
+            int total_deletes = 0;
+            int total_seconds = 0;
+            // compile and output the stats data to the logs
+            @SuppressWarnings("unchecked")
+            Map<String, Map<String, Integer>> stats = getCurrentSyncVar(SYNC_VAR_HANDLER_STATS, Map.class);
+            for (Map.Entry<String, Map<String, Integer>> entry : stats.entrySet()) {
+                String handler = entry.getKey();
+                Map<String, Integer> handlerStats = entry.getValue();
+                int lines   = handlerStats.get("lines");
+                int errors  = handlerStats.get("errors");
+                int adds    = handlerStats.get("adds");
+                int updates = handlerStats.get("updates");
+                int deletes = handlerStats.get("deletes");
+                int seconds = handlerStats.get("seconds");
+                total_lines += lines;
+                total_errors += errors;
+                total_adds += adds;
+                total_updates += updates;
+                total_deletes += deletes;
+                total_seconds += seconds;
+                sb.append("   - handler ");
+                sb.append(handler);
+                sb.append(": processed ");
+                sb.append(lines);
+                sb.append(" lines with ");
+                sb.append(errors);
+                sb.append("errors in ");
+                sb.append(seconds);
+                sb.append(" seconds:");
+                sb.append("\t add=");
+                sb.append(adds);
+                sb.append("\t,upd=");
+                sb.append(updates);
+                sb.append("\t,del=");
+                sb.append(deletes);
+                sb.append("\n");
+            }
+            // total summary (start, end, totals)
+            Date start = (Date) syncVars.get(SYNC_VAR_STARTDATE);
+            sb.append("  -- TOTAL: started on ");
+            sb.append(DateFormat.getDateTimeInstance().format(start));
+            sb.append(" processed ");
+            sb.append(total_lines);
+            sb.append(" lines with ");
+            sb.append(total_errors);
+            sb.append("errors in ");
+            sb.append(total_seconds);
+            sb.append(" seconds:");
+            sb.append("\t add=");
+            sb.append(total_adds);
+            sb.append("\t,upd=");
+            sb.append(total_updates);
+            sb.append("\t,del=");
+            sb.append(total_deletes);
+            syncVars.put(SYNC_VAR_SUMMARY, sb.toString());
+            log.info("SakoraCSV sync run ("+runId+") statistics:\n"+sb.toString());
+        }
     }
 
     /**
@@ -167,11 +250,11 @@ public class CsvCommonHandlerService {
 
     public String getCurrentSyncState() {
         String status = getCurrentSyncVar(SYNC_VAR_STATUS, String.class);
-        if (status.equals("running")) {
+        if (status.equals(SYNC_STATE_RUNNING)) {
             String state = getCurrentSyncVar(SYNC_VAR_HANDLER_STATE, String.class);
             CsvHandler handler = getCurrentSyncVar(SYNC_VAR_HANDLER, CsvHandler.class);
             if (handler != null) {
-                String handlerName = handler.getClass().getSimpleName().replace("Handler", "").replace("Csv", "");
+                String handlerName = handler.getName();
                 status = "Sync ("+getCurrentSyncRunId()+"): "+handlerName+" state is: "+state;
             }
         }
@@ -183,9 +266,20 @@ public class CsvCommonHandlerService {
          */
         setCurrentSyncVar(SYNC_VAR_HANDLER_STATE, state);
         setCurrentSyncVar(SYNC_VAR_HANDLER, handler);
-        String handlerName = handler.getClass().getSimpleName().replace("Handler", "").replace("Csv", "");
+        String handlerName = handler.getName();
         log.info("SakoraCSV: Sync ("+getCurrentSyncRunId()+"): "+handlerName+" state is: "+state);
+        if (STATE_DONE.equals(state)) {
+            // store the stats in the overall set
+            @SuppressWarnings("unchecked")
+            Map<String, Map<String, Integer>> stats = getCurrentSyncVar(SYNC_VAR_HANDLER_STATS, Map.class);
+            if (stats == null) {
+                stats = new LinkedHashMap<String, Map<String,Integer>>(); // want to maintain the ordering
+            }
+            stats.put(handlerName, handler.getStats());
+            setCurrentSyncVar(SYNC_VAR_HANDLER_STATS, stats);
+        }
     }
+
 
     /**
      * REMOVAL MODE handling

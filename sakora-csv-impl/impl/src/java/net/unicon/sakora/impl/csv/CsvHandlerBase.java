@@ -29,6 +29,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.unicon.sakora.api.csv.CsvHandler;
 import net.unicon.sakora.api.csv.CsvSyncContext;
@@ -91,6 +93,9 @@ public abstract class CsvHandlerBase implements CsvHandler {
 	protected int adds = 0;
 	protected int updates = 0;
 	protected int deletes = 0;
+	protected int seconds = 0;
+	protected int start = 0;
+	protected int end = 0;
 	protected ContentHostingService contentHostingService = null;
 	protected ServerConfigurationService configurationService = null;
 	protected CsvCommonHandlerService commonHandlerService = null;
@@ -105,40 +110,63 @@ public abstract class CsvHandlerBase implements CsvHandler {
 		pleaseStop = true;
 	}
 
-	/**
-	 * Executed immediately before the sync processing for this handler is complete
-	 * @param context
+	/* (non-Javadoc)
+	 * @see net.unicon.sakora.api.csv.CsvHandler#before(net.unicon.sakora.api.csv.CsvSyncContext)
 	 */
-   public void before(CsvSyncContext context) {
-       // reset the stats counters
-       lines = 0;
-       errors = 0;
-       adds = 0;
-       updates = 0;
-       deletes = 0;
+	public void before(CsvSyncContext context) {
+	    // reset the stats counters
+	    lines = 0;
+	    errors = 0;
+	    adds = 0;
+	    updates = 0;
+	    deletes = 0;
 
-       time = new Date();
-   }
+	    time = new Date();
+	    start = (int) (time.getTime() / 1000);
+	}
 
-   /**
-    * Executed after the sync processing for this handler is complete,
-    * NOTE: check the SyncContext IS_BATCH_OK or the current handler state var to see if there was an error
-    * @param context
-    */
-   public void after(CsvSyncContext context) {
-       String handlerName = this.getClass().getSimpleName().replace("Handler", "").replace("Csv", "");
-       if ("fail".equals(commonHandlerService.getCurrentSyncState())) {
-           // error
-           handlerName += " [FAILED]";
-       } else {
-           // success
-           handlerName += " completed";
-       }
-       if (errors > 0) {
-           log.warn("SakoraCSV handler "+handlerName+" encountered "+errors+" errors while processing "+lines+" lines, please check and correct the feed");
-       }
-       log.info("SakoraCSV handler "+handlerName+" processing "+lines+" lines with "+errors+" errors: adds="+adds+", updates="+updates+", deletes="+deletes);
-   }
+	/* (non-Javadoc)
+	 * @see net.unicon.sakora.api.csv.CsvHandler#after(net.unicon.sakora.api.csv.CsvSyncContext)
+	 */
+	public void after(CsvSyncContext context) {
+	    // update stats
+	    end = (int) (new Date().getTime() / 1000);
+	    seconds = end - start;
+	    // helpful logging
+	    String handlerName = this.getClass().getSimpleName().replace("Handler", "").replace("Csv", "");
+	    if ("fail".equals(commonHandlerService.getCurrentSyncState())) {
+	        // error
+	        handlerName += " [FAILED]";
+	    } else {
+	        // success
+	        handlerName += " completed";
+	    }
+	    if (errors > 0) {
+	        log.warn("SakoraCSV handler "+handlerName+" encountered "+errors+" errors while processing "+lines+" lines, please check and correct the feed");
+	    }
+	    log.info("SakoraCSV handler "+handlerName+" processing "+lines+" lines with "+errors+" errors: adds="+adds+", updates="+updates+", deletes="+deletes);
+	}
+
+	/* (non-Javadoc)
+	 * @see net.unicon.sakora.api.csv.CsvHandler#getName()
+	 */
+	abstract public String getName(); //return this.getClass().getSimpleName().replace("Handler", "").replace("Csv", "");
+
+	/* (non-Javadoc)
+	 * @see net.unicon.sakora.api.csv.CsvHandler#getStats()
+	 */
+	public Map<String, Integer> getStats() {
+	    HashMap<String, Integer> stats = new HashMap<String, Integer>();
+	    stats.put("lines", lines);
+	    stats.put("errors", errors);
+	    stats.put("adds", adds);
+	    stats.put("updates", updates);
+	    stats.put("deletes", deletes);
+	    stats.put("start", start);
+	    stats.put("seconds", seconds);
+	    stats.put("end", end);
+	    return stats;
+	}
 
 	/**
 	 * Handled initial setup of the sync context,

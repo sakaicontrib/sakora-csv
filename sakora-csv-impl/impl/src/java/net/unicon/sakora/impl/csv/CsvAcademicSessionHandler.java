@@ -44,6 +44,11 @@ public class CsvAcademicSessionHandler extends CsvHandlerBase {
 	static final Log log = LogFactory.getLog(CsvAcademicSessionHandler.class);
 
 	@Override
+	public String getName() {
+	    return "AcademicSession";
+	}
+
+	@Override
 	protected void readInputLine(CsvSyncContext context, String[] line) {
 		
 		final int minFieldCount = 5;

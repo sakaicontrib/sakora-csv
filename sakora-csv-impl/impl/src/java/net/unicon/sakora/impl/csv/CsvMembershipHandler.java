@@ -58,6 +58,11 @@ public class CsvMembershipHandler extends CsvHandlerBase {
     private String mode = MODE_SECTION; // set by the spring config (course or section)
     private String defaultEnrollmentSetCategory = "NONE";
 
+    @Override
+    public String getName() {
+        return MODE_SECTION.equals(mode) ? "SectionMembership" : "CourseMembership";
+    }
+
 	@Override
 	protected void readInputLine(CsvSyncContext context, String[] line) {
 		

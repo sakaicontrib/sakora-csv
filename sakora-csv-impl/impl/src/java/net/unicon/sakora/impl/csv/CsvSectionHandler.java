@@ -47,6 +47,11 @@ public class CsvSectionHandler extends CsvHandlerBase {
 	public CsvSectionHandler() {
 	}
 
+    @Override
+    public String getName() {
+        return "Section";
+    }
+
 	@Override
 	protected void readInputLine(CsvSyncContext context, String[] line) {
 

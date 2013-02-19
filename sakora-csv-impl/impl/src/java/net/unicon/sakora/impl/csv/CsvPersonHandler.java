@@ -73,6 +73,11 @@ public class CsvPersonHandler extends CsvHandlerBase {
 	public CsvPersonHandler() {
 	}
 
+    @Override
+    public String getName() {
+        return "Person";
+    }
+
 	@Override
 	protected void readInputLine(CsvSyncContext context, String[] line) {
 

@@ -39,6 +39,11 @@ public class CsvCourseSetHandler extends CsvHandlerBase {
 	public CsvCourseSetHandler() {
 	}
 
+    @Override
+    public String getName() {
+        return "CourseSet";
+    }
+
 	@Override
 	protected void readInputLine(CsvSyncContext context, String[] line) {
 

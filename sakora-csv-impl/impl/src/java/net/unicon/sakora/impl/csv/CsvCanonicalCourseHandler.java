@@ -37,6 +37,11 @@ public class CsvCanonicalCourseHandler extends CsvHandlerBase {
 	static final Log log = LogFactory.getLog(CsvCanonicalCourseHandler.class);
 
 	@Override
+    public String getName() {
+        return "CanonicalCourse";
+    }
+
+	@Override
 	protected void readInputLine(CsvSyncContext context, String[] line) {
 
 		final int minFieldCount = 3;
