@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.unicon.sakora.api.csv.CsvHandler;
 import net.unicon.sakora.api.csv.CsvSyncContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -136,7 +137,8 @@ public class CsvCommonHandlerService {
     public synchronized void completeRun(boolean success) {
         // run this after a run completes
         String runId = getCurrentSyncRunId();
-        log.info("SakoraCSV sync run ("+runId+") completed: success="+success);
+        Date start = (Date) syncVars.get(SYNC_VAR_STARTDATE);
+        log.info("SakoraCSV sync run ("+runId+") started on "+DateFormat.getDateTimeInstance().format(start)+" was completed: success="+success);
         syncVars.put(SYNC_VAR_STATUS, success?SYNC_STATE_COMPLETE:SYNC_STATE_FAILED);
         if (success) {
             StringBuilder sb = new StringBuilder();
@@ -164,39 +166,36 @@ public class CsvCommonHandlerService {
                 total_updates += updates;
                 total_deletes += deletes;
                 total_seconds += seconds;
-                sb.append("   - handler ");
-                sb.append(handler);
+                sb.append("  - ");
+                sb.append(StringUtils.rightPad(handler, 20));
                 sb.append(": processed ");
-                sb.append(lines);
+                sb.append(String.format("%6d", lines));
                 sb.append(" lines with ");
-                sb.append(errors);
-                sb.append("errors in ");
-                sb.append(seconds);
+                sb.append(String.format("%4d", errors));
+                sb.append(" errors in ");
+                sb.append(String.format("%4d", seconds));
                 sb.append(" seconds:");
-                sb.append("\t add=");
-                sb.append(adds);
-                sb.append("\t,upd=");
-                sb.append(updates);
-                sb.append("\t,del=");
-                sb.append(deletes);
+                sb.append(" add=");
+                sb.append(String.format("%4d", adds));
+                sb.append(", upd=");
+                sb.append(String.format("%4d", updates));
+                sb.append(", del=");
+                sb.append(String.format("%4d", deletes));
                 sb.append("\n");
             }
             // total summary (start, end, totals)
-            Date start = (Date) syncVars.get(SYNC_VAR_STARTDATE);
-            sb.append("  -- TOTAL: started on ");
-            sb.append(DateFormat.getDateTimeInstance().format(start));
-            sb.append(" processed ");
+            sb.append("  --- TOTAL:    processed ");
             sb.append(total_lines);
             sb.append(" lines with ");
             sb.append(total_errors);
-            sb.append("errors in ");
+            sb.append(" errors in ");
             sb.append(total_seconds);
             sb.append(" seconds:");
-            sb.append("\t add=");
+            sb.append(" add=");
             sb.append(total_adds);
-            sb.append("\t,upd=");
+            sb.append(", upd=");
             sb.append(total_updates);
-            sb.append("\t,del=");
+            sb.append(", del=");
             sb.append(total_deletes);
             syncVars.put(SYNC_VAR_SUMMARY, sb.toString());
             log.info("SakoraCSV sync run ("+runId+") statistics:\n"+sb.toString());
