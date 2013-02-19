@@ -24,13 +24,12 @@
 						http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
 						http://www.springframework.org/schema/util
     					http://www.springframework.org/schema/util/spring-util-2.0.xsd">
-	<bean
-		id="net.unicon.sakora.impl.jobs.DataLoaderJobBean.wrapper.base"
+
+	<bean id="net.unicon.sakora.impl.jobs.DataLoaderJobBean.wrapper.base"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringStatefulJobBeanWrapper"
 		abstract="true" init-method="init">
 		<property name="schedulerManager">
-			<ref
-				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
 	</bean>
 
@@ -52,6 +51,7 @@
 		<property name="sectionMeetingHandler" ref="net.unicon.sakora.impl.csv.CsvSectionMeetingHandler"/>
 		<property name="configurationService" ref="org.sakaiproject.component.api.ServerConfigurationService"/>
 		<property name="dbLog" ref="net.unicon.sakora.impl.csv.dao.CsvSyncDao" />
+        <property name="commonHandlerService" ref="net.unicon.sakora.impl.csv.CsvCommonHandlerService" />
 	</bean>
 
     <!-- Dao and transaction proxy for tracking delta between data loads -->
