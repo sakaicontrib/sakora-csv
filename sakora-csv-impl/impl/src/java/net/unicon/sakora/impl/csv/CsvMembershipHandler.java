@@ -86,7 +86,6 @@ public class CsvMembershipHandler extends CsvHandlerBase {
 			}
 
 			try {
-			    boolean processedEnrollment = false; 
 				if (!isValid(userEid, "User Eid", eid)
 						|| !isValid(role, "Role", eid)
 						|| !isValid(status, "Status", eid)) {
@@ -125,7 +124,6 @@ public class CsvMembershipHandler extends CsvHandlerBase {
 				            cmAdmin.addOrUpdateEnrollment(userEid, enrolled.getEid(), status, credits, gradingScheme);
 				        }
 				        updates++; // hard to say if it was an add or an update
-				        processedEnrollment = true;
 				    } else {
 				        if (log.isDebugEnabled()) log.debug("Skipped processing section membership for user ("+userEid+") in section ("+eid+") because it is part of an academic session which is being skipped");
 				    }
@@ -134,35 +132,34 @@ public class CsvMembershipHandler extends CsvHandlerBase {
 				    if (commonHandlerService.processCourseOffering(eid)) {
 				        cmAdmin.addOrUpdateCourseOfferingMembership(userEid, role, eid, status);
 				        updates++; // hard to say if it was an add or an update
-				        processedEnrollment = true;
 				    } else {
 				        if (log.isDebugEnabled()) log.debug("Skipped processing membership for user ("+userEid+") in course offering ("+eid+") because it is part of an academic session which is being skipped");
 				    }
 				}
 
-				if (processedEnrollment) {
-				    if (commonHandlerService.ignoreMembershipRemovals()) {
-				        if (log.isDebugEnabled()) log.debug("SakoraCSV skipping sakora membership table update for user ("+userEid+") and "+mode+" ("+eid+") because ignoreMembershipRemovals=true");
+				if (commonHandlerService.ignoreMembershipRemovals()) {
+				    if (log.isDebugEnabled()) log.debug("SakoraCSV skipping sakora membership table update for user ("+userEid+") and "+mode+" ("+eid+") because ignoreMembershipRemovals=true");
+				} else {
+				    // Update or add Sakora membership entry (used for tracking deltas)
+				    Search search = new Search();
+				    search.addRestriction(new Restriction("mode", mode, Restriction.EQUALS));
+				    search.addRestriction(new Restriction("userEid", userEid));
+				    search.addRestriction(new Restriction("containerEid", eid));
+				    List<Membership> existing = dao.findBySearch(Membership.class, search);
+				    if ( existing == null || existing.isEmpty() ) {
+				        dao.create( new Membership(userEid, eid, role, mode, time) );
 				    } else {
-				        // Update or add Sakora membership entry (used for tracking deltas)
-				        Search search = new Search();
-				        search.addRestriction(new Restriction("mode", mode, Restriction.EQUALS));
-				        search.addRestriction(new Restriction("userEid", userEid));
-				        search.addRestriction(new Restriction("containerEid", eid));
-				        List<Membership> existing = dao.findBySearch(Membership.class, search);
-				        if ( existing == null || existing.isEmpty() ) {
-				            dao.create( new Membership(userEid, eid, role, mode, time) );
-				        } else {
-				            for ( int i = 0 ; i < existing.size() ; i++ ) {
-				                // guard against dupl records, which can lead to inadvertent CM membership deletion
-				                if ( i == existing.size() - 1 ) {
-				                    existing.get(i).setInputTime(time);
-				                    existing.get(i).setRole(role);
-				                    dao.update(existing.get(i));
-				                } else {
-				                    // Not in transaction so can't use delete(Object).
-				                    dao.delete(Membership.class, existing.get(i).getId());
-				                }
+				        for ( int i = 0 ; i < existing.size() ; i++ ) {
+				            // guard against dupl records, which can lead to inadvertent CM membership deletion
+				            if ( i == existing.size() - 1 ) {
+				                // only update the last one found
+				                existing.get(i).setInputTime(time);
+				                existing.get(i).setRole(role);
+				                dao.update(existing.get(i));
+				            } else {
+				                // Remove all duplicates
+				                // Not in transaction so can't use delete(Object).
+				                dao.delete(Membership.class, existing.get(i).getId());
 				            }
 				        }
 				    }

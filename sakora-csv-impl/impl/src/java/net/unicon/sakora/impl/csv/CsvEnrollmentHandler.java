@@ -33,7 +33,7 @@ import org.sakaiproject.genericdao.api.search.Restriction;
 import org.sakaiproject.genericdao.api.search.Search;
 
 /**
- * Reads in Enrollment data from csv extracts, expect format is:
+ * Reads in Enrollment data from csv extracts, expected format is:
  * Enrollment Set Eid, User Eid, Status, Enrollment Credits, Grading Scheme
  * 
  * @author Dan McCallum dmccallum@unicon.net
@@ -78,7 +78,8 @@ public class CsvEnrollmentHandler extends CsvHandlerBase {
 			            dao.create(new SakoraLog(this.getClass().toString(), "Invalid EnrollmentSet Eid " + eid));
 			        } else {
 			            cmAdmin.addOrUpdateEnrollment(userEid, eid, status, credits, gradingScheme);
-			            dao.save(new Membership(userEid, eid, studentRole, "enrollment", time));
+			            // NOTE: this next line is likely to cause a hibernate exception
+			            dao.save( new Membership(userEid, eid, studentRole, "enrollment", time) );
 			            adds++;
 			        }
 			    } else {

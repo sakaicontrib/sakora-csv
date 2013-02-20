@@ -127,15 +127,15 @@ public class CsvPersonHandler extends CsvHandlerBase {
 				} else {
 					edit = userDirService.editUser(existingId);
 					// check if the user has changed, only update if the record has changed
-					if (!StringUtils.equals(firstName, edit.getFirstName())) {
+					if (!strEquals(firstName, edit.getFirstName())) {
 					    edit.setFirstName(firstName);
 					    changed = true;
 					}
-					if (!StringUtils.equals(lastName, edit.getLastName())) {
+					if (!strEquals(lastName, edit.getLastName())) {
 					    edit.setLastName(lastName);
 					    changed = true;
 					}
-					if (!StringUtils.equals(email, edit.getEmail())) {
+					if (!strEquals(email, edit.getEmail())) {
 					    edit.setEmail(email);
 					    changed = true;
 					}
@@ -143,7 +143,7 @@ public class CsvPersonHandler extends CsvHandlerBase {
 					    edit.setPassword(pw);
 					    changed = true;
 					}
-					if (!StringUtils.equals(type, edit.getFirstName())) {
+					if (!strEquals(type, edit.getFirstName())) {
 					    edit.setType(type);
 					    changed = true;
 					}
@@ -163,7 +163,7 @@ public class CsvPersonHandler extends CsvHandlerBase {
 						    }
 						} else {
 						    String currentVal = edit.getPropertiesEdit().getProperty(fieldName);
-						    if (currentVal == null || fieldValue.equals(currentVal)) {
+						    if (currentVal == null || strEquals(fieldValue, currentVal)) {
 						        edit.getPropertiesEdit().addProperty(fieldName, fieldValue);
 						        changed = true;
 						    }
@@ -221,6 +221,21 @@ public class CsvPersonHandler extends CsvHandlerBase {
 					"] fields): [" + (line == null ? null : Arrays.toString(line)) + "]");
 			errors++;
 		}
+	}
+
+	/**
+	 * SPECIAL method to compare two strings for equality,
+	 * this will also say they are equal if they are both null or "" (empty string)
+	 * 
+	 * @param one
+	 * @param two
+	 * @return true if equal, false otherwise
+	 */
+	private boolean strEquals(String one, String two) {
+	    if (StringUtils.isBlank(one) && StringUtils.isBlank(two)) {
+	        return true;
+	    }
+	    return StringUtils.equals(one, two);
 	}
 
 	private Map<String, String> getOptionalFields(String[] line, int startAtIdx) {
