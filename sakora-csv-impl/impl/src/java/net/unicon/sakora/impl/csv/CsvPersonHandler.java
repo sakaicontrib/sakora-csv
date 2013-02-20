@@ -143,7 +143,7 @@ public class CsvPersonHandler extends CsvHandlerBase {
 					    edit.setPassword(pw);
 					    changed = true;
 					}
-					if (!strEquals(type, edit.getFirstName())) {
+					if (!strEquals(type, edit.getType())) {
 					    edit.setType(type);
 					    changed = true;
 					}
@@ -178,16 +178,19 @@ public class CsvPersonHandler extends CsvHandlerBase {
 				    } else {
 				        updates++;
 				    }
+				} else {
+				    // no changes so just cancel the edit
+				    userDirService.cancelEdit(edit);
 				}
 			}
 			catch(UserIdInvalidException uiie) {
 				dao.create(new SakoraLog(this.getClass().toString(), uiie.getLocalizedMessage()));
-				log.error("CsvPersonHandler: " + uiie.getMessage());
+				log.error("CsvPersonHandler: UserIdInvalidException: " + uiie.getMessage());
 				errors++;
 			}
 			catch(UserNotDefinedException unde) {
 				dao.create(new SakoraLog(this.getClass().toString(), unde.getLocalizedMessage()));
-				log.error("CsvPersonHandler: " + unde.getMessage());
+				log.error("CsvPersonHandler: UserNotDefinedException: " + unde.getMessage());
 				errors++;
 			}
 			catch(UserAlreadyDefinedException uade) {
@@ -197,12 +200,12 @@ public class CsvPersonHandler extends CsvHandlerBase {
 			}
 			catch(UserLockedException ule) {
 				dao.create(new SakoraLog(this.getClass().toString(), ule.getLocalizedMessage()));
-				log.error("CsvPersonHandler: " + ule.getMessage());
+				log.error("CsvPersonHandler: UserLockedException: " + ule.getMessage());
 				errors++;
 			}
 			catch(UserPermissionException upe) {
 				dao.create(new SakoraLog(this.getClass().toString(), upe.getLocalizedMessage()));
-				log.error("CsvPersonHandler: " + upe.getMessage());
+				log.error("CsvPersonHandler: CsvPersonHandler: " + upe.getMessage());
 				errors++;
 			}
 

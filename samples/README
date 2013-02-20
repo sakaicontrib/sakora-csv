@@ -17,25 +17,27 @@ Clear the CM/Sakora database tables (using the script) and restart Sakai
 Load the multiple feed (using load.sh)
 Check the logs for ERROR/WARN (should find none) - expect 186 lines with 0 errors: 41 adds, 145 updates, 0 deletes
 Load the multiple feed again (using load.sh)
-Check the logs for ERROR/WARN (should find none) - expect 186 lines with 0 errors: 0 adds, 186 updates, 0 deletes
+Check the logs for ERROR/WARN (should find none) - expect 186 lines with 0 errors: 0 adds, 160 updates, 0 deletes
 Load the partial feed (using load.sh)
-Check the logs for ERROR/WARN (should find none) - expect 119 lines with 0 errors: 0 adds, 119 updates, 60 deletes
+Check the logs for ERROR/WARN (should find none) - expect 119 lines with 0 errors: 0 adds, 93 updates, 60 deletes
 Load the partial feed again (using load.sh)
-Check the logs for ERROR/WARN (should find none) - expect 119 lines with 0 errors: 0 adds, 119 updates, 60 deletes
+Check the logs for ERROR/WARN (should find none) - expect 119 lines with 0 errors: 0 adds, 93 updates, 60 deletes
 
 Clear the CM/Sakora database tables (using the script) and restart Sakai
 Load the multiple feed (using load.sh)
+Check the logs for ERROR/WARN (should find none) - expect 186 lines with 0 errors: 41 adds, 119 updates, 0 deletes
 Load the partial feed (using load-ims.sh)
-Check the logs for ERROR/WARN (should find none) - expect 119 lines with 0 errors: 0 adds, 119 updates, 60 deletes
+Check the logs for ERROR/WARN (should find none) - expect 119 lines with 0 errors: 0 adds, 93 updates, 8 deletes
 Load the partial feed again (using load-ims.sh)
-Check the logs for ERROR/WARN (should find none) - expect 119 lines with 0 errors: 0 adds, 119 updates, 60 deletes
+Check the logs for ERROR/WARN (should find none) - expect 119 lines with 0 errors: 0 adds, 93 updates, 8 deletes
 
 Clear the CM/Sakora database tables (using the script) and restart Sakai
 Load the multiple feed (using load.sh)
+Check the logs for ERROR/WARN (should find none) - expect 186 lines with 0 errors: 41 adds, 119 updates, 0 deletes
 Load the partial feed (using load-imr.sh)
-Check the logs for errors and warnings (should find none)
+Check the logs for ERROR/WARN (should find none) - expect 119 lines with 0 errors: 0 adds, 93 updates, 0 deletes
 Load the partial feed again (using load-imr.sh)
-Check the logs for errors and warnings (should find none)
+Check the logs for ERROR/WARN (should find none) - expect 119 lines with 0 errors: 0 adds, 93 updates, 0 deletes
 
 NOTE: the updates and deletes counts might vary based on whether you already 
       have the users loaded from previous runs, recommend you set the 
