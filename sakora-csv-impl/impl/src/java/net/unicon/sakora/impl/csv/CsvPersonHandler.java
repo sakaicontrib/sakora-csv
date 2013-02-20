@@ -28,6 +28,7 @@ import net.unicon.sakora.api.csv.CsvSyncContext;
 import net.unicon.sakora.api.csv.model.Person;
 import net.unicon.sakora.api.csv.model.SakoraLog;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.genericdao.api.search.Restriction;
@@ -107,6 +108,7 @@ public class CsvPersonHandler extends CsvHandlerBase {
 			try {
 				UserEdit edit = null;
 
+				boolean changed = false;
 				if (existingId == null || "".equals(existingId)) {
 					if ( optionalFields.containsKey(ID_FIELD_NAME) ) {
 						newId = optionalFields.get(ID_FIELD_NAME);
@@ -116,15 +118,36 @@ public class CsvPersonHandler extends CsvHandlerBase {
 					}
 					edit = userDirService.addUser(newId, eid);
 					newId = edit.getId();
+					edit.setFirstName(firstName);
+					edit.setLastName(lastName);
+					edit.setEmail(email);
+					edit.setPassword(pw);
+					edit.setType(type);
+					changed = true;
 				} else {
 					edit = userDirService.editUser(existingId);
+					// check if the user has changed, only update if the record has changed
+					if (!StringUtils.equals(firstName, edit.getFirstName())) {
+					    edit.setFirstName(firstName);
+					    changed = true;
+					}
+					if (!StringUtils.equals(lastName, edit.getLastName())) {
+					    edit.setLastName(lastName);
+					    changed = true;
+					}
+					if (!StringUtils.equals(email, edit.getEmail())) {
+					    edit.setEmail(email);
+					    changed = true;
+					}
+					if (!edit.checkPassword(pw)) {
+					    edit.setPassword(pw);
+					    changed = true;
+					}
+					if (!StringUtils.equals(type, edit.getFirstName())) {
+					    edit.setType(type);
+					    changed = true;
+					}
 				}
-
-				edit.setFirstName(firstName);
-				edit.setLastName(lastName);
-				edit.setEmail(email);
-				edit.setPassword(pw);
-				edit.setType(type);
 
 				if ( !(optionalFields.isEmpty()) ) {
 					log.debug("Processing optional fields for user with eid [" + eid  + "]: " + optionalFields);
@@ -134,19 +157,27 @@ public class CsvPersonHandler extends CsvHandlerBase {
 						}
 						String fieldValue = optionalFields.get(fieldName);
 						if ( fieldValue == null || "".equals(fieldValue) ) {
-							edit.getPropertiesEdit().removeProperty(fieldName);
+						    if (edit.getPropertiesEdit().getProperty(fieldName) != null) {
+						        edit.getPropertiesEdit().removeProperty(fieldName);
+						        changed = true;
+						    }
 						} else {
-							edit.getPropertiesEdit().addProperty(fieldName, fieldValue);
+						    String currentVal = edit.getPropertiesEdit().getProperty(fieldName);
+						    if (currentVal == null || fieldValue.equals(currentVal)) {
+						        edit.getPropertiesEdit().addProperty(fieldName, fieldValue);
+						        changed = true;
+						    }
 						}
 					}
 				}
 
-				userDirService.commitEdit(edit);
-
-				if (existingId == null) {
-					adds++;
-				} else {
-					updates++;
+				if (changed) {
+				    userDirService.commitEdit(edit);
+				    if (existingId == null) {
+				        adds++;
+				    } else {
+				        updates++;
+				    }
 				}
 			}
 			catch(UserIdInvalidException uiie) {
@@ -176,7 +207,15 @@ public class CsvPersonHandler extends CsvHandlerBase {
 			}
 
 			// Log users read in for delta calculation, update existing and create new
-			dao.save(new Person(eid, (existingId == null ? newId : existingId), time));
+			// dao.save(new Person(eid, (existingId == null ? newId : existingId), time));
+			Person p = dao.findById(Person.class, eid);
+			if (p == null) {
+			    dao.create(new Person(eid, newId, time));
+			} else {
+			    p.setInputTime(time);
+			    p.setUserId( (existingId == null ? newId : existingId) );
+			    dao.update(p);
+			}
 		} else {
 			log.error("Skipping short line (expected at least [" + minFieldCount + 
 					"] fields): [" + (line == null ? null : Arrays.toString(line)) + "]");

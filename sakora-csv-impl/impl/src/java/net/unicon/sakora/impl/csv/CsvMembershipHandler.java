@@ -151,7 +151,7 @@ public class CsvMembershipHandler extends CsvHandlerBase {
 				        search.addRestriction(new Restriction("containerEid", eid));
 				        List<Membership> existing = dao.findBySearch(Membership.class, search);
 				        if ( existing == null || existing.isEmpty() ) {
-				            dao.save(new Membership(userEid, eid, role, mode, time));
+				            dao.create( new Membership(userEid, eid, role, mode, time) );
 				        } else {
 				            for ( int i = 0 ; i < existing.size() ; i++ ) {
 				                // guard against dupl records, which can lead to inadvertent CM membership deletion
@@ -161,7 +161,6 @@ public class CsvMembershipHandler extends CsvHandlerBase {
 				                    dao.update(existing.get(i));
 				                } else {
 				                    // Not in transaction so can't use delete(Object).
-				                    // Should really be fixed.
 				                    dao.delete(Membership.class, existing.get(i).getId());
 				                }
 				            }
@@ -208,7 +207,7 @@ public class CsvMembershipHandler extends CsvHandlerBase {
 	                String handler = MODE_SECTION.equals(mode) ? "SectionMembershipHandler" : "CourseMembershipHandler";
 	                log.warn("SakoraCSV "+handler+" processInternal: No current containers so we are skipping all internal memberships post CSV read processing");
 	            } else {
-	                search.addRestriction( new Restriction("containerEid", enrollmentContainerEids) );
+	                search.addRestriction( new Restriction("containerEid", enrollmentContainerEids.toArray(new String[enrollmentContainerEids.size()])) );
 	                log.info("SakoraCSV limiting "+mode+" membership removals to "+enrollmentContainerEids.size()+" "+mode+" containers: "+enrollmentContainerEids);
 	            }
 	        }

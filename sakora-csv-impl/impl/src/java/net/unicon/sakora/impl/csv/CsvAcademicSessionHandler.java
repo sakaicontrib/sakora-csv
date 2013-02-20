@@ -89,9 +89,8 @@ public class CsvAcademicSessionHandler extends CsvHandlerBase {
 			if (existing != null) {
 				existing.setInputTime(time);
 				dao.update(existing);
-			}
-			else {
-				dao.save(new Session(eid, time));
+			} else {
+				dao.create(new Session(eid, time));
 			}
 		} else {
 			log.error("SakoraCSV Skipping short line (expected at least [" + minFieldCount + 

@@ -7,7 +7,7 @@ multiple  - complex feeds which load multiple terms worth of data and lots of us
 partial   - a subset/variation on the 'multiple' feeds which can be used to test removals processing (missing spring term and some memberships have changed)
 
 Recommended testing plan:
-Clear the CM database tables and restart Sakai
+Clear the CM/Sakora database tables (using the script) and restart Sakai
 Load the single feed (using load.sh)
 Check the logs for ERROR/WARN (should find none) - expect 10 lines with 0 errors: 7 adds, 3 updates, 0 deletes
 Load the single feed again (using load.sh)
@@ -19,18 +19,18 @@ Check the logs for ERROR/WARN (should find none) - expect 186 lines with 0 error
 Load the multiple feed again (using load.sh)
 Check the logs for ERROR/WARN (should find none) - expect 186 lines with 0 errors: 0 adds, 186 updates, 0 deletes
 Load the partial feed (using load.sh)
-Check the logs for errors and warnings (should find none)
+Check the logs for ERROR/WARN (should find none) - expect 119 lines with 0 errors: 0 adds, 119 updates, 60 deletes
 Load the partial feed again (using load.sh)
-Check the logs for errors and warnings (should find none)
+Check the logs for ERROR/WARN (should find none) - expect 119 lines with 0 errors: 0 adds, 119 updates, 60 deletes
 
-Clear the CM database tables and restart Sakai
+Clear the CM/Sakora database tables (using the script) and restart Sakai
 Load the multiple feed (using load.sh)
 Load the partial feed (using load-ims.sh)
-Check the logs for errors and warnings (should find none)
+Check the logs for ERROR/WARN (should find none) - expect 119 lines with 0 errors: 0 adds, 119 updates, 60 deletes
 Load the partial feed again (using load-ims.sh)
-Check the logs for errors and warnings (should find none)
+Check the logs for ERROR/WARN (should find none) - expect 119 lines with 0 errors: 0 adds, 119 updates, 60 deletes
 
-Clear the CM database tables and restart Sakai
+Clear the CM/Sakora database tables (using the script) and restart Sakai
 Load the multiple feed (using load.sh)
 Load the partial feed (using load-imr.sh)
 Check the logs for errors and warnings (should find none)

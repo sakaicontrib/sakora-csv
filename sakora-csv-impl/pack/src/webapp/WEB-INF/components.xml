@@ -54,46 +54,45 @@
         <property name="commonHandlerService" ref="net.unicon.sakora.impl.csv.CsvCommonHandlerService" />
 	</bean>
 
-    <!-- Dao and transaction proxy for tracking delta between data loads -->
-    <bean id="net.unicon.sakora.impl.csv.dao.CsvSyncTarget"
-                    class="net.unicon.sakora.impl.csv.dao.CsvSyncDaoImpl">
-            <property name="sessionFactory"
-                    ref="org.sakaiproject.springframework.orm.hibernate.GlobalSessionFactory" />
-            <property name="persistentClasses">
-                    <list>
-                            <value>net.unicon.sakora.api.csv.model.Membership</value>
-                            <value>net.unicon.sakora.api.csv.model.Person</value>
-                            <value>net.unicon.sakora.api.csv.model.SakoraLog</value>
-                            <value>net.unicon.sakora.api.csv.model.Session</value>
-                    </list>
-            </property>
-    </bean>
 
-    <bean id="net.unicon.sakora.impl.csv.dao.CsvSyncDao"
-                    class="org.sakaiproject.genericdao.api.spring.CurrentClassLoaderTxProxyFactoryBean">
-            <property name="transactionManager"
-                    ref="org.sakaiproject.springframework.orm.hibernate.GlobalTransactionManager" />
-            <property name="target"
-                    ref="net.unicon.sakora.impl.csv.dao.CsvSyncTarget" />
-            <property name="transactionAttributes">
-                    <props>
-                            <prop key="*">PROPAGATION_REQUIRED</prop>
-                    </props>
-            </property>
-    </bean>
+  <!-- DAO and transaction proxy for tracking delta between data loads -->
+  <bean id="net.unicon.sakora.impl.csv.dao.CsvSyncTarget" 
+        class="net.unicon.sakora.impl.csv.dao.CsvSyncDaoImpl">
+    <property name="sessionFactory" ref="org.sakaiproject.springframework.orm.hibernate.GlobalSessionFactory" />
+    <property name="persistentClasses">
+      <list>
+        <value>net.unicon.sakora.api.csv.model.Membership</value>
+        <value>net.unicon.sakora.api.csv.model.Person</value>
+        <value>net.unicon.sakora.api.csv.model.SakoraLog</value>
+        <value>net.unicon.sakora.api.csv.model.Session</value>
+      </list>
+    </property>
+  </bean>
 
-	<bean id="org.sakaiproject.sakora.api.model.hibernate.AdditionalHibernateMappings"
-		class="org.sakaiproject.springframework.orm.hibernate.impl.AdditionalHibernateMappingsImpl">
-		<property name="mappingResources">
-			<list>
-                <value>net/unicon/sakora/api/csv/model/Membership.hbm.xml</value>
-                <value>net/unicon/sakora/api/csv/model/Person.hbm.xml</value>
-                <value>net/unicon/sakora/api/csv/model/SakoraLog.hbm.xml</value>
-                <value>net/unicon/sakora/api/csv/model/Session.hbm.xml</value>
-            </list>
-		</property>
-	</bean>
-	
+  <bean id="net.unicon.sakora.impl.csv.dao.CsvSyncDao" 
+        class="org.sakaiproject.genericdao.springutil.CurrentClassLoaderTxProxyFactoryBean">
+    <property name="transactionManager" ref="org.sakaiproject.springframework.orm.hibernate.GlobalTransactionManager" />
+    <property name="target" ref="net.unicon.sakora.impl.csv.dao.CsvSyncTarget" />
+    <property name="transactionAttributes">
+      <props>
+        <prop key="*">PROPAGATION_REQUIRED</prop>
+      </props>
+    </property>
+  </bean>
+
+  <bean id="org.sakaiproject.sakora.api.model.hibernate.AdditionalHibernateMappings" 
+        class="org.sakaiproject.springframework.orm.hibernate.impl.AdditionalHibernateMappingsImpl">
+    <property name="mappingResources">
+      <list>
+        <value>net/unicon/sakora/api/csv/model/Membership.hbm.xml</value>
+        <value>net/unicon/sakora/api/csv/model/Person.hbm.xml</value>
+        <value>net/unicon/sakora/api/csv/model/SakoraLog.hbm.xml</value>
+        <value>net/unicon/sakora/api/csv/model/Session.hbm.xml</value>
+      </list>
+    </property>
+  </bean>
+
+
 	<bean id="net.unicon.sakora.impl.csv.dao.CsvIndexGenerator"
 		class="net.unicon.sakora.impl.csv.dao.CsvIndexGenerator"
 		init-method="init" destroy-method="destroy">

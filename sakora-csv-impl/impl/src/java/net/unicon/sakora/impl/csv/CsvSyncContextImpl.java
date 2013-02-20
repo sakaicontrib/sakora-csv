@@ -34,4 +34,9 @@ public class CsvSyncContextImpl implements CsvSyncContext {
 		this.persistentState = state;
 	}
 
+	@Override
+	public String toString() {
+	    return "SC:props="+persistentState;
+	}
+
 }
