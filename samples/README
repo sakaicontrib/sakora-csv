@@ -9,15 +9,15 @@ partial   - a subset/variation on the 'multiple' feeds which can be used to test
 Recommended testing plan:
 Clear the CM database tables and restart Sakai
 Load the single feed (using load.sh)
-Check the logs for errors and warnings (should find none)
+Check the logs for ERROR/WARN (should find none) - expect 10 lines with 0 errors: 7 adds, 3 updates, 0 deletes
 Load the single feed again (using load.sh)
-Check the logs for errors and warnings (should find none)
+Check the logs for ERROR/WARN (should find none) - expect 10 lines with 0 errors: 0 adds, 10 updates, 0 deletes
 
-Clear the CM database tables and restart Sakai
+Clear the CM/Sakora database tables (using the script) and restart Sakai
 Load the multiple feed (using load.sh)
-Check the logs for errors and warnings (should find none)
+Check the logs for ERROR/WARN (should find none) - expect 186 lines with 0 errors: 41 adds, 145 updates, 0 deletes
 Load the multiple feed again (using load.sh)
-Check the logs for errors and warnings (should find none)
+Check the logs for ERROR/WARN (should find none) - expect 186 lines with 0 errors: 0 adds, 186 updates, 0 deletes
 Load the partial feed (using load.sh)
 Check the logs for errors and warnings (should find none)
 Load the partial feed again (using load.sh)
@@ -37,6 +37,8 @@ Check the logs for errors and warnings (should find none)
 Load the partial feed again (using load-imr.sh)
 Check the logs for errors and warnings (should find none)
 
+NOTE: the updates and dels counts might vary based on whether you already have the users loaded from previous runs,
+      recommend you set the net.unicon.sakora.csv.userRemovalMode=ignore unless specifically testing user processing
 
 SQL cleanup script:
 There is also a cleanup sql script which is for testing purposes only and will clean out all the CM tables

@@ -133,11 +133,20 @@ public class CsvUploadServlet extends HttpServlet {
 		    else if ( ("ignoreMissingSessions".equals(part.getName()) 
 		            || "ignoreMembershipRemovals".equals(part.getName())
 		            ) && part.isParam()) {
+		        // boolean overrides here
 		        ParamPart paramPart = (ParamPart) part;
 		        Boolean val = Boolean.parseBoolean(paramPart.getStringValue());
 		        jobOverrides.put(part.getName(), val.toString()); // need to store it as a string to be compatible with the sync context props
-		        log.info("SakoraCSV: POST param "+part.getName()+" is overriding to "+val+" for this sync job");
+		        log.info("SakoraCSV: POST param "+part.getName()+" set to override to "+val+" for this sync job");
 		    }
+            else if ( ("userRemovalMode".equals(part.getName()) 
+                    ) && part.isParam()) {
+                // string overrides here
+                ParamPart paramPart = (ParamPart) part;
+                String val = paramPart.getStringValue();
+                jobOverrides.put(part.getName(), val);
+                log.info("SakoraCSV: POST param "+part.getName()+" set to override to "+val+" for this sync job");
+            }
 		    else if (part.isFile()) {
 		        UserDirectoryService userDirectoryService = (UserDirectoryService) ComponentManager.get("org.sakaiproject.user.api.UserDirectoryService");
 		        SecurityService securityService = (SecurityService) ComponentManager.get("org.sakaiproject.authz.api.SecurityService");

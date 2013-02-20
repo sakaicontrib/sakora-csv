@@ -217,9 +217,6 @@
 		parent="net.unicon.sakora.impl.csv.CsvHandlerBase"
 		init-method="init">
 		<property name="idManager" ref="org.sakaiproject.id.api.IdManager" />
-		<property name="deleteUsers" value="false" />
-		<!-- An alternative to deleting users no longer in the CSV data is to change their user type.
-		Such as to 'alumni' and then optionally define that user type with different permissions -->
 		<property name="suspended" value="suspended" />
 		<property name="csvFileName" value="people.csv" />
 	</bean>

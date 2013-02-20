@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.unicon.sakora.api.csv.CsvHandler;
 import net.unicon.sakora.api.csv.CsvSyncContext;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -66,6 +67,11 @@ public class CsvCommonHandlerService {
     public static final String STATE_FAIL = "fail";
     public static final String STATE_DONE = "done";
 
+    public static final String URM_DELETE = "delete";
+    public static final String URM_DISABLE = "disable";
+    public static final String URM_IGNORE = "ignore";
+    private static final String[] URM_VALIDS = {URM_DISABLE,URM_DELETE,URM_IGNORE};
+
     private static final String CURRENT_ENROLLMENT_SET_EIDS = "currentEnrollmentSetEids";
     private static final String CURRENT_SECTION_EIDS = "currentSectionEids";
     private static final String CURRENT_COURSE_OFFERING_EIDS = "currentCourseOfferingEids";
@@ -73,7 +79,7 @@ public class CsvCommonHandlerService {
 
     private static final String IGNORE_MEMBERSHIP_REMOVALS = "ignoreMembershipRemovals";
     private static final String IGNORE_MISSING_SESSIONS = "ignoreMissingSessions";
-
+    private static final String USER_REMOVAL_MODE = "userRemoveMode";
 
 
     protected ServerConfigurationService configurationService;
@@ -95,6 +101,8 @@ public class CsvCommonHandlerService {
         if (ignoreMembershipRemovals()) {
             log.info("SakoraCSV ignoreMembershipRemovals is enabled: all enrollment removal processing will be skipped");
         }
+        setUserRemoveMode(configurationService.getString("net.unicon.sakora.csv.userRemovalMode", userRemoveMode));
+        log.info("SakoraCSV userRemoveMode is set to "+userRemoveMode);
     }
 
     public void destroy() {
@@ -123,13 +131,18 @@ public class CsvCommonHandlerService {
         // process context overrides
         if (context.getProperties().containsKey(IGNORE_MISSING_SESSIONS)) {
             Boolean ims = Boolean.parseBoolean(context.getProperties().get(IGNORE_MISSING_SESSIONS));
-            setIgnoreMissingSessions(ims);
-            log.info("SakoraCSV sync run ("+runId+") overriding ignoreMissingSessions: "+ims);
+            overrideIgnoreMissingSessions(ims);
+            log.info("SakoraCSV sync run ("+runId+") overriding "+IGNORE_MISSING_SESSIONS+": "+ims);
         }
         if (context.getProperties().containsKey(IGNORE_MEMBERSHIP_REMOVALS)) {
             Boolean ier = Boolean.parseBoolean(context.getProperties().get(IGNORE_MEMBERSHIP_REMOVALS));
-            setIgnoreMissingSessions(ier);
-            log.info("SakoraCSV sync run ("+runId+") overriding ignoreMembershipRemovals: "+ier);
+            overrideIgnoreMembershipRemovals(ier);
+            log.info("SakoraCSV sync run ("+runId+") overriding "+IGNORE_MEMBERSHIP_REMOVALS+": "+ier);
+        }
+        if (context.getProperties().containsKey(USER_REMOVAL_MODE)) {
+            String urm = context.getProperties().get(USER_REMOVAL_MODE);
+            overrideUserRemoveMode(urm);
+            log.info("SakoraCSV sync run ("+runId+") overriding "+USER_REMOVAL_MODE+": "+urm);
         }
         return runId;
     }
@@ -183,12 +196,12 @@ public class CsvCommonHandlerService {
                 sb.append(" deletes\n");
             }
             // total summary (start, end, totals)
-            sb.append("  --- TOTAL:           processed ");
-            sb.append(total_lines);
+            sb.append("  --- TOTAL:         processed ");
+            sb.append(String.format("%6d", total_lines));
             sb.append(" lines with ");
-            sb.append(total_errors);
+            sb.append(String.format("%5d", total_errors));
             sb.append(" errors in ");
-            sb.append(total_seconds);
+            sb.append(String.format("%5d", total_seconds));
             sb.append(" seconds: ");
             sb.append(String.format("%5d", total_adds));
             sb.append(" adds, ");
@@ -311,6 +324,48 @@ public class CsvCommonHandlerService {
         }
         return ignoreMembershipRemovals;
     }
+
+    /**
+     * USER REMOVAL handling
+     * disable: (DEFAULT): assign the user a type which matches the "suspended" key in the PersonHandler (defaults to "suspended")
+     * delete: removes the user from the system
+     * ignore: skips over the user removal processing entirely
+     */
+    protected String userRemoveMode = "disable";
+    public void setUserRemoveMode(String userRemoveMode) {
+        if (ArrayUtils.contains(URM_VALIDS, userRemoveMode)) {
+            this.userRemoveMode = userRemoveMode;
+        } else {
+            this.userRemoveMode = URM_DISABLE;
+            log.warn("SakoraCSV userRemoveMode ("+userRemoveMode+") is invalid: resetting to default (disable), must match one of these: "+ArrayUtils.toString(URM_VALIDS));
+        }
+    }
+    public String getUserRemoveMode() {
+        return userRemoveMode;
+    }
+    /**
+     * Allows the current setting to be overridden for the current sync run only
+     * @param urm null clears the override, see {@link #userRemoveMode}
+     */
+    public void overrideUserRemoveMode(String urm) {
+        if (ArrayUtils.contains(URM_VALIDS, userRemoveMode) || urm == null) {
+            setCurrentSyncVar(USER_REMOVAL_MODE, urm);
+            if (urm != null) {
+                log.info("Overriding the "+USER_REMOVAL_MODE+" value of "+userRemoveMode+" with "+urm+" for current sync: "+getCurrentSyncRunId());
+            }
+        } else {
+            log.warn("SakoraCSV userRemoveMode override ("+urm+") is invalid: ignoring the override, must match one of these: "+ArrayUtils.toString(URM_VALIDS));
+        }
+    }
+    public String userRemoveMode() {
+        String urm = getCurrentSyncVar(USER_REMOVAL_MODE, String.class);
+        if (urm != null) {
+            // override from the current run
+            return urm;
+        }
+        return userRemoveMode;
+    }
+
 
     /**
      * Academic Session Skip handling:

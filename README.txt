@@ -18,3 +18,10 @@ Configuration options (others documented on the confluence page):
 # If true, no memberships removals are processed for feed (all removal processing is skipped)
 # Default: false (matches legacy behavior)
 #net.unicon.sakora.csv.ignoreMembershipRemovals=true
+# Configure Sakora user removal processing (replaces 'deleteUser')
+# Valid values are:
+# disable (legacy): assign the user a type which matches the "suspended" key in the PersonHandler (defaults to "suspended")
+# delete: removes the user from the system
+# ignore: skips over the user removal processing entirely
+# Default: "disable" (matches legacy behavior)
+#net.unicon.sakora.csv.userRemovalMode=ignore

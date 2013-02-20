@@ -67,7 +67,6 @@ public class CsvPersonHandler extends CsvHandlerBase {
 	private List<String> optionalFieldNames = new ArrayList<String>() {{
 		add(ID_FIELD_NAME);
 	}};
-	private boolean deleteUsers = false;
 	private String suspended = "suspended";
 
 	public CsvPersonHandler() {
@@ -218,67 +217,68 @@ public class CsvPersonHandler extends CsvHandlerBase {
 	
 	@Override
 	protected void processInternal(CsvSyncContext context) {
+	    if (CsvCommonHandlerService.URM_IGNORE.equals(commonHandlerService.userRemoveMode())) {
+	        if (log.isDebugEnabled()) log.debug("SakoraCSV skipping people (user removal) processing, userRemoveMode=ignore");
+	    } else {
+	        // process the removals
+	        loginToSakai();
 
-		loginToSakai();
+	        // look for all users previously input via csv but not included in this import
+	        Search search = new Search();
+	        search.addRestriction(new Restriction("inputTime", time, Restriction.NOT_EQUALS));
+	        search.setLimit(searchPageSize);
 
-		// look for all users previously input via csv but not included in this import
-		Search search = new Search();
-		search.addRestriction(new Restriction("inputTime", time, Restriction.NOT_EQUALS));
-		search.setLimit(searchPageSize);
+	        boolean done = false;
 
-		boolean done = false;
-		
-		while (!done) {
-			List<Person> people = dao.findBySearch(Person.class, search);
-			for (Person user : people) {
-				try {
-					UserEdit target = userDirService.editUser(user.getUserId());
-					if (deleteUsers) {
-						userDirService.removeUser(target);
-					} else {
-						target.setType(suspended);
-					}
-					// commit the changes
-					userDirService.commitEdit(target);
-					deletes++;
-				}
-				catch(UserNotDefinedException unde) {
-					dao.create(new SakoraLog(this.getClass().toString(), unde.getLocalizedMessage()));
-					log.error("CsvPersonHandler: " + unde.getMessage());
-				}
-				catch(UserAlreadyDefinedException uade) {
-					dao.create(new SakoraLog(this.getClass().toString(), uade.getLocalizedMessage()));
-					log.error("CsvPersonHandler: " + uade.getMessage());
-				}
-				catch(UserLockedException ule) {
-					dao.create(new SakoraLog(this.getClass().toString(), ule.getLocalizedMessage()));
-					log.error("CsvPersonHandler: " + ule.getMessage());
-				}
-				catch(UserPermissionException upe) {
-					dao.create(new SakoraLog(this.getClass().toString(), upe.getLocalizedMessage()));
-					log.error("CsvPersonHandler: " + upe.getMessage());
-				}
-			}
-			if (people == null || people.size() == 0) {
-				done = true;
-			} else {
-				search.setStart(search.getStart() + searchPageSize);
-			}
-			// should we halt if a stop was requested via pleaseStop?
-		}
+	        while (!done) {
+	            List<Person> people = dao.findBySearch(Person.class, search);
+	            for (Person user : people) {
+	                try {
+	                    UserEdit target = userDirService.editUser(user.getUserId());
+	                    if (CsvCommonHandlerService.URM_DELETE.equals(commonHandlerService.userRemoveMode())) {
+	                        userDirService.removeUser(target);
+	                    } else {
+	                        // assume the default disable case (without checking)
+	                        target.setType(suspended);
+	                    }
+	                    // commit the changes
+	                    userDirService.commitEdit(target);
+	                    deletes++;
+	                }
+	                catch(UserNotDefinedException unde) {
+	                    dao.create(new SakoraLog(this.getClass().toString(), unde.getLocalizedMessage()));
+	                    log.error("CsvPersonHandler: " + unde.getMessage());
+	                }
+	                catch(UserAlreadyDefinedException uade) {
+	                    dao.create(new SakoraLog(this.getClass().toString(), uade.getLocalizedMessage()));
+	                    log.error("CsvPersonHandler: " + uade.getMessage());
+	                }
+	                catch(UserLockedException ule) {
+	                    dao.create(new SakoraLog(this.getClass().toString(), ule.getLocalizedMessage()));
+	                    log.error("CsvPersonHandler: " + ule.getMessage());
+	                }
+	                catch(UserPermissionException upe) {
+	                    dao.create(new SakoraLog(this.getClass().toString(), upe.getLocalizedMessage()));
+	                    log.error("CsvPersonHandler: " + upe.getMessage());
+	                }
+	            }
+	            if (people == null || people.size() == 0) {
+	                done = true;
+	            } else {
+	                search.setStart(search.getStart() + searchPageSize);
+	            }
+	            // should we halt if a stop was requested via pleaseStop?
+	        }
 
-		logoutFromSakai();
-		dao.create(new SakoraLog(this.getClass().toString(),
-				"Finished processing input, added " + adds + " items, updated " 
-				+ updates + " items and removed " + deletes));
-	}
-
-	public boolean isDeleteUsers() {
-		return deleteUsers;
+	        logoutFromSakai();
+	    }
+	    dao.create(new SakoraLog(this.getClass().toString(),
+	            "Finished processing input, added " + adds + " items, updated " 
+	                    + updates + " items and removed " + deletes));
 	}
 
 	public void setDeleteUsers(boolean deleteUsers) {
-		this.deleteUsers = deleteUsers;
+	    log.warn("SakoraCSV: deleteUsers is no longer supported, use userRemoveMode option instead (see docs for details)");
 	}
 
 	public String getSuspended() {
