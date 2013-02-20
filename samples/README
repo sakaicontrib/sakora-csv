@@ -37,8 +37,10 @@ Check the logs for errors and warnings (should find none)
 Load the partial feed again (using load-imr.sh)
 Check the logs for errors and warnings (should find none)
 
-NOTE: the updates and dels counts might vary based on whether you already have the users loaded from previous runs,
-      recommend you set the net.unicon.sakora.csv.userRemovalMode=ignore unless specifically testing user processing
+NOTE: the updates and deletes counts might vary based on whether you already 
+      have the users loaded from previous runs, recommend you set the 
+      net.unicon.sakora.csv.userRemovalMode=ignore unless actively testing user processing
+
 
 SQL cleanup script:
 There is also a cleanup sql script which is for testing purposes only and will clean out all the CM tables
