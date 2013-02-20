@@ -138,7 +138,7 @@ public class CsvCommonHandlerService {
         // run this after a run completes
         String runId = getCurrentSyncRunId();
         Date start = (Date) syncVars.get(SYNC_VAR_STARTDATE);
-        log.info("SakoraCSV sync run ("+runId+") started on "+DateFormat.getDateTimeInstance().format(start)+" was completed: success="+success);
+        log.info("SakoraCSV sync complete ("+(success?"success":"FAILED")+") for run ("+runId+") started on "+DateFormat.getDateTimeInstance().format(start));
         syncVars.put(SYNC_VAR_STATUS, success?SYNC_STATE_COMPLETE:SYNC_STATE_FAILED);
         if (success) {
             StringBuilder sb = new StringBuilder();
@@ -197,7 +197,7 @@ public class CsvCommonHandlerService {
             sb.append(String.format("%5d", total_deletes));
             sb.append(" deletes\n");
             syncVars.put(SYNC_VAR_SUMMARY, sb.toString());
-            log.info("SakoraCSV sync run ("+runId+") statistics:\n"+sb.toString());
+            log.info("SakoraCSV sync statistics for run ("+runId+"):\n"+sb.toString());
         }
     }
 

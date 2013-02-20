@@ -426,7 +426,7 @@ public class CsvSyncServiceImpl implements CsvSyncService {
 		}
 		try {
 			if ( log.isInfoEnabled() ) {
-				log.info("Moving batch from [" + syncContext.getProperties().get(BATCH_UPLOAD_DIR) + 
+				log.info("SakoraCSV Moving batch from [" + syncContext.getProperties().get(BATCH_UPLOAD_DIR) + 
 						"] to [" + syncContext.getProperties().get(BATCH_PROCESSING_DIR) + "]");
 			}
 			moveFiles(syncContext.getProperties().get(BATCH_UPLOAD_DIR),

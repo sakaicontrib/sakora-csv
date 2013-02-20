@@ -212,10 +212,10 @@ public abstract class CsvHandlerBase implements CsvHandler {
 			fileWasRead = true;
 		} catch (FileNotFoundException ffe) {
 		    dao.create(new SakoraLog(this.getClass().toString(), ffe.getLocalizedMessage()));
-		    log.info("CSV reader failed to locate file [" + csvPath + "] (this is OK if you did not upload this file as part of the feed): "+ffe.getLocalizedMessage());
+		    log.info("SakoraCSV reader failed to locate file [" + csvPath + "] (this is OK if you did not upload this file as part of the feed): "+ffe.getLocalizedMessage());
 		} catch (IOException ioe) {
 			dao.create(new SakoraLog(this.getClass().toString(), ioe.getLocalizedMessage()));
-			log.warn("CSV reader failed to read from file [" + csvPath + "]: "+ioe, ioe);
+			log.warn("SakoraCSV reader failed to read from file [" + csvPath + "]: "+ioe, ioe);
 		}
 		return fileWasRead;
 	}
@@ -226,7 +226,7 @@ public abstract class CsvHandlerBase implements CsvHandler {
 				csvr.close();
 			} catch (IOException e) {
 				if ( log.isDebugEnabled() ) {
-					log.debug("Failed to cleanly close CSV reader [file name: " + csvFileName + "]", e);
+					log.debug("SakoraCSV Failed to cleanly close CSV reader [file name: " + csvFileName + "]", e);
 				}
 			}
 		}
@@ -235,7 +235,7 @@ public abstract class CsvHandlerBase implements CsvHandler {
 				br.close();
 			} catch (IOException e) {
 				if ( log.isDebugEnabled() ) {
-					log.debug("Failed to cleanly close underlying reader for CSV file [file name: " + csvFileName + "]", e);
+					log.debug("SakoraCSV Failed to cleanly close underlying reader for CSV file [file name: " + csvFileName + "]", e);
 				}
 			}
 		}
@@ -295,9 +295,12 @@ public abstract class CsvHandlerBase implements CsvHandler {
 		String readAllLines = context.getProperties().get(READ_ALL_LINES);
 		if ( readAllLines != null && Boolean.parseBoolean(readAllLines) ) {
 			processInternal(context);
-		} else if ( log.isDebugEnabled() ) {
-			log.debug("Did not process all lines of current file [" + context.getProperties().get(BATCH_FILE_PATH) + 
-					"] so skipping post processing. This ensures we do not mistakenly interpret a partially-read snapshot file as specifying a too-great number of deletes.");
+		} else {
+		    dao.create(new SakoraLog(this.getClass().toString(), "Skipped post processing for "+getName()+" because we only partially processed the lines in CSV file [" + context.getProperties().get(BATCH_FILE_PATH) + "]"));
+		    if ( log.isDebugEnabled() ) {
+		        log.debug("SakoraCSV Did not process all lines of current file [" + context.getProperties().get(BATCH_FILE_PATH) + 
+		                "] so skipping post processing. This ensures we do not mistakenly interpret a partially-read snapshot file as specifying a too-great number of deletes.");
+		    }
 		}
 	}
 	
