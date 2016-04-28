@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Licensed to the Sakai Foundation under one or more contributor
   license agreements. See the NOTICE file distributed with this
@@ -17,14 +17,17 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <artifactId>sakora-csv</artifactId>
         <groupId>net.unicon</groupId>
-        <version>1.8-SNAPSHOT</version>
+        <version>10-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
+
     <name>Simple Sakai SIS Integration Services (Sakora CSV) Component Packaging</name>
     <groupId>net.unicon</groupId>
     <artifactId>sakai-sakora-csv-pack</artifactId>
@@ -32,11 +35,12 @@
     <properties>
         <deploy.target>components</deploy.target>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>net.unicon</groupId>
             <artifactId>sakai-sakora-csv-impl</artifactId>
-            <version>1.8-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>
