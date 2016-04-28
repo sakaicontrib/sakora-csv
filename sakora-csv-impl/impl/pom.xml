@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Licensed to the Sakai Foundation under one or more contributor
   license agreements. See the NOTICE file distributed with this
@@ -17,86 +17,91 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>sakora-csv</artifactId>
-    <groupId>net.unicon</groupId>
-    <version>1.8-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
-  </parent>
-  <name>Simple Sakai SIS Integration Services (Sakora CSV) Implementation</name>
-  <groupId>net.unicon</groupId>
-  <artifactId>sakai-sakora-csv-impl</artifactId>
-  <packaging>jar</packaging>
-  <properties>
-    <deploy.target />
-  </properties>
-  <dependencies>
-    <dependency>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+      <artifactId>sakora-csv</artifactId>
       <groupId>net.unicon</groupId>
-      <artifactId>sakai-sakora-csv-api</artifactId>
-      <version>1.8-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.sakaiproject.kernel</groupId>
-      <artifactId>sakai-kernel-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.sakaiproject.kernel</groupId>
-      <artifactId>sakai-component-manager</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.sakaiproject.edu-services.course-management</groupId>
-      <artifactId>coursemanagement-api</artifactId>
-    </dependency>
-    <!-- generic DAO -->
-    <dependency>
-      <groupId>org.sakaiproject</groupId>
-      <artifactId>generic-dao</artifactId>
-      <version>0.9.18</version>
-    </dependency>
-    <!-- Spring and Hibernate dependencies. -->
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-orm</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-core</artifactId>
-    </dependency>
-    <!-- commons -->
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.quartz-scheduler</groupId>
-      <artifactId>quartz</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>net.sf.opencsv</groupId>
-      <artifactId>opencsv</artifactId>
-      <version>1.8</version>
-    </dependency>
-  </dependencies>
-  <build>
-    <resources>
-      <resource>
-        <directory>src/sql</directory>
-        <includes>
-          <include>**/*.sql</include>
-        </includes>
-      </resource>
-    </resources>
-  </build>
+      <version>10-SNAPSHOT</version>
+      <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <name>Simple Sakai SIS Integration Services (Sakora CSV) Implementation</name>
+    <groupId>net.unicon</groupId>
+    <artifactId>sakai-sakora-csv-impl</artifactId>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.unicon</groupId>
+            <artifactId>sakai-sakora-csv-api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Sakai Dependencies -->
+        <dependency>
+            <groupId>org.sakaiproject.kernel</groupId>
+            <artifactId>sakai-kernel-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.sakaiproject.kernel</groupId>
+            <artifactId>sakai-component-manager</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.sakaiproject.edu-services.course-management</groupId>
+            <artifactId>coursemanagement-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.sakaiproject</groupId>
+            <artifactId>generic-dao</artifactId>
+            <version>0.9.18</version>
+        </dependency>
+
+        <!-- Spring and Hibernate Dependencies. -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+        </dependency>
+
+        <!-- Apache Commons Dependencies -->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>1.8</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/sql</directory>
+                <includes>
+                    <include>**/*.sql</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 </project>
