@@ -19,6 +19,7 @@
 package net.unicon.sakora.impl.jobs;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import net.unicon.sakora.api.csv.CsvSyncContext;
 import net.unicon.sakora.api.csv.CsvSyncService;
@@ -38,10 +39,11 @@ public class CsvLoaderJobBean implements StatefulJob {
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		JobDetail detail = context.getJobDetail();
 		JobDataMap map = detail.getJobDataMap();
+		Map<String, String> convertedMap = new HashMap( map );
 		CsvSyncContext syncContext = new CsvSyncContextImpl();
-		syncContext.setProperties(map);
+		syncContext.setProperties( convertedMap );
 		csvSyncService.sync(syncContext);
-		context.setResult(new HashMap(map));
+		context.setResult( convertedMap );
 	}
 	
 	public CsvSyncService getCsvSyncService() {

@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Licensed to the Sakai Foundation under one or more contributor
   license agreements. See the NOTICE file distributed with this
@@ -17,56 +17,62 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>sakora-csv</artifactId>
-    <groupId>net.unicon</groupId>
-    <version>1.8-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
-  </parent>
-  <name>Simple Sakai SIS Integration Services (Sakora CSV) Tool</name>
-  <groupId>net.unicon</groupId>
-  <artifactId>sakai-sakora-csv-tool</artifactId>
-  <packaging>war</packaging>
-  
-  <dependencies>
-    <dependency>
-      <groupId>net.unicon</groupId>
-      <artifactId>sakai-sakora-csv-api</artifactId>
-      <version>1.8-SNAPSHOT</version> 
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.sakaiproject.kernel</groupId>
-      <artifactId>sakai-kernel-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.sakaiproject.kernel</groupId>
-      <artifactId>sakai-component-manager</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.quartz-scheduler</groupId>
-      <artifactId>quartz</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.sakaiproject.scheduler</groupId>
-      <artifactId>scheduler-api</artifactId>
-      <version>2.7.0</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>servlets.com</groupId>
-      <artifactId>cos</artifactId>
-      <version>05Nov2002</version>
-    </dependency>    
-  </dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <artifactId>sakora-csv</artifactId>
+        <groupId>net.unicon</groupId>
+        <version>12-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <name>Simple Sakai SIS Integration Services (Sakora CSV) Tool</name>
+    <groupId>net.unicon</groupId>
+    <artifactId>sakai-sakora-csv-tool</artifactId>
+    <packaging>war</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.unicon</groupId>
+            <artifactId>sakai-sakora-csv-api</artifactId>
+            <version>${project.version}</version> 
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Sakai Dependencies -->
+        <dependency>
+            <groupId>org.sakaiproject.kernel</groupId>
+            <artifactId>sakai-kernel-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.sakaiproject.kernel</groupId>
+            <artifactId>sakai-component-manager</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.sakaiproject.scheduler</groupId>
+            <artifactId>scheduler-api</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+
+        
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>servlets.com</groupId>
+            <artifactId>cos</artifactId>
+            <version>05Nov2002</version>
+        </dependency>
+    </dependencies>
 </project>

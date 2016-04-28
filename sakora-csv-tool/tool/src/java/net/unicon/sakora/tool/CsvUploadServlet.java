@@ -54,6 +54,9 @@ import com.oreilly.servlet.multipart.MultipartParser;
 import com.oreilly.servlet.multipart.ParamPart;
 import com.oreilly.servlet.multipart.Part;
 
+import static org.quartz.JobBuilder.*;
+import static org.quartz.JobKey.*;
+
 /**
  * Simple POST only REST webservice for uploading csv data files for the Sakora
  * CsvSyncService.
@@ -92,7 +95,7 @@ public class CsvUploadServlet extends HttpServlet {
     private static final String OVERRIDE_IGNORE_MEMBERSHIP_REMOVALS = "ignoreMembershipRemovals";
     private static final String OVERRIDE_IGNORE_MISSING_SESSIONS = "ignoreMissingSessions";
 
-    static final Log log = LogFactory.getLog(CsvUploadServlet.class);
+    static final Log LOG = LogFactory.getLog(CsvUploadServlet.class);
 
     /**
      * Anything in this map is passed along to the sync context exactly as is,
@@ -103,8 +106,8 @@ public class CsvUploadServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) 
 	throws IOException {
-	    log.info("SakoraCSV Processing incoming POST request");
-	    jobOverrides = new HashMap<String, String>();
+	    LOG.info("SakoraCSV Processing incoming POST request");
+	    jobOverrides = new HashMap<>();
 	    ServerConfigurationService serverConfigurationService = (ServerConfigurationService) ComponentManager.get("org.sakaiproject.component.api.ServerConfigurationService");
 
 	    String basePath = ((CsvSyncService)ComponentManager.get("net.unicon.sakora.api.csv.CsvSyncService")).getBatchUploadDir();
@@ -141,7 +144,7 @@ public class CsvUploadServlet extends HttpServlet {
 		        ParamPart paramPart = (ParamPart) part;
 		        Boolean val = Boolean.parseBoolean(paramPart.getStringValue());
 		        jobOverrides.put(part.getName(), val.toString()); // need to store it as a string to be compatible with the sync context props
-		        log.info("SakoraCSV: POST param "+part.getName()+" set to override to "+val+" for this sync job");
+		        LOG.info("SakoraCSV: POST param "+part.getName()+" set to override to "+val+" for this sync job");
 		    }
             else if ( (OVERRIDE_USER_REMOVAL_MODE.equals(part.getName()) 
                     ) && part.isParam()) {
@@ -149,7 +152,7 @@ public class CsvUploadServlet extends HttpServlet {
                 ParamPart paramPart = (ParamPart) part;
                 String val = paramPart.getStringValue();
                 jobOverrides.put(part.getName(), val);
-                log.info("SakoraCSV: POST param "+part.getName()+" set to override to "+val+" for this sync job");
+                LOG.info("SakoraCSV: POST param "+part.getName()+" set to override to "+val+" for this sync job");
             }
 		    else if (part.isFile()) {
 		        UserDirectoryService userDirectoryService = (UserDirectoryService) ComponentManager.get("org.sakaiproject.user.api.UserDirectoryService");
@@ -179,7 +182,7 @@ public class CsvUploadServlet extends HttpServlet {
 		                baseFile.mkdir();
 		            }
 		            String filename = basePath + File.separator + part.getName() + ".csv";
-		            log.info("SakoraCSV Processing file upload: "+filename);
+		            LOG.info("SakoraCSV Processing file upload: "+filename);
 
 		            /* 
 		             * stream the uploaded file to disk, it may be very large 
@@ -199,14 +202,14 @@ public class CsvUploadServlet extends HttpServlet {
 		            bInputStream.close();
 		        }
 		    } else {
-		        log.warn("SakoraCSV POST request processing found unrecognized param ("+part.getName()+"), skipping...");
+		        LOG.warn("SakoraCSV POST request processing found unrecognized param ("+part.getName()+"), skipping...");
 		    }
 		}
 		if (runJob) {
-		    log.info("SakoraCSV completed POST request processing: doing immediate job run by request");
+		    LOG.info("SakoraCSV completed POST request processing: doing immediate job run by request");
 			runSyncJob();
 		} else {
-		    log.info("SakoraCSV completed POST request processing");
+		    LOG.info("SakoraCSV completed POST request processing");
 		}
 		out.flush();
 	}
@@ -226,14 +229,21 @@ public class CsvUploadServlet extends HttpServlet {
 			JobBeanWrapper jobWrapper = schedulerManager.getJobBeanWrapper(jobName);
 			if (jobWrapper != null) {
 				try {
-					JobDetail jd = scheduler.getJobDetail(jobName, Scheduler.DEFAULT_GROUP);
+					JobDetail jd = scheduler.getJobDetail( jobKey( jobName, Scheduler.DEFAULT_GROUP ));
 					if (jd == null) {
-						jd = new JobDetail(jobName, Scheduler.DEFAULT_GROUP, jobWrapper.getJobClass(), false, true, true);
+						jd = newJob( jobWrapper.getJobClass() )
+								.withIdentity( jobName, Scheduler.DEFAULT_GROUP )
+								.storeDurably()
+								.requestRecovery()
+								.build();
 					}
 					jd.getJobDataMap().put(JobBeanWrapper.SPRING_BEAN_NAME, jobWrapper.getBeanId());
 					jd.getJobDataMap().put(JobBeanWrapper.JOB_TYPE, jobWrapper.getJobType());
 					if (jobOverrides != null && !jobOverrides.isEmpty()) {
-						if (log.isDebugEnabled()) log.debug("SakoraCSV inserting "+jobOverrides.size()+" job overrides into job data map: "+jobOverrides);
+						if (LOG.isDebugEnabled())
+						{
+							LOG.debug("SakoraCSV inserting "+jobOverrides.size()+" job overrides into job data map: "+jobOverrides);
+						}
 						jd.getJobDataMap().putAll(jobOverrides);
 					} else {
 					    // remove any overrides
@@ -243,18 +253,18 @@ public class CsvUploadServlet extends HttpServlet {
 					}
 					scheduler.addJob(jd, true); // need to always update the job details
 				} catch (SchedulerException e) {
-					e.printStackTrace();
+					LOG.warn( e );
 				}
 			}
 			else {
-				log.error("SakoraCSV: No Job Wrapper by that name ("+jobName+") (aborting sync)");
+				LOG.error("SakoraCSV: No Job Wrapper by that name ("+jobName+") (aborting sync)");
 				return;
 			}
 
 			try {
-				scheduler.triggerJob(jobName, Scheduler.DEFAULT_GROUP);
+				scheduler.triggerJob( jobKey( jobName, Scheduler.DEFAULT_GROUP ));
 			} catch (SchedulerException e) {
-			    log.error("SakoraCSV failed to trigger schedule job from POST request (aborting sync): "+e, e);
+			    LOG.error("SakoraCSV failed to trigger schedule job from POST request (aborting sync): "+e, e);
 			}
 		}
 	}
