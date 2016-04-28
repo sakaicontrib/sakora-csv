@@ -18,9 +18,9 @@
  */
 package net.unicon.sakora.impl.csv;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import net.unicon.sakora.api.csv.CsvSyncContext;
 import net.unicon.sakora.api.csv.model.Membership;
@@ -41,118 +41,144 @@ import org.sakaiproject.genericdao.api.search.Search;
  * @author Joshua Ryan
  */
 public class CsvEnrollmentHandler extends CsvHandlerBase {
-	static final Log log = LogFactory.getLog(CsvEnrollmentHandler.class);
-	private String studentRole = "S";
+    static final Log LOG = LogFactory.getLog(CsvEnrollmentHandler.class);
+    private String studentRole = "S";
 
-	public CsvEnrollmentHandler() {
-	}
+    public CsvEnrollmentHandler() {}
 
     @Override
     public String getName() {
         return "Enrollment";
     }
 
-	@Override
-	protected void readInputLine(CsvSyncContext context, String[] line) {
+    @Override
+    protected void readInputLine(CsvSyncContext context, String[] line) {
 
-		final int minFieldCount = 5;
+        final int minFieldCount = 5;
 
-		if (line != null && line.length >= minFieldCount) {
-			line = trimAll(line);
+        if (line != null && line.length >= minFieldCount) {
+            line = trimAll(line);
 
-			// for clarity
-			String eid = line[0];
-			String userEid = line[1];
-			String status = line[2];
-			String credits = line[3];
-			String gradingScheme = line[4];
+            // for clarity
+            String eid = line[0];
+            String userEid = line[1];
+            String status = line[2];
+            String credits = line[3];
+            String gradingScheme = line[4];
 
-			if (!isValid(userEid, "User Eid", eid)
-					|| !isValid(status, "Status", eid)) {
-				log.error("Missing required parameter(s), skipping item " + eid);
-				errors++;
-			} else {
-			    if (commonHandlerService.processEnrollmentSet(eid)) {
-			        if (!cmService.isEnrollmentSetDefined(eid)) {
-			            log.error("Invalid EnrollmentSet Eid " + eid);
-			            dao.create(new SakoraLog(this.getClass().toString(), "Invalid EnrollmentSet Eid " + eid));
-			        } else {
-			            cmAdmin.addOrUpdateEnrollment(userEid, eid, status, credits, gradingScheme);
-			            // NOTE: this next line is likely to cause a hibernate exception
-			            dao.save( new Membership(userEid, eid, studentRole, "enrollment", time) );
-			            adds++;
-			        }
-			    } else {
-			        if (log.isDebugEnabled()) log.debug("Skipped processing enrollment for user ("+userEid+") because it is in enrollment set ("+eid+") which is part of an academic session which is being skipped");
-			    }
-			}
-		} else {
-			log.error("Skipping short line (expected at least [" + minFieldCount + 
-					"] fields): [" + (line == null ? null : Arrays.toString(line)) + "]");
-			errors++;
-		}
-	}
-	
-	@Override
-	protected void processInternal(CsvSyncContext context) {
-	    if (commonHandlerService.ignoreMembershipRemovals()) {
-	        if (log.isDebugEnabled()) log.debug("SakoraCSV skipping enrollment membership processing, ignoreMembershipRemovals=true");
-	    } else {
-	        // do removal processing
-	        loginToSakai();
-	        // look for all enrollments previously defined but not included in this snapshot
-	        Search search = new Search();
-	        search.addRestriction(new Restriction("inputTime", time, Restriction.NOT_EQUALS));
-	        search.addRestriction(new Restriction("mode", "enrollment", Restriction.EQUALS));
-	        search.setLimit(searchPageSize);
+            if (!isValid(userEid, "User Eid", eid)
+                    || !isValid(status, "Status", eid)) {
+                LOG.error("Missing required parameter(s), skipping item " + eid);
+                errors++;
+            } else {
+                if (commonHandlerService.processEnrollmentSet(eid)) {
+                    if (!cmService.isEnrollmentSetDefined(eid)) {
+                        LOG.error("Invalid EnrollmentSet Eid " + eid);
+                        dao.create(new SakoraLog(this.getClass().toString(), "Invalid EnrollmentSet Eid " + eid));
+                    } else {
+                        cmAdmin.addOrUpdateEnrollment(userEid, eid, status, credits, gradingScheme);
+                        // NOTE: this next line is likely to cause a hibernate exception
+                        dao.save( new Membership(userEid, eid, studentRole, "enrollment", time) );
+                        adds++;
+                    }
+                } else {
+                    if (LOG.isDebugEnabled()) LOG.debug("Skipped processing enrollment for user ("+userEid+") because it is in enrollment set ("+eid+") which is part of an academic session which is being skipped");
+                }
+            }
+        } else {
+            LOG.error("Skipping short line (expected at least [" + minFieldCount + 
+                    "] fields): [" + (line == null ? null : Arrays.toString(line)) + "]");
+            errors++;
+        }
+    }
 
-	        boolean done = false;
+    @Override
+    protected void processInternal(CsvSyncContext context) {
+        if (commonHandlerService.ignoreMembershipRemovals()) {
+            if (LOG.isDebugEnabled()) LOG.debug("SakoraCSV skipping enrollment membership processing, ignoreMembershipRemovals=true");
+        } else {
+            // do removal processing
+            loginToSakai();
 
-	        // filter out anything which is not part of the current set of enrollment sets
-	        if (commonHandlerService.ignoreMissingSessions()) {
-	            Set<String> enrollmentSetEids = commonHandlerService.getCurrentEnrollmentSets();
-	            if (enrollmentSetEids.isEmpty()) {
-	                // no sets are current so we skip everything
-	                done = true;
-	                log.warn("SakoraCSV EnrollmentHandler processInternal: No current enrollment sets so we are skipping all internal enrollment post CSV read processing");
-	            } else {
-	                search.addRestriction( new Restriction("containerEid", enrollmentSetEids) );
-	                log.info("SakoraCSV limiting enrollment membership removals to "+enrollmentSetEids.size()+" enrollment sets: "+enrollmentSetEids);
-	            }
-	        }
+            boolean done = false;
 
-	        while (!done) {
-	            List<Membership> memberships = dao.findBySearch(Membership.class, search);
-	            if (log.isDebugEnabled()) log.debug("SakoraCSV processing "+memberships.size()+" enrollment membership removals");
-	            for (Membership membership : memberships) {
-	                try {
-	                    cmAdmin.addOrUpdateEnrollment(membership.getUserEid(), membership.getContainerEid(), "dropped", "0", "");
-	                } catch (IdNotFoundException idfe) {
-	                    dao.create(new SakoraLog(this.getClass().toString(), idfe.getLocalizedMessage()));
-	                }
-	            }
+            List<String> enrollmentSetEids = new ArrayList<String>();
+            boolean ignoreMissingSessions = commonHandlerService.ignoreMissingSessions();
+            // filter out anything which is not part of the current set of enrollment sets
+            if (ignoreMissingSessions) {
+                enrollmentSetEids.addAll(commonHandlerService.getCurrentEnrollmentSets());
+                if (enrollmentSetEids.isEmpty()) {
+                    // no sets are current so we skip everything
+                    done = true;
+                    LOG.warn("SakoraCSV EnrollmentHandler processInternal: No current enrollment sets so we are skipping all internal enrollment post CSV read processing");
+                } else {
+                    LOG.info("SakoraCSV limiting enrollment membership removals to "+enrollmentSetEids.size()+" enrollment sets: "+enrollmentSetEids);
+                }
+            }
 
-	            if (memberships == null || memberships.size() == 0) {
-	                done = true;
-	            } else {
-	                search.setStart(search.getStart() + searchPageSize);
-	            }
-	            // should we halt if a stop was requested via pleaseStop?
-	        }
+            if (!done)
+            {
+                // if we are ignoring missing sessions, we have to add a restriction on containerEid which could result
+                // in over 1000 entries in the IN clause. This is a problem for Oracle so we need to loop the search.
+                // if we are not ignoring missing sessions, we do not add a restriction, and the loop will execute exactly once. 
+                int max = 1000;
+                int containerCount = max;
+                int startIndex = 0;
+                int endIndex = max;
+                if (ignoreMissingSessions)
+                {
+                    containerCount = enrollmentSetEids.size();
+                    endIndex = Math.min(containerCount, max);
+                }
 
-	        logoutFromSakai();
-	    }
-	    dao.create(new SakoraLog(this.getClass().toString(),
-	            "Finished processing input, added or updated " + updates + " items and removed " + deletes));
-	}
+                while (startIndex < containerCount)
+                {
+                    // look for all enrollments previously defined but not included in this snapshot
+                    Search search = new Search();
+                    search.addRestriction(new Restriction("inputTime", time, Restriction.NOT_EQUALS));
+                    search.addRestriction(new Restriction("mode", "enrollment", Restriction.EQUALS));
+                    search.setLimit(searchPageSize);
+                    if (ignoreMissingSessions)
+                    {
+                        search.addRestriction(new Restriction("containerEid", enrollmentSetEids.subList(startIndex, endIndex)));
+                    }
 
-	public String getStudentRole() {
-		return studentRole;
-	}
+                    boolean paging = true;
+                    while (paging) {
+                        List<Membership> memberships = dao.findBySearch(Membership.class, search);
+                        if (LOG.isDebugEnabled()) LOG.debug("SakoraCSV processing "+memberships.size()+" enrollment membership removals");
+                        for (Membership membership : memberships) {
+                            try {
+                                cmAdmin.addOrUpdateEnrollment(membership.getUserEid(), membership.getContainerEid(), "dropped", "0", "");
+                            } catch (IdNotFoundException idfe) {
+                                dao.create(new SakoraLog(this.getClass().toString(), idfe.getLocalizedMessage()));
+                            }
+                        }
 
-	public void setStudentRole(String studentRole) {
-		this.studentRole = studentRole;
-	}
+                        if (memberships == null || memberships.isEmpty()) {
+                            paging = false;
+                        } else {
+                            search.setStart(search.getStart() + searchPageSize);
+                        }
+                        // should we halt if a stop was requested via pleaseStop?
+                    }
 
-	
+                    startIndex = endIndex; // if not ignoring missing sessions, startIndex == containerCount after a single iteration and the loop exits
+                    endIndex = Math.min(endIndex + max, containerCount);
+                }
+            }
+
+            logoutFromSakai();
+        }
+        dao.create(new SakoraLog(this.getClass().toString(),
+                "Finished processing input, added or updated " + updates + " items and removed " + deletes));
+    }
+
+    public String getStudentRole() {
+        return studentRole;
+    }
+
+    public void setStudentRole(String studentRole) {
+        this.studentRole = studentRole;
+    }
 }
