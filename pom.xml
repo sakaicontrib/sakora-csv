@@ -17,8 +17,10 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <name>Simple Sakai SIS Integration Services (Sakora CSV)</name>
     <groupId>net.unicon</groupId>
     <artifactId>sakora-csv</artifactId>
@@ -27,94 +29,83 @@
         <url>http://www.unicon.net/</url>
     </organization>
     <inceptionYear>2007</inceptionYear>
-    <version>1.8-SNAPSHOT</version>
+    <version>12-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <description>CSV imports for Sakai Course Management
-      More info at: https://confluence.sakaiproject.org/display/IMSES/Simple+Sakai+SIS+Services
-    </description>
+    <description>CSV imports for Sakai Course Management. More info at: https://confluence.sakaiproject.org/display/IMSES/Simple+Sakai+SIS+Services</description>
 
     <parent>
         <artifactId>master</artifactId>
         <groupId>org.sakaiproject</groupId>
-        <version>11-SNAPSHOT</version> 
+        <version>12-SNAPSHOT</version> 
         <relativePath>../master/pom.xml</relativePath>
     </parent>
 
-   <profiles>
-      <profile>
-         <id>full</id>
-         <activation>
-            <activeByDefault>true</activeByDefault>
-         </activation>
-         <modules>
-           <!-- put your full set of modules here -->
-	   <module>sakora-csv-api/api</module>
-	   <module>sakora-csv-impl/impl</module>
-	   <module>sakora-csv-impl/pack</module>
-	   <module>sakora-csv-tool/tool</module>
-         </modules>
-      </profile>
-      <profile>
-         <id>ddl</id>
-         <modules>
-            <!-- put the path to the ddl pom.xml here -->
-            <module>sakora-csv-impl/impl/src/ddl</module>
-         </modules>
-      </profile>
-   </profiles>
+    <profiles>
+        <profile>
+            <id>full</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <!-- put your full set of modules here -->
+                <module>sakora-csv-api/api</module>
+                <module>sakora-csv-impl/impl</module>
+                <module>sakora-csv-impl/pack</module>
+                <module>sakora-csv-tool/tool</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>ddl</id>
+            <modules>
+                <!-- put the path to the ddl pom.xml here -->
+                <module>sakora-csv-impl/impl/src/ddl</module>
+            </modules>
+        </profile>
+    </profiles>
 
     <scm>
-      <connection>scm:svn:https://source.sakaiproject.org/contrib/unicon/sakora-csv/trunk</connection>
-      <developerConnection>scm:svn:https://source.sakaiproject.org/contrib/unicon/sakora-csv/trunk</developerConnection>
-      <url>https://source.sakaiproject.org/contrib/unicon/sakora-csv/trunk</url>
+        <url>https://github.com/sakaicontrib/sakora-csv</url>
     </scm>
 
-    <dependencyManagement>
-        <dependencies>
-        </dependencies>
-    </dependencyManagement>
-
-    <repositories>    
+    <repositories>
         <repository>
-        <id>sakai-maven</id>
-        <name>Sakai Maven Repo</name>
-        <layout>default</layout>
-        <url>http://source.sakaiproject.org/maven2</url>
-        <snapshots>
-          <enabled>false</enabled>
-        </snapshots>
-      </repository>
-      <repository>
-        <id>sakai-maven2-snapshots</id>
-        <name>Sakai Maven Repo</name>
-        <layout>default</layout>
-        <url>http://source.sakaiproject.org/maven2-snapshots</url>
-        <snapshots>
-          <enabled>false</enabled>
-        </snapshots>
-      </repository>
+            <id>sakai-maven</id>
+            <name>Sakai Maven Repo</name>
+            <layout>default</layout>
+            <url>http://source.sakaiproject.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>sakai-maven2-snapshots</id>
+            <name>Sakai Maven Repo</name>
+            <layout>default</layout>
+            <url>http://source.sakaiproject.org/maven2-snapshots</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
     </repositories>
 
     <build>
-      <plugins>
-	<plugin>
-	  <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>2.6</version>
-          <configuration>
-            <encoding>UTF-8</encoding>
-          </configuration>
-	</plugin>
-	<plugin>
-	  <groupId>org.apache.maven.plugins</groupId>
-	  <artifactId>maven-gpg-plugin</artifactId>
-	  <version>1.4</version>
-	  <configuration>
-	    <skip>true</skip>
-	  </configuration>
-	</plugin>
-      </plugins>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.4</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
-
 </project>
-
