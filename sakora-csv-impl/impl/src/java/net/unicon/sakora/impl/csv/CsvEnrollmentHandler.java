@@ -18,6 +18,7 @@
  */
 package net.unicon.sakora.impl.csv;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -100,28 +101,52 @@ public class CsvEnrollmentHandler extends CsvHandlerBase {
 	    } else {
 	        // do removal processing
 	        loginToSakai();
-	        // look for all enrollments previously defined but not included in this snapshot
-	        Search search = new Search();
-	        search.addRestriction(new Restriction("inputTime", time, Restriction.NOT_EQUALS));
-	        search.addRestriction(new Restriction("mode", "enrollment", Restriction.EQUALS));
-	        search.setLimit(searchPageSize);
 
 	        boolean done = false;
 
+	        List<String> enrollmentSetEids = new ArrayList<String>();
+	        boolean ignoreMissingSessions = commonHandlerService.ignoreMissingSessions();
 	        // filter out anything which is not part of the current set of enrollment sets
-	        if (commonHandlerService.ignoreMissingSessions()) {
-	            Set<String> enrollmentSetEids = commonHandlerService.getCurrentEnrollmentSets();
+	        if (ignoreMissingSessions) {
+	            enrollmentSetEids.addAll(commonHandlerService.getCurrentEnrollmentSets());
 	            if (enrollmentSetEids.isEmpty()) {
 	                // no sets are current so we skip everything
 	                done = true;
 	                log.warn("SakoraCSV EnrollmentHandler processInternal: No current enrollment sets so we are skipping all internal enrollment post CSV read processing");
 	            } else {
-	                search.addRestriction( new Restriction("containerEid", enrollmentSetEids) );
 	                log.info("SakoraCSV limiting enrollment membership removals to "+enrollmentSetEids.size()+" enrollment sets: "+enrollmentSetEids);
 	            }
 	        }
 
-	        while (!done) {
+	        if (!done)
+            {
+                // if we are ignoring missing sessions, we have to add a restriction on containerEid which could result
+                // in over 1000 entries in the IN clause. This is a problem for Oracle so we need to loop the search.
+                // if we are not ignoring missing sessions, we do not add a restriction, and the loop will execute exactly once. 
+                int max = 1000;
+                int containerCount = max;
+                int startIndex = 0;
+                int endIndex = max;
+                if (ignoreMissingSessions)
+                {
+                    containerCount = enrollmentSetEids.size();
+                    endIndex = Math.min(containerCount, max);
+                }
+                
+                while (startIndex < containerCount)
+                {
+                    // look for all enrollments previously defined but not included in this snapshot
+                    Search search = new Search();
+                    search.addRestriction(new Restriction("inputTime", time, Restriction.NOT_EQUALS));
+                    search.addRestriction(new Restriction("mode", "enrollment", Restriction.EQUALS));
+                    search.setLimit(searchPageSize);
+                    if (ignoreMissingSessions)
+                    {
+                        search.addRestriction(new Restriction("containerEid", enrollmentSetEids.subList(startIndex, endIndex)));
+                    }
+                    
+                    boolean paging = true;
+                    while (paging) {
 	            List<Membership> memberships = dao.findBySearch(Membership.class, search);
 	            if (log.isDebugEnabled()) log.debug("SakoraCSV processing "+memberships.size()+" enrollment membership removals");
 	            for (Membership membership : memberships) {
@@ -133,12 +158,17 @@ public class CsvEnrollmentHandler extends CsvHandlerBase {
 	            }
 
 	            if (memberships == null || memberships.size() == 0) {
-	                done = true;
+	                paging = false;
 	            } else {
 	                search.setStart(search.getStart() + searchPageSize);
 	            }
 	            // should we halt if a stop was requested via pleaseStop?
 	        }
+
+					startIndex = endIndex; // if not ignoring missing sessions, startIndex == containerCount after a single iteration and the loop exits
+                    endIndex = Math.min(endIndex + max, containerCount);
+                }
+            }
 
 	        logoutFromSakai();
 	    }

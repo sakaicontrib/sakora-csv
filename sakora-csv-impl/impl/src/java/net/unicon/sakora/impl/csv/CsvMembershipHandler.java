@@ -18,6 +18,7 @@
  */
 package net.unicon.sakora.impl.csv;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -181,22 +182,18 @@ public class CsvMembershipHandler extends CsvHandlerBase {
 	    } else {
 	        // do removal processing
 	        loginToSakai();
-	        // look for all enrollments previously defined but not included in this snapshot
-	        Search search = new Search();
-	        search.addRestriction(new Restriction("inputTime", time, Restriction.NOT_EQUALS));
-	        search.addRestriction(new Restriction("mode", mode, Restriction.EQUALS));
-	        search.setLimit(searchPageSize);
 
 	        boolean done = false;
 
+			 List<String> enrollmentContainerEids = new ArrayList<String>();
+            boolean ignoreMissingSessions = commonHandlerService.ignoreMissingSessions();
 	        // filter out anything which is not part of the current set of offerings/sections
-	        if (commonHandlerService.ignoreMissingSessions()) {
-	            Set<String> enrollmentContainerEids;
+	        if (ignoreMissingSessions) {
 	            if (MODE_SECTION.equals(mode)) {
-	                enrollmentContainerEids = commonHandlerService.getCurrentSectionEids();
+	                enrollmentContainerEids.addAll(commonHandlerService.getCurrentSectionEids());
 	            } else {
 	                // course enrollments
-	                enrollmentContainerEids = commonHandlerService.getCurrentCourseOfferingEids();
+	                enrollmentContainerEids.addAll(commonHandlerService.getCurrentCourseOfferingEids());
 	            }
 	            if (enrollmentContainerEids.isEmpty()) {
 	                // no offerings or sections are current so we skip everything
@@ -204,12 +201,39 @@ public class CsvMembershipHandler extends CsvHandlerBase {
 	                String handler = MODE_SECTION.equals(mode) ? "SectionMembershipHandler" : "CourseMembershipHandler";
 	                log.warn("SakoraCSV "+handler+" processInternal: No current containers so we are skipping all internal memberships post CSV read processing");
 	            } else {
-	                search.addRestriction( new Restriction("containerEid", enrollmentContainerEids.toArray(new String[enrollmentContainerEids.size()])) );
 	                log.info("SakoraCSV limiting "+mode+" membership removals to "+enrollmentContainerEids.size()+" "+mode+" containers: "+enrollmentContainerEids);
 	            }
 	        }
 
-	        while (!done) {
+	        if (!done)
+            {
+                // if we are ignoring missing sessions, we have to add a restriction on containerEid which could result
+                // in over 1000 entries in the IN clause. This is a problem for Oracle so we need to loop the search.
+                // if we are not ignoring missing sessions, we do not add a restriction, and the loop will execute exactly once. 
+                int max = 1000;
+                int containerCount = max;
+                int startIndex = 0;
+                int endIndex = max;
+                if (ignoreMissingSessions)
+                {
+                    containerCount = enrollmentContainerEids.size();
+                    endIndex = Math.min(containerCount, max);
+                }
+                
+                while (startIndex < containerCount)
+                {
+                    Search search = new Search();
+                    search.addRestriction(new Restriction("inputTime", time, Restriction.NOT_EQUALS));
+                    search.addRestriction(new Restriction("mode", mode, Restriction.EQUALS));
+                    search.setLimit(searchPageSize);
+                    if (ignoreMissingSessions)
+                    {
+                        List<String> subList = enrollmentContainerEids.subList(startIndex, endIndex);
+                        search.addRestriction( new Restriction("containerEid", subList.toArray(new String[subList.size()])) );
+                    }
+                    
+                    boolean paging = true;
+                    while (paging) {
 	            List<Membership> memberships = dao.findBySearch(Membership.class, search);
 	            if (log.isDebugEnabled()) log.debug("SakoraCSV processing "+memberships.size()+" "+mode+" membership removals");
 	            for (Membership membership : memberships) {
@@ -234,13 +258,17 @@ public class CsvMembershipHandler extends CsvHandlerBase {
 	            }
 
 	            if (memberships == null || memberships.size() == 0) {
-	                done = true;
+	                paging = false;
 	            } else {
 	                search.setStart(search.getStart() + searchPageSize);
 	            }
 	            // should we halt if a stop was requested via pleaseStop?
 	        }
 
+					startIndex = endIndex; // if not ignoring missing sessions, startIndex == containerCount after a single iteration and the loop exits
+                    endIndex = Math.min(endIndex + max, containerCount);
+                }
+            }
 	        logoutFromSakai();
 	    }
 	    dao.create(new SakoraLog(this.getClass().toString(),
