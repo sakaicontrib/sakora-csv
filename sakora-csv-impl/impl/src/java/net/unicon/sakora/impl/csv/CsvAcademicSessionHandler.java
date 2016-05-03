@@ -107,20 +107,11 @@ public class CsvAcademicSessionHandler extends CsvHandlerBase {
 
 		Search search = new Search();
 		search.addRestriction(new Restriction("inputTime", time, Restriction.EQUALS));
-
-		boolean done = false;
-
-		while (!done) {
-			List<Session> sessions = dao.findBySearch(Session.class, search);
-			for (Session session : sessions) {
-				currentSessions.add(session.getEid());
-			}
-			if (sessions == null || sessions.size() == 0) {
-				done = true;
-			} else {
-				search.setStart(search.getStart() + searchPageSize);
-			}
+		List<Session> sessions = dao.findBySearch(Session.class, search);
+		for (Session session : sessions) {
+			currentSessions.add(session.getEid());
 		}
+
         if (currentSessions.isEmpty() && !commonHandlerService.ignoreMissingSessions()) {
             // TODO should we die here? -AZ
             /* 
