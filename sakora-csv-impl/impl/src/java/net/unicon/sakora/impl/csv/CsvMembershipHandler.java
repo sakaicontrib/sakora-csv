@@ -243,12 +243,12 @@ public class CsvMembershipHandler extends CsvHandlerBase {
                                     if (section != null) {
                                         EnrollmentSet enrolled = section.getEnrollmentSet();
                                         cmAdmin.removeEnrollment(membership.getUserEid(), enrolled.getEid());
-                                        if (LOG.isDebugEnabled()) LOG.debug("SakoraCSV removed "+mode+" membership for "+membership.getUserEid()+": "+membership);
+                                        if (LOG.isDebugEnabled()) LOG.debug("SakoraCSV removed "+mode+" membership for "+membership.getUserEid()+": "+enrolled.getEid());
                                         deletes++;
                                     }
                                 } else {
                                     cmAdmin.removeCourseOfferingMembership(membership.getUserEid(), membership.getContainerEid());
-                                    if (LOG.isDebugEnabled()) LOG.debug("SakoraCSV removed "+mode+" membership for "+membership.getUserEid()+": "+membership);
+                                    if (LOG.isDebugEnabled()) LOG.debug("SakoraCSV removed "+mode+" membership for "+membership.getUserEid()+": "+membership.getContainerEid());
                                     deletes++;
                                 }
                             } catch (IdNotFoundException idfe) {
