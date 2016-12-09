@@ -18,20 +18,18 @@
  */
 package net.unicon.sakora.api.csv.model;
 
-import java.util.Date;
-
 public class Person {
 
     private String userEid;
     private String userId;
-    private Date inputTime;
+    private int inputTime;
 
     public Person() {}
 
-	public Person(String userEid, String userId, Date inputTime) {
+	public Person(String userEid, String userId, int time) {
 		this.userEid = userEid;
 		this.userId = userId;
-		this.inputTime = inputTime;
+		this.inputTime = time;
 	}
 
 	public String getUserEid() {
@@ -50,11 +48,11 @@ public class Person {
 		this.userId = userId;
 	}
 
-	public Date getInputTime() {
+	public int getInputTime() {
 		return inputTime;
 	}
 
-	public void setInputTime(Date inputTime) {
+	public void setInputTime(int inputTime) {
 		this.inputTime = inputTime;
 	}
 

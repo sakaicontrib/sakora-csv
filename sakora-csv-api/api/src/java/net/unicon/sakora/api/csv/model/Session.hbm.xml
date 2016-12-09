@@ -4,6 +4,6 @@
 <hibernate-mapping>
    <class name="net.unicon.sakora.api.csv.model.Session" table="SAKORA_SESSION">
       <id name="eid" type="string" length="255" column="EID" />
-      <property name="inputTime" type="timestamp" column="INPUT_TIME" />
+      <property name="inputTime" type="integer" column="INPUT_TIME" />
    </class>
 </hibernate-mapping>

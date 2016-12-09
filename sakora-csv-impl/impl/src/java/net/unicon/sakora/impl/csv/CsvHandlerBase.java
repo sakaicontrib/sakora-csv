@@ -82,7 +82,7 @@ public abstract class CsvHandlerBase implements CsvHandler {
 	protected volatile boolean pleaseStop;
     protected String csvFileName;
 	protected int searchPageSize = 1000;
-	protected Date time = null;
+	protected int time = 0;
 	protected CsvSyncDao dao;
 	protected boolean hasHeader = false;
 	protected File inputFile = null;
@@ -121,8 +121,7 @@ public abstract class CsvHandlerBase implements CsvHandler {
 	    updates = 0;
 	    deletes = 0;
 
-	    time = new Date();
-	    start = (int) (time.getTime() / 1000);
+	    time = start = (int) (new Date().getTime() / 1000);
 	}
 
 	/* (non-Javadoc)

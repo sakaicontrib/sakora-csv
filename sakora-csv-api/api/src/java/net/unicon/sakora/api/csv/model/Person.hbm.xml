@@ -5,7 +5,7 @@
    <class name="net.unicon.sakora.api.csv.model.Person" table="SAKORA_PERSON">
       <id name="userEid" type="string" length="255" column="USER_EID" />
       <property name="userId" type="string" length="255" column="USER_ID" />
-      <property name="inputTime" type="timestamp" column="INPUT_TIME" />
+      <property name="inputTime" type="integer" column="INPUT_TIME" />
    </class>
    
 </hibernate-mapping>

@@ -18,25 +18,23 @@
  */
 package net.unicon.sakora.api.csv.model;
 
-import java.util.Date;
-
 public class Session {
 
 	private String eid;
-	private Date inputTime;
+	private int inputTime;
 
 	public Session() {}
 
-	public Session(String eid, Date inputTime) {
+	public Session(String eid, int time) {
 		this.eid = eid;
-		this.inputTime = inputTime;
+		this.inputTime = time;
 	}
 
-	public Date getInputTime() {
+	public int getInputTime() {
 		return inputTime;
 	}
 
-	public void setInputTime(Date inputTime) {
+	public void setInputTime(int inputTime) {
 		this.inputTime = inputTime;
 	}
 

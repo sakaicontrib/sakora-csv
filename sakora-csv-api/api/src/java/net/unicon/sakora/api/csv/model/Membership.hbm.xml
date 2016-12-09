@@ -10,7 +10,7 @@
       <property name="containerEid" type="string" length="255" column="COURSE_EID" />
       <property name="role" type="string" length="255" column="ROLE" />
       <property name="mode" type="string" length="8" column="`MODE`" />      
-      <property name="inputTime" type="timestamp" column="INPUT_TIME" />
+      <property name="inputTime" type="integer" column="INPUT_TIME" />
    </class>
    
 </hibernate-mapping>
