@@ -25,9 +25,9 @@ public class Session {
 
 	public Session() {}
 
-	public Session(String eid, int time) {
+	public Session(String eid, int inputTime) {
 		this.eid = eid;
-		this.inputTime = time;
+		this.inputTime = inputTime;
 	}
 
 	public int getInputTime() {

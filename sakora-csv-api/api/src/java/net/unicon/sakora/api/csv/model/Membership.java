@@ -29,11 +29,11 @@ public class Membership {
     
     public Membership() {}
 
-	public Membership(String userEid, String containerEid, String role, String mode, int time) {
+	public Membership(String userEid, String containerEid, String role, String mode, int inputTime) {
 		this.userEid = userEid;
 		this.containerEid = containerEid;
 		this.role = role;
-		this.inputTime = time;
+		this.inputTime = inputTime;
 		this.mode = mode;
 	}
 

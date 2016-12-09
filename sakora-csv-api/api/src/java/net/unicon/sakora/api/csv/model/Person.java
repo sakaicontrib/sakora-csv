@@ -26,10 +26,10 @@ public class Person {
 
     public Person() {}
 
-	public Person(String userEid, String userId, int time) {
+	public Person(String userEid, String userId, int inputTime) {
 		this.userEid = userEid;
 		this.userId = userId;
-		this.inputTime = time;
+		this.inputTime = inputTime;
 	}
 
 	public String getUserEid() {
