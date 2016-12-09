@@ -185,7 +185,7 @@ public class CsvMembershipHandler extends CsvHandlerBase {
             boolean done = false;
 
             List<String> enrollmentContainerEids = new ArrayList<String>();
-            boolean ignoreMissingSessions = commonHandlerService.ignoreMissingSessions();
+            final boolean ignoreMissingSessions = commonHandlerService.ignoreMissingSessions();
             // filter out anything which is not part of the current set of offerings/sections
             if (ignoreMissingSessions) {
                 if (MODE_SECTION.equals(mode)) {
@@ -199,8 +199,6 @@ public class CsvMembershipHandler extends CsvHandlerBase {
                     done = true;
                     String handler = MODE_SECTION.equals(mode) ? "SectionMembershipHandler" : "CourseMembershipHandler";
                     LOG.warn("SakoraCSV "+handler+" processInternal: No current containers so we are skipping all internal memberships post CSV read processing");
-                } else {
-                    LOG.info("SakoraCSV limiting "+mode+" membership removals to "+enrollmentContainerEids.size()+" "+mode+" containers: "+enrollmentContainerEids);
                 }
             }
 
@@ -209,7 +207,7 @@ public class CsvMembershipHandler extends CsvHandlerBase {
                 // if we are ignoring missing sessions, we have to add a restriction on containerEid which could result
                 // in over 1000 entries in the IN clause. This is a problem for Oracle so we need to loop the search.
                 // if we are not ignoring missing sessions, we do not add a restriction, and the loop will execute exactly once. 
-                int max = 1000;
+                final int max = 1000;
                 int containerCount = max;
                 int startIndex = 0;
                 int endIndex = max;
@@ -225,10 +223,12 @@ public class CsvMembershipHandler extends CsvHandlerBase {
                     search.addRestriction(new Restriction("inputTime", time, Restriction.NOT_EQUALS));
                     search.addRestriction(new Restriction("mode", mode, Restriction.EQUALS));
                     search.setLimit(searchPageSize);
+                    LOG.debug("Searching for memberships to drop where inputTime != " + time + " and mode = " + mode);
                     if (ignoreMissingSessions)
                     {
                         List<String> subList = enrollmentContainerEids.subList(startIndex, endIndex);
                         search.addRestriction( new Restriction("containerEid", subList.toArray(new String[subList.size()])) );
+                        LOG.info("SakoraCSV limiting "+mode+" membership removals to "+subList.size()+" "+mode+" containers: "+subList);
                     }
 
                     boolean paging = true;
