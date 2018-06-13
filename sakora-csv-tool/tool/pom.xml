@@ -24,7 +24,7 @@
     <parent>
         <artifactId>sakora-csv</artifactId>
         <groupId>net.unicon</groupId>
-        <version>13-SNAPSHOT</version>
+        <version>19-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
