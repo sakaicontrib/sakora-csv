@@ -290,8 +290,9 @@ public class CsvPersonHandler extends CsvHandlerBase {
 	        while (!done) {
 	            List<Person> people = dao.findBySearch(Person.class, search);
 	            for (Person user : people) {
+	                String userId = user.getUserId();
 	                try {
-	                    UserEdit target = userDirService.editUser(user.getUserId());
+	                    UserEdit target = userDirService.editUser(userId);
 	                    if (CsvCommonHandlerService.URM_DELETE.equals(commonHandlerService.userRemoveMode())) {
 	                        userDirService.removeUser(target);
 	                    } else {
@@ -304,19 +305,19 @@ public class CsvPersonHandler extends CsvHandlerBase {
 	                }
 	                catch(UserNotDefinedException unde) {
 	                    dao.create(new SakoraLog(this.getClass().toString(), unde.getLocalizedMessage()));
-	                    log.error("CsvPersonHandler: " + unde.getMessage());
+	                    log.error("CsvPersonHandler: UserNotDefinedException: " + userId + ":" + unde.getMessage());
 	                }
 	                catch(UserAlreadyDefinedException uade) {
 	                    dao.create(new SakoraLog(this.getClass().toString(), uade.getLocalizedMessage()));
-	                    log.error("CsvPersonHandler: " + uade.getMessage());
+	                    log.error("CsvPersonHandler: UserAlreadyDefinedException: " + userId + ":" + uade.getMessage());
 	                }
 	                catch(UserLockedException ule) {
 	                    dao.create(new SakoraLog(this.getClass().toString(), ule.getLocalizedMessage()));
-	                    log.error("CsvPersonHandler: " + ule.getMessage());
+	                    log.error("CsvPersonHandler: UserLockedException: " + userId + ":" + ule.getMessage());
 	                }
 	                catch(UserPermissionException upe) {
 	                    dao.create(new SakoraLog(this.getClass().toString(), upe.getLocalizedMessage()));
-	                    log.error("CsvPersonHandler: " + upe.getMessage());
+	                    log.error("CsvPersonHandler: UserPermissionException: " + userId + ":" + upe.getMessage());
 	                }
 	            }
 	            if (people == null || people.size() == 0) {
