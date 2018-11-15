@@ -242,9 +242,13 @@ public class CsvMembershipHandler extends CsvHandlerBase {
                                     Section section = cmService.getSection(membership.getContainerEid());
                                     if (section != null) {
                                         EnrollmentSet enrolled = section.getEnrollmentSet();
-                                        cmAdmin.removeEnrollment(membership.getUserEid(), enrolled.getEid());
-                                        if (LOG.isDebugEnabled()) LOG.debug("SakoraCSV removed "+mode+" membership for "+membership.getUserEid()+": "+enrolled.getEid());
-                                        deletes++;
+                                        if (enrolled != null) {
+                                            cmAdmin.removeEnrollment(membership.getUserEid(), enrolled.getEid());
+                                            if (LOG.isDebugEnabled()) LOG.debug("SakoraCSV removed "+mode+" membership for "+membership.getUserEid()+": "+enrolled.getEid());
+                                            deletes++;
+                                        } else {
+                                            LOG.info("Null EnrollmentSet found for section EID " + section.getEid() + ", enrollments for this set can't be removed...");
+                                        }
                                     }
                                 } else {
                                     cmAdmin.removeCourseOfferingMembership(membership.getUserEid(), membership.getContainerEid());
