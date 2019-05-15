@@ -238,7 +238,7 @@ public class CsvUploadServlet extends HttpServlet {
 								.build();
 					}
 					jd.getJobDataMap().put(JobBeanWrapper.SPRING_BEAN_NAME, jobWrapper.getBeanId());
-					jd.getJobDataMap().put(JobBeanWrapper.JOB_TYPE, jobWrapper.getJobType());
+					jd.getJobDataMap().put(JobBeanWrapper.JOB_NAME, jobWrapper.getJobName());
 					if (jobOverrides != null && !jobOverrides.isEmpty()) {
 						if (LOG.isDebugEnabled())
 						{
