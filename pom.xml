@@ -29,14 +29,14 @@
         <url>http://www.unicon.net/</url>
     </organization>
     <inceptionYear>2007</inceptionYear>
-    <version>20-SNAPSHOT</version>
+    <version>21-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>CSV imports for Sakai Course Management. More info at: https://confluence.sakaiproject.org/display/IMSES/Simple+Sakai+SIS+Services</description>
 
     <parent>
         <artifactId>master</artifactId>
         <groupId>org.sakaiproject</groupId>
-        <version>20-SNAPSHOT</version>
+        <version>21-SNAPSHOT</version>
     </parent>
 
     <profiles>
