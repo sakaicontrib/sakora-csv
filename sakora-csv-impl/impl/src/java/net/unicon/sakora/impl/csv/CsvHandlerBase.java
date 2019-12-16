@@ -57,6 +57,7 @@ import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.UserDirectoryService;
 
 import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
 
 /**
  * Base class which is extended by all CSV processors
@@ -215,6 +216,9 @@ public abstract class CsvHandlerBase implements CsvHandler {
 		} catch (IOException ioe) {
 			dao.create(new SakoraLog(this.getClass().toString(), ioe.getLocalizedMessage()));
 			log.warn("SakoraCSV reader failed to read from file [" + csvPath + "]: "+ioe, ioe);
+		} catch (CsvValidationException cve) {
+			dao.create(new SakoraLog(this.getClass().toString(), cve.getLocalizedMessage()));
+			log.warn("SakoraCSV reader failed validation of file [" + csvPath + "]: "+cve, cve);
 		}
 		return fileWasRead;
 	}
@@ -273,6 +277,9 @@ public abstract class CsvHandlerBase implements CsvHandler {
 		        // can be thrown by methods in readInputLine but generally this is unlikely to happen because most (or all) handlers catch this exception themselves
 		        dao.create(new SakoraLog(this.getClass().toString(), getClass().getSimpleName() + ":: " + ine.getLocalizedMessage()));
 		        log.error(getClass().getSimpleName() + ":: " + ine.getLocalizedMessage(), ine);
+		    } catch (CsvValidationException cve) {
+		        dao.create(new SakoraLog(this.getClass().toString(), cve.getLocalizedMessage()));
+		        log.warn("SakoraCSV reader failed validation of file [" + context.getProperties().get(BATCH_FILE_PATH) + "]: "+cve, cve);
 		    }
 		    finally {
 		        logoutFromSakai();
