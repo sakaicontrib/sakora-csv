@@ -122,8 +122,12 @@ public class CsvAcademicSessionHandler extends CsvHandlerBase {
              */
             log.error("SakoraCSV has no current academic sessions to process and session processing is on, this is an invalid state as it would cause all data (courses, memberships, etc.) to be disabled or removed, please check your sessions.csv file");
         }
-        // set the current academic sessions according to the incoming sessions
-		cmAdmin.setCurrentAcademicSessions(currentSessions);
+
+		if (!currentSessions.isEmpty() && !commonHandlerService.ignoreMissingSessions()) {
+			// set the current academic sessions according to the incoming sessions
+			cmAdmin.setCurrentAcademicSessions(currentSessions);
+		}
+
 		commonHandlerService.setCurrentAcademicSessions( currentSessions.toArray(new String[currentSessions.size()]) );
 		logoutFromSakai();
 	}
